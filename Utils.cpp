@@ -34,6 +34,14 @@ void Utils::Log(const char* fmt, ...)
     va_end(args);
 }
 
+void Utils::Warn(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    Log("Warning: %s", fmt, args);
+    va_end(args);
+}
+
 unsigned Utils::Hash(const std::string& data)
 {
 	uint32_t hash = 0;

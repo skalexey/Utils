@@ -11,6 +11,7 @@
 namespace Utils
 {
 	void Log(const char* fmt, ...);
+	void Warn(const char* fmt, ...);
     void Log(const char* fmt, va_list args);
 	unsigned Hash(const std::string& data);
 }
