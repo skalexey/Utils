@@ -53,3 +53,10 @@ unsigned Utils::Hash(const std::string& data)
 	}
 	return hash;
 }
+
+std::string Utils::FormatStr(const char* fmt, va_list args)
+{
+    char[256] buf;
+    sprintf(buf, fmt, args);
+    return buf;
+}
