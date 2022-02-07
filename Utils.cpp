@@ -1,6 +1,5 @@
 //
 //  Utils.cpp
-//  Cloud Raiders Debug
 //
 //  Created by skorokhodov on 11/22/17.
 //
