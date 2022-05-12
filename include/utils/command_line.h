@@ -9,7 +9,7 @@ namespace utils
 	struct opt_val
 	{
 		std::string val;
-		opt_val(bool __valid, std::string __val) : val(__val), m_valid(__valid) {}
+		opt_val(bool valid, const std::string& val) : m_valid(valid), val(val) {}
 		inline operator bool() { return m_valid; }
 		
 	protected:
@@ -25,9 +25,9 @@ namespace utils
 			if (p != std::string::npos)
 			{
 				if (p == arg.size() - 1)
-					return {true, ""};
+					return opt_val( true, "" );
 				else
-					return {true, arg.substr(p + 1)};
+					return opt_val(true, arg.substr(p + 1));
 			}
 		}
 		return {false, ""};
