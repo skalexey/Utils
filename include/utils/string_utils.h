@@ -1,14 +1,12 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace utils
 {
-	int count_substring(const std::string& where, const std::string& what)
-	{
-		int cnt = 0;
-		for (std::size_t pos = 0; pos != std::string::npos; cnt++)
-			pos = where.find(what, pos) + 1;
-		return cnt;
-	}
+	int count_substring(const std::string& where, const std::string& what);
+	std::string str_tolower(std::string s);
+	std::string format_str(const char* fmt, ...);
+	std::vector<std::string_view> split(const std::string_view& str, const std::string_view& delim);
 }
