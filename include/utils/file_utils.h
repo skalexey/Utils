@@ -4,8 +4,7 @@
 
 namespace utils
 {
-	int file_exists(const std::string& fpath)
-	{
-		return std::ifstream(fpath.c_str()).good();
-	}
+	int file_exists(const std::string& fpath);
+	int copy_file(const std::string& from_path, const std::string& to_path, bool safe = false);
+	int move_file(const std::string& from_path, const std::string& to_path, bool safe = false);
 }
