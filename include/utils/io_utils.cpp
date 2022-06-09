@@ -36,31 +36,43 @@ namespace utils
 		}
 
 		// input_line, close_input
-		std::string last_input_fname;
+		std::string last_input_fpath;
 
-		bool input_line(std::string& s, std::istream& def_i, const std::string& fname)
+		bool input_line(std::string& s, std::istream& def_i, const std::string& fpath)
 		{
 			return input_t_impl<std::string>(s, def_i, [&](std::istream& is, std::string& to) {
 				utils::input::getline(is, to);
 				return true;
-			}, fname);
+			}, fpath);
 		}
 
-		void close_input(const std::string& fname)
+		void close_input(const std::string& fpath)
 		{
-			auto _fname_ = fname.empty() ? last_input_fname : fname;
-			if (!_fname_.empty())
+			auto _fpath_ = fpath.empty() ? last_input_fpath : fpath;
+			if (!_fpath_.empty())
 			{
-				auto it = file_info.find(_fname_);
+				auto it = file_info.find(_fpath_);
 				if (it != file_info.end())
 				{
 					auto& info = it->second;
 					info.fi.close();
 					info.fo.close();
-					last_input_fname = "";
+					last_input_fpath = "";
 					file_info.erase(it);
 				}
 			}
+		}
+
+		std::ifstream* get_file(const std::string& fpath)
+		{
+			auto _fpath_ = fpath.empty() ? last_input_fpath : fpath;
+			if (!_fpath_.empty())
+			{
+				auto it = file_info.find(_fpath_);
+				if (it != file_info.end())
+					return &it->second.fi;
+			}
+			return nullptr;
 		}
 
 		// register_command

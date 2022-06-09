@@ -1,5 +1,7 @@
 #include <fstream>
 #include <cstdio>
+#include <string>
+//#include <filesystem>
 #include "file_utils.h"
 
 namespace utils
@@ -44,4 +46,33 @@ namespace utils
 		return ret;
 	}
 
+	int file_remove_last_line(const std::string& fpath)
+	{
+		std::ifstream f(fpath);
+		return file_remove_last_line_f(f);
+	}
+
+	int file_remove_last_line_f(std::ifstream& f)
+	{
+		// TODO: implement
+		if (f.is_open())
+		{
+			auto cur_pos = f.tellg();
+			f.seekg(0, std::ios::beg);
+			std::string line;
+			std::size_t last_line_begin = 0;
+			while (!f.eof())
+			{
+				line.clear();
+				last_line_begin = f.tellg();
+				std::getline(f, line);
+				//std::cout << "getline: '" << line << "'\n";
+			}
+			auto fsize = f.tellg();
+			//std::filesystem::resize_file("", 64 * 1024);
+			f.seekg(cur_pos, std::ios::beg);
+		}
+		
+		return 0;
+	}
 }

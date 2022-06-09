@@ -52,7 +52,7 @@ namespace utils
 		extern std::string last_getline_value;
 		extern std::string last_command;
 		extern bool last_getline_valid;
-		extern std::string last_input_fname;
+		extern std::string last_input_fpath;
 
 		void getline(std::istream& is, std::string& s);
 
@@ -62,12 +62,12 @@ namespace utils
 			T& t
 			, std::istream& def_i
 			, const std::function<bool(std::istream&, T&)>& reader
-			, const std::string& fname = ""
+			, const std::string& fpath = ""
 		)
 		{
-			if (!fname.empty())
+			if (!fpath.empty())
 			{
-				auto it = file_info.find(fname);
+				auto it = file_info.find(fpath);
 				if (it != file_info.end())
 				{
 					auto& info = it->second;
@@ -92,13 +92,13 @@ namespace utils
 				}
 				else
 				{
-					wr_file_info& info = file_info[fname];
-					info.fo.open(fname, std::ios::app);
+					wr_file_info& info = file_info[fpath];
+					info.fo.open(fpath, std::ios::app);
 					info.fo.seekp(0, std::ios::end);
-					info.fi.open(fname);
+					info.fi.open(fpath);
 					info.fsize = info.fo.tellp();
-					last_input_fname = fname;
-					return input_t_impl(t, def_i, reader, fname);
+					last_input_fpath = fpath;
+					return input_t_impl(t, def_i, reader, fpath);
 				}
 			}
 			else
@@ -107,10 +107,10 @@ namespace utils
 			}
 		}
 
-		bool input_line(std::string& s, std::istream& def_i, const std::string& fname = "");
+		bool input_line(std::string& s, std::istream& def_i, const std::string& fpath = "");
 
 		template <typename T>
-		bool input_t(T& t, std::istream& def_i, const std::string& fname = "")
+		bool input_t(T& t, std::istream& def_i, const std::string& fpath = "")
 		{
 			return input_t_impl<T>(t, def_i, [&](std::istream& is, T& to) {
 				std::string s;
@@ -121,10 +121,12 @@ namespace utils
 				if (!ss.eof())
 					return false;
 				return true;
-			}, fname);
+			}, fpath);
 		}
 
-		void close_input(const std::string& fname = "");
+		void close_input(const std::string& fpath = "");
+
+		std::ifstream* get_file(const std::string& fpath = "");
 
 		// register_command
 		struct cmd_info
