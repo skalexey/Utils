@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iterator>
 #include <cstdarg>
 #include <string>
 #include <cstdio>
@@ -35,22 +36,40 @@ namespace utils
 		return buf;
 	}
 
-	std::vector<std::string_view> split(const std::string_view& str, const std::string_view& delim)
+	std::vector<std::string_view> split(
+		const std::string_view& str
+		, const std::string_view& delim
+	)
 	{
 		std::vector<std::string_view> ret;
 #if __cplusplus > 201703L
 		auto v = std::views::split(parts, delim);
-		for (auto&& sub : v)
-			ret.push_back(sub);
+		std::copy(v.begin(), v.end(), std::back_inserter(sub));
 #else
 		std::size_t p = std::string::npos, cur = std::string::npos;
 		do
 		{
 			cur = ++p;
-			p = str.find_first_of(delim, p);
+			p = str.find(delim, p);
 			ret.push_back(str.substr(cur, p - cur));
 		} while (p != std::string::npos);
 #endif
+		return ret;
+	}
+
+	std::vector<std::string_view> split_of(
+		const std::string_view& str
+		, const std::string_view& delims
+	)
+	{
+		std::size_t p = std::string::npos, cur = std::string::npos;
+		std::vector<std::string_view> ret;
+		do
+		{
+			cur = ++p;
+			p = str.find_first_of(delims, p);
+			ret.push_back(str.substr(cur, p - cur));
+		} while (p != std::string::npos);
 		return ret;
 	}
 }
