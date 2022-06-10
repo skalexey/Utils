@@ -4,7 +4,7 @@
 #include <string>
 #include <cstdio>
 #include <string_view>
-#if __cplusplus > 201703L
+#if defined(__cpp_lib_ranges)
 #include <ranges>
 #endif
 #include "string_utils.h"
@@ -42,7 +42,7 @@ namespace utils
 	)
 	{
 		std::vector<std::string_view> ret;
-#if __cplusplus > 201703L
+#if defined(__cpp_lib_ranges)
 		auto v = std::views::split(parts, delim);
 		std::copy(v.begin(), v.end(), std::back_inserter(sub));
 #else
