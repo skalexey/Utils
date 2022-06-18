@@ -43,8 +43,8 @@
 	#else
 		#define LOG_VERBOSE(msg)
 	#endif
-	#define LOG_PREFIX(prefix) const auto prefixInitializer = PrefixInitializer(prefix);
-	#define LOG_POSTFIX(postfix) const auto postfixInitializer = PostfixInitializer(postfix);
+	#define LOG_PREFIX(prefix) const auto prefixInitializer = PrefixInitializer(prefix)
+	#define LOG_POSTFIX(postfix) const auto postfixInitializer = PostfixInitializer(postfix)
 	#define LOG(msg) logStream() << logPrefix << msg << logPostfix
 	#define LOG_DEBUG(msg) logStream() << logPrefix << "[D] " << msg << logPostfix
 	#define LOG_ERROR(msg) logStream() << logPrefix << "Error! " << msg << (logPostfix.empty() ? "\n" : logPostfix)
