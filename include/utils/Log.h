@@ -50,6 +50,9 @@
 	#define LOG_ERROR(msg) logStream() << logPrefix << "Error! " << msg << (logPostfix.empty() ? "\n" : logPostfix)
 	#define LOG_WARNING(msg) logStream() << logPrefix << "Warning: " << msg << (logPostfix.empty() ? "\n" : logPostfix)
 	#define LOG_INFO(msg) logStream() << logPrefix << msg << (logPostfix.empty() ? "\n" : logPostfix)
+	
+	// Print and invoke an expression
+	#define LOG_EXPR(ex) LOG(#ex); ex
 #else
 	#define LOG_PREFIX(prefix)
 	#define LOG_POSTFIX(postfix)
@@ -69,6 +72,7 @@
 	#define LOG_ERROR(msg)
 	#define LOG_INFO(msg)
 	#define LOG_VERBOSE(msg)
+	#define LOG_EXPR(ex)
 #endif
 
 
