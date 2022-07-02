@@ -38,6 +38,7 @@ message("utils_INCLUDES: ${utils_INCLUDES}")
 
 # Set sources
 file(GLOB SRC CONFIGURE_DEPENDS "src/*")
+file(GLOB_RECURSE HEADERS "include/*.h")
 
 # Inherit parent sources logic
 set(PARENT_SRC ${PARENT_SRC} ${SRC})
