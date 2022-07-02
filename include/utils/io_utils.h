@@ -62,6 +62,7 @@ namespace utils
 			T& t
 			, std::istream& def_i
 			, const std::function<bool(std::istream&, T&)>& reader
+			, const std::function<bool(std::ostream&, const T&)>& writer
 			, const std::string& fpath = ""
 		)
 		{
@@ -73,7 +74,7 @@ namespace utils
 					auto& info = it->second;
 					if (info.fi.tellg() < info.fsize)
 					{
-						//std::cout << "fi.tellg(): " << fi.tellg() << ", fsize: " << fsize << "\n";
+						//std::cout << "fi.tellg(): " << info.fi.tellg() << ", fsize: " << info.fsize << "\n";
 						auto ret = reader(info.fi, t);
 						std::cout << (ret ? "[from file]: '" : "[from file with errors]: '") << t << "'\n";
 						return ret;
@@ -83,10 +84,7 @@ namespace utils
 						// Read from the default input
 						auto ret = reader(def_i, t);
 						if (last_getline_valid)
-						{
-							info.fo << t << "\n";
-							info.fo.flush();
-						}
+							writer(info.fo, t);
 						return ret;
 					}
 				}
@@ -98,7 +96,7 @@ namespace utils
 					info.fi.open(fpath);
 					info.fsize = info.fo.tellp();
 					last_input_fpath = fpath;
-					return input_t_impl(t, def_i, reader, fpath);
+					return input_t_impl(t, def_i, reader, writer, fpath);
 				}
 			}
 			else
@@ -121,7 +119,21 @@ namespace utils
 				if (!ss.eof())
 					return false;
 				return true;
-			}, fpath);
+			}
+			, [&](std::ostream& os, const T& what)
+			{
+				//std::cout << sizeof(t) << "\n";
+				std::stringstream ss;
+				ss << what;
+				if (!ss.str().empty())
+				{
+					os << ss.str() << "\n";
+					os.flush();
+					return true;
+				}
+				return false;
+			}
+			, fpath);
 		}
 
 		void close_input(const std::string& fpath = "");

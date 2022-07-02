@@ -40,10 +40,22 @@ namespace utils
 
 		bool input_line(std::string& s, std::istream& def_i, const std::string& fpath)
 		{
-			return input_t_impl<std::string>(s, def_i, [&](std::istream& is, std::string& to) {
-				utils::input::getline(is, to);
-				return true;
-			}, fpath);
+			return input_t_impl<std::string>(s, def_i
+				, [&](std::istream& is, std::string& to) {
+					utils::input::getline(is, to);
+					return true;
+				}
+				, [&](std::ostream& os, const std::string& what)
+				{
+					if (!what.empty())
+					{
+						os << what << "\n";
+						os.flush();
+						return true;
+					}
+					return false;
+				}
+			, fpath);
 		}
 
 		void close_input(const std::string& fpath)
