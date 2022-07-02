@@ -45,16 +45,6 @@ namespace utils
 					utils::input::getline(is, to);
 					return true;
 				}
-				, [&](std::ostream& os, const std::string& what)
-				{
-					if (!what.empty())
-					{
-						os << what << "\n";
-						os.flush();
-						return true;
-					}
-					return false;
-				}
 			, fpath);
 		}
 

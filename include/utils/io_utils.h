@@ -104,6 +104,28 @@ namespace utils
 				return reader(def_i, t);
 			}
 		}
+	
+		template <typename T>
+		bool input_t_impl(
+			T& t
+			, std::istream& def_i
+			, const std::function<bool(std::istream&, T&)>& reader
+			, const std::string& fpath = ""
+		)
+		{
+			std::function<bool(std::ostream&, const T&)> f = [&] (std::ostream& os, const T& what) -> bool {
+				std::stringstream ss;
+				ss << what;
+				if (!ss.str().empty())
+				{
+					os << ss.str() << "\n";
+					os.flush();
+					return true;
+				}
+				return false;
+			};
+			return input_t_impl(t, def_i, reader, f, fpath);
+		}
 
 		bool input_line(std::string& s, std::istream& def_i, const std::string& fpath = "");
 
@@ -119,19 +141,6 @@ namespace utils
 				if (!ss.eof())
 					return false;
 				return true;
-			}
-			, [&](std::ostream& os, const T& what)
-			{
-				//std::cout << sizeof(t) << "\n";
-				std::stringstream ss;
-				ss << what;
-				if (!ss.str().empty())
-				{
-					os << ss.str() << "\n";
-					os.flush();
-					return true;
-				}
-				return false;
 			}
 			, fpath);
 		}
