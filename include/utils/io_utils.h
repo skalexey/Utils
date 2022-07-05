@@ -68,35 +68,38 @@ namespace utils
 		{
 			if (!fpath.empty())
 			{
+				wr_file_info* info_ptr = nullptr;
 				auto it = file_info.find(fpath);
-				if (it != file_info.end())
+				if (it == file_info.end())
 				{
-					auto& info = it->second;
-					if (info.fi.tellg() < info.fsize)
-					{
-						//std::cout << "fi.tellg(): " << info.fi.tellg() << ", fsize: " << info.fsize << "\n";
-						auto ret = reader(info.fi, t);
-						std::cout << (ret ? "[from file]: '" : "[from file with errors]: '") << t << "'\n";
-						return ret;
-					}
-					else
-					{
-						// Read from the default input
-						auto ret = reader(def_i, t);
-						if (last_getline_valid)
-							writer(info.fo, t);
-						return ret;
-					}
-				}
-				else
-				{
-					wr_file_info& info = file_info[fpath];
+					info_ptr = &file_info[fpath];
+					auto& info = *info_ptr;
 					info.fo.open(fpath, std::ios::app);
 					info.fo.seekp(0, std::ios::end);
 					info.fi.open(fpath);
 					info.fsize = info.fo.tellp();
 					last_input_fpath = fpath;
-					return input_t_impl(t, def_i, reader, writer, fpath);
+				}
+				else
+				{
+					info_ptr = &it->second;
+				}
+
+				auto& info = *info_ptr;
+				if (info.fi.tellg() < info.fsize)
+				{
+					//std::cout << "fi.tellg(): " << info.fi.tellg() << ", fsize: " << info.fsize << "\n";
+					auto ret = reader(info.fi, t);
+					std::cout << (ret ? "[from file]: '" : "[from file with errors]: '") << t << "'\n";
+					return ret;
+				}
+				else
+				{
+					// Read from the default input
+					auto ret = reader(def_i, t);
+					if (last_getline_valid)
+						writer(info.fo, t);
+					return ret;
 				}
 			}
 			else
