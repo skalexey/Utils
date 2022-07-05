@@ -156,12 +156,13 @@ namespace utils
 		struct cmd_info
 		{
 			std::string alias;
-			using f_t = std::function<void()>;
+			using f_t = std::function<bool()>;
 			f_t f;
 
-			inline void call() {
+			inline auto call() {
 				if (f)
-					f();
+					return f();
+				return false;
 			}
 		};
 		extern std::unordered_map<std::string, cmd_info> registered_commands;

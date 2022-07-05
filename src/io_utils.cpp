@@ -19,20 +19,29 @@ namespace utils
 
 		void getline(std::istream& is, std::string& s)
 		{
-			std::getline(is, s);
-
-			// Set last getline value
-			last_getline_value = s;
-			auto first_word = last_getline_value.substr(0, last_getline_value.find_first_of(" "));
-
-			// Set valid flag
-
-			auto it = registered_commands.find(utils::str_tolower(first_word));
-			if (!(last_getline_valid = it == registered_commands.end()))
+			std::string tmp;
+			bool cmd_ret = false;
+			do
 			{
-				it->second.call(); // Call a command
-				last_command = it->first;
-			}
+				std::getline(is, tmp);
+
+				// Set last getline value
+				last_getline_value = tmp;
+				auto first_word = last_getline_value.substr(0, last_getline_value.find_first_of(" ")
+				);
+
+				// Set valid flag
+
+				auto it = registered_commands.find(utils::str_tolower(first_word));
+				if (!(last_getline_valid = it == registered_commands.end()))
+				{
+					cmd_ret = it->second.call(); // Call a command
+					last_command = it->first;
+					tmp.clear();
+				}
+			} while (cmd_ret && !last_getline_valid);
+
+			tmp.swap(s);
 		}
 
 		// input_line, close_input
