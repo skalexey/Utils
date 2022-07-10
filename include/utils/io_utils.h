@@ -170,6 +170,8 @@ namespace utils
 		void register_command(const std::string& cmd, const cmd_info::f_t& f = nullptr);
 
 		void reset_last_input();
+
+		bool ask_user(const std::string& question);
 	}
 }
 

@@ -4,6 +4,7 @@
 //  Created by Alex Skorokhodov on 2022/06/05.
 //
 
+#include "string_utils.h"
 #include "io_utils.h"
 
 namespace utils
@@ -100,6 +101,29 @@ namespace utils
 			last_getline_valid = false;
 			last_getline_value = "";
 		}
+        
+		bool ask_user(const std::string& question)
+        {
+			auto repeat_please = [] () {
+				std::cout << "Answer y or n (or yes or no)\n";
+			};
+
+			std::string answer;
+			std::cout << question << " (y/n)\n";
+
+			while (true)
+			{
+				std::cin >> answer;
+				auto a = utils::str_tolower(answer);
+				if (a == "y" || a == "yes")
+					return true;
+				else if (a == "n" || a == "no")
+					return false;
+				else
+					repeat_please();
+			}
+
+        }
 	}
 }
 
