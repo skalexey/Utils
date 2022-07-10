@@ -5,17 +5,17 @@ cmake_minimum_required (VERSION 3.8)
 
 project (utils C CXX)
 
-if (WIN32)
-	SET(MY_FLAGS "/std:c++latest")
+if(MSVC)
+	# fix __cplusplus macro for MSVC
+	add_compile_options(
+		"/Zc:__cplusplus"
+		"/std:c++latest"
+	)
 else()
 	set(CMAKE_CXX_STANDARD 20)
 endif()
 
 option(INHERIT_PARENT_SRC "Adds all parent's source files" OFF)
-
-if (LOG_ON)
-	add_compile_definitions("LOG_ON")
-endif ()
 
 ## Set and add includes
 # private includes
