@@ -1,9 +1,11 @@
+
 #include <algorithm>
 #include <iterator>
-#include <cstdarg>
 #include <string>
-#include <cstdio>
 #include <string_view>
+#ifdef __cpp_lib_format
+#include <format>
+#endif
 #if defined(__cpp_lib_ranges)
 #include <ranges>
 #endif
@@ -30,8 +32,8 @@ namespace utils
 	{
 		va_list args;
 		va_start(args, fmt);
-		char buf[512];
-		vsnprintf(buf, 512, fmt, args);
+		char buf[10512];
+		vsnprintf(buf, 10512, fmt, args);
 		va_end(args);
 		return buf;
 	}
@@ -43,8 +45,8 @@ namespace utils
 	{
 		std::vector<std::string_view> ret;
 #if defined(__cpp_lib_ranges)
-		auto v = std::views::split(parts, delim);
-		std::copy(v.begin(), v.end(), std::back_inserter(sub));
+		auto v = std::views::split(str, delim);
+		std::copy(v.begin(), v.end(), std::back_inserter(ret));
 #else
 		std::size_t p = std::string::npos, cur = std::string::npos;
 		do
