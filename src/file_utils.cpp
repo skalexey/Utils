@@ -1,8 +1,13 @@
 #include <fstream>
-#include <cstdio>
 #include <string>
-//#include <filesystem>
+#ifdef __cpp_lib_filesystem
+namespace fs = std::filesystem;
+#else
+#include <cstdio>
+#endif
 #include "file_utils.h"
+
+namespace ch = std::chrono;
 
 namespace utils
 {
@@ -11,8 +16,21 @@ namespace utils
 		return std::ifstream(fpath.c_str()).good();
 	}
 
-	int copy_file(const std::string& from_path, const std::string& to_path, bool safe)
+#ifdef __cpp_lib_filesystem
+	int copy_file(const fs::path& from_path, const fs::path& to_path, bool safe)
 	{
+		if (!fs::exists(from_path))
+			return 1;
+
+		if (safe)
+			if (fs::exists(to_path))
+				return 2;
+
+		auto options = safe ? 
+			fs::copy_options::skip_existing : fs::copy_options::overwrite_existing;
+		fs::copy_file(from_path, to_path, fs::copy_options::skip_existing);
+#else
+	int copy_file(const std::string & from_path, const std::string & to_path, bool safe)
 		std::ifstream src(from_path, std::ios::binary);
 
 		// Check if the copied file exists
@@ -35,18 +53,39 @@ namespace utils
 		std::ifstream dst_check(to_path, std::ios::binary);
 		if (!dst_check.is_open())
 			return 3;
+#endif
 		return 0;
 	}
 
+#ifdef __cpp_lib_filesystem
+	bool remove_file(const fs::path& fpath)
+	{
+		return fs::remove(fpath);
+	}
+#else
+	bool remove_file(const std::string& fpath)
+	{
+		return std::remove(from_path.c_str()) == 0;
+	}
+#endif
+
+
+#ifdef __cpp_lib_filesystem
+	int move_file(const fs::path& from_path, const fs::path& to_path, bool safe)
+#else
 	int move_file(const std::string& from_path, const std::string& to_path, bool safe)
+#endif
 	{
 		auto ret = copy_file(from_path, to_path, safe);
 		if (ret == 0)
-			std::remove(from_path.c_str());
+			remove_file(from_path);
 		return ret;
 	}
-
+#ifdef __cpp_lib_filesystem
+	int file_remove_last_line(const fs::path& fpath)
+#else
 	int file_remove_last_line(const std::string& fpath)
+#endif
 	{
 		std::ifstream f(fpath);
 		return file_remove_last_line_f(f);
@@ -75,4 +114,35 @@ namespace utils
 		
 		return 0;
 	}
+
+	inline std::string file_contents_impl(const std::string& fpath)
+	{
+		std::ifstream f(fpath);
+		return std::string((std::istreambuf_iterator<char>(f)),
+			(std::istreambuf_iterator<char>()));
+	}
+#ifdef __cpp_lib_filesystem
+	std::chrono::system_clock::time_point file_modif_time(const fs::path& fpath)
+	{
+		return ch::clock_cast<ch::system_clock>(fs::last_write_time(fpath));
+	}
+
+	std::string file_contents(const fs::path& fpath)
+	{
+		return file_contents_impl(fpath.string());
+	}
+#else
+	std::chrono::system_clock::time_point file_modif_time(const std::string& fpath)
+	{
+		throw("file_modif_time not supported without <filesystem>");
+	}
+
+	std::string file_contents(const std::string& fpath)
+	{
+		return file_contents_impl(fpath);
+	}
+#endif
 }
+
+
+
