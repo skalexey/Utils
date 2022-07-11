@@ -86,7 +86,7 @@ namespace utils
 				}
 
 				auto& info = *info_ptr;
-				if (info.fi.tellg() < info.fsize)
+				if (!info.fi.eof())
 				{
 					//std::cout << "fi.tellg(): " << info.fi.tellg() << ", fsize: " << info.fsize << "\n";
 					auto ret = reader(info.fi, t);
