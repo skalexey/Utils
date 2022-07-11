@@ -4,9 +4,14 @@
 //  Created by skorokhodov on 2022/06/05.
 //
 
+#if defined __APPLE__ || __cplusplus < 202002L
+#include <iomanip>
+#include <ctime>
+#include <cstdlib>
+#endif
+#include <sstream>
 #include <string>
 #include <stdio.h>
-#include <ctime>
 #include "datetime.h"
 
 namespace ch = std::chrono;
@@ -24,9 +29,10 @@ namespace utils
 		return buf;
 	}
 
+
 	ch::system_clock::time_point parse_datetime(const std::string& str, const std::string& fmt)
 	{
-#if  __cplusplus >= 202002L // Use C++20 syntax
+#if  __cplusplus >= 202002L && !defined(__APPLE__) // Use C++20 syntax
 		ch::system_clock::time_point tp;
 		std::stringstream ss(str);
 		ss >> ch::parse(fmt, tp);
@@ -34,20 +40,43 @@ namespace utils
 	#else
 		// From:
 		// https://stackoverflow.com/questions/21021388/how-to-parse-a-date-string-into-a-c11-stdchrono-time-point-or-similar
-		std::tm tm = {};
-		std::stringstream ss(str);
-		ss >> std::get_time(&tm, fmt.c.str());
-		auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
-		return tp;
-		//std::tm tm = {};
-		//strptime("Thu Jan 9 2014 12:35:34", "%a %b %d %Y %H:%M:%S", &tm);
-		//auto tp = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+		if (fmt.find("GMT") != std::string::npos || fmt.find("UTC") != std::string::npos)
+		{	// Parse as UTC time
+			auto tz = std::getenv("TZ");
+			setenv("TZ", "UTC", 1);
+			std::tm tm{};
+			std::stringstream ss(str);
+			ss >> std::get_time(&tm, fmt.c_str());
+			auto t = std::mktime(&tm);
+			if (tz)
+				setenv("TZ", tz, 1);
+			else
+				unsetenv("TZ");
+			return std::chrono::system_clock::from_time_t(t);
+		}
+		else
+		{
+			// Parse as local time
+			std::tm tm{};
+			auto t = std::mktime(&tm);
+			std::stringstream ss(str);
+			ss >> std::get_time(&tm, fmt.c_str());
+			return std::chrono::system_clock::from_time_t(t);
+		}
 #endif
 	}
 
 	ch::system_clock::time_point parse_datetime_http(const std::string& str)
 	{
 		// Fri, 08 Jul 2022 15:47 : 48 GMT
-		return parse_datetime(str, "%a, %d %b %C%y %H:%M:%S GMT");
+		return parse_datetime(str, "%a, %d %b %Y %H:%M:%S GMT");
+	}
+
+	std::string time_to_string(const std::chrono::system_clock::time_point& tp)
+	{
+		// TODO: branch for C++20
+		std::time_t t = std::chrono::system_clock::to_time_t(tp);
+		return std::string(std::ctime(&t));
 	}
 }
+
