@@ -29,7 +29,7 @@ namespace utils
 
 		auto options = safe ? 
 			fs::copy_options::skip_existing : fs::copy_options::overwrite_existing;
-		fs::copy_file(from_path, to_path, fs::copy_options::skip_existing);
+		fs::copy_file(from_path, to_path, options);
 #else
 	int copy_file(const std::string & from_path, const std::string & to_path, bool safe)
 		std::ifstream src(from_path, std::ios::binary);
