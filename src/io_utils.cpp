@@ -111,7 +111,7 @@ namespace utils
 			std::string answer;
 			std::cout << question << " (y/n)\n";
 
-			while (true)
+			while (!std::cin.fail())
 			{
 				std::cin >> answer;
 				auto a = utils::str_tolower(answer);
@@ -122,7 +122,7 @@ namespace utils
 				else
 					repeat_please();
 			}
-
+			throw std::string("Input stream failure");
         }
 	}
 }
