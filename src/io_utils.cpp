@@ -18,18 +18,18 @@ namespace utils
 		bool last_getline_valid = false;
 		std::string last_command;
 
-		void getline(std::istream& is, std::string& s)
+		bool getline(std::istream& is, std::string& s)
 		{
 			std::string tmp;
 			bool cmd_ret = false;
 			do
 			{
 				std::getline(is, tmp);
-
+				if (std::cin.fail())
+					return false;
 				// Set last getline value
 				last_getline_value = tmp;
-				auto first_word = last_getline_value.substr(0, last_getline_value.find_first_of(" ")
-				);
+				auto first_word = last_getline_value.substr(0, last_getline_value.find_first_of(" "));
 
 				// Set valid flag
 
@@ -43,6 +43,7 @@ namespace utils
 			} while (cmd_ret && !last_getline_valid);
 
 			tmp.swap(s);
+			return true;
 		}
 
 		// input_line, close_input

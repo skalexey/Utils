@@ -32,7 +32,7 @@ namespace utils
 	{
 		va_list args;
 		va_start(args, fmt);
-		char buf[10512];
+		static char buf[10512];
 		vsnprintf(buf, 10512, fmt, args);
 		va_end(args);
 		return buf;

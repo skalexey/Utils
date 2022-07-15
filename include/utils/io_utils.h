@@ -54,7 +54,7 @@ namespace utils
 		extern bool last_getline_valid;
 		extern std::string last_input_fpath;
 
-		void getline(std::istream& is, std::string& s);
+		bool getline(std::istream& is, std::string& s);
 
 		// input_line, input_t, close_input
 		template <typename T>
