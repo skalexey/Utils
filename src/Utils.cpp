@@ -10,7 +10,6 @@
 #include <time.h>
 #include <cstdint>
 #include <cstdarg>
-#include <sstream>
 #include <string>
 #include <iomanip>
 #include <algorithm>
@@ -69,18 +68,4 @@ std::string Utils::FormatStr(const char* fmt, ...)
 	vsnprintf(buf, 512, fmt, args);
 	va_end(args);
 	return buf;
-}
-
-bool Utils::ToBool(std::string str)
-{
-    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-    std::istringstream is(str);
-    bool b;
-    is >> std::boolalpha >> b;
-    return b;
-}
-
-bool Utils::ParseBool(std::string str)
-{
-    return ToBool(str);
 }

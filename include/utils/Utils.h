@@ -14,6 +14,4 @@ namespace Utils
 	void Warn(const char* fmt, ...);
 	unsigned Hash(const std::string& data);
 	std::string FormatStr(const char* fmt, ...);
-	bool ToBool(std::string str);
-	bool ParseBool(std::string str);
 }

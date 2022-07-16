@@ -1,4 +1,6 @@
 
+#include <sstream>
+#include <ios>
 #include <algorithm>
 #include <iterator>
 #include <string>
@@ -73,5 +75,19 @@ namespace utils
 			ret.push_back(str.substr(cur, p - cur));
 		} while (p != std::string::npos);
 		return ret;
+	}
+
+	bool to_bool(std::string str)
+	{
+		std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+		std::istringstream is(str);
+		bool b;
+		is >> std::boolalpha >> b;
+		return b;
+	}
+
+	bool parse_bool(std::string str)
+	{
+		return to_bool(str);
 	}
 }
