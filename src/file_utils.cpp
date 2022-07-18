@@ -10,10 +10,25 @@ namespace fs = std::filesystem;
 
 namespace ch = std::chrono;
 
+namespace
+{
+	std::string last_error_msg;
+}
+
 namespace utils
 {
 	namespace file
 	{
+		const std::string& last_error()
+		{
+			return last_error_msg;
+		}
+
+		void set_last_error(const std::string& s)
+		{
+			last_error_msg = s;
+		}
+
 	#ifdef __cpp_lib_filesystem
 		bool same(const fs::path& f1, const fs::path& f2)
 	#else
@@ -32,6 +47,16 @@ namespace utils
 		}
 
 	#ifdef __cpp_lib_filesystem
+		int exists(const std::filesystem::path& fpath)
+		{
+			return fs::exists(fpath);
+		}
+
+		int dir_exists(const std::filesystem::path& path)
+		{
+			return fs::exists(path);
+		}
+
 		int copy_file(const fs::path& from_path, const fs::path& to_path, bool safe)
 		{
 			if (!fs::exists(from_path))
@@ -43,7 +68,20 @@ namespace utils
 
 			auto options = safe ?
 				fs::copy_options::skip_existing : fs::copy_options::overwrite_existing;
-			fs::copy_file(from_path, to_path, options);
+			try
+			{
+				fs::copy_file(from_path, to_path, options);
+			}
+			catch (fs::filesystem_error& e)
+			{
+				last_error_msg = e.what();
+				return 3;
+			}
+			catch (...)
+			{
+				last_error_msg = "";
+				return 3;
+			}
 	#else
 			int copy_file(const std::string & from_path, const std::string & to_path, bool safe)
 				std::ifstream src(from_path, std::ios::binary);
