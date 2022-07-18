@@ -15,7 +15,7 @@ namespace utils
 
 		// utils::getline
 		std::string last_getline_value;
-		bool last_getline_valid = false;
+		bool last_getline_valid = true;
 		std::string last_command;
 
 		bool getline(std::istream& is, std::string& s)
