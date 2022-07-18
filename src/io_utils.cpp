@@ -96,6 +96,11 @@ namespace utils
 			registered_commands[cmd] = {cmd, f};
 		}
 
+		void unregister_command(const std::string& cmd)
+		{
+			registered_commands.erase(cmd);
+		}
+
 		void reset_last_input()
 		{
 			last_command = "";

@@ -168,6 +168,7 @@ namespace utils
 		extern std::unordered_map<std::string, cmd_info> registered_commands;
 
 		void register_command(const std::string& cmd, const cmd_info::f_t& f = nullptr);
+		void unregister_command(const std::string& cmd);
 
 		void reset_last_input();
 
