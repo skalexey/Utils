@@ -183,6 +183,9 @@ namespace utils
 	#endif
 		std::chrono::system_clock::time_point modif_time(const fs::path& fpath)
 		{
+			if (!utils::file::exists(fpath))
+				return std::chrono::system_clock::time_point();
+
 	#ifdef __APPLE__
 			auto lwt = fs::last_write_time(fpath).time_since_epoch();
 			ch::system_clock::now();
