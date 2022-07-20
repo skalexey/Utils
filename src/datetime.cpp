@@ -72,11 +72,26 @@ namespace utils
 		return parse_datetime(str, "%a, %d %b %Y %H:%M:%S GMT");
 	}
 
-	std::string time_to_string(const std::chrono::system_clock::time_point& tp)
+	std::string time_to_string(const ch::system_clock::time_point& tp, bool ms)
 	{
 		// TODO: branch for C++20
+		using namespace std::chrono;
 		std::time_t t = std::chrono::system_clock::to_time_t(tp);
-		return std::string(std::ctime(&t));
+		std::stringstream ss;
+		ss << std::ctime(&t);
+		if (ms)
+		{
+			ss << std::ctime(&t) << " : " << std::setw(4) << std::setfill('0')
+				<< duration_cast<milliseconds>(
+					system_clock::now().time_since_epoch()
+				).count() % 1000;
+		}
+		return ss.str();
+	}
+
+	std::string time(bool ms)
+	{
+		return time_to_string(ch::system_clock::now(), ms);
 	}
 }
 
