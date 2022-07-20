@@ -13,8 +13,8 @@ namespace utils
 	{
 		const std::string& last_error();
 #ifdef __cpp_lib_filesystem
-		int exists(const std::filesystem::path& fpath);
-		int dir_exists(const std::filesystem::path& path);
+		bool exists(const std::filesystem::path& fpath);
+		bool dir_exists(const std::filesystem::path& path);
 		int copy_file(const std::filesystem::path& from_path, const std::filesystem::path& to_path, bool safe = false);
 		int move_file(const std::filesystem::path& from_path, const std::filesystem::path& to_path, bool safe = false);
 		int remove_last_line(const std::filesystem::path& fpath);
@@ -23,7 +23,7 @@ namespace utils
 		std::string contents(const std::filesystem::path& fpath);
 		bool same(const std::filesystem::path& f1, const std::filesystem::path& f2);
 #else
-		int exists(const std::string& fpath);
+		bool exists(const std::string& fpath);
 		int copy_file(const std::string& from_path, const std::string& to_path, bool safe = false);
 		int move_file(const std::string& from_path, const std::string& to_path, bool safe = false);
 		int remove_last_line(const std::string& fpath);

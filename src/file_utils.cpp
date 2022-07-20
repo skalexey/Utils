@@ -41,18 +41,18 @@ namespace utils
 				== std::hash<std::string>{}(f2_contents);
 		}
 
-		int exists(const std::string& fpath)
+		bool exists(const std::string& fpath)
 		{
 			return std::ifstream(fpath.c_str()).good();
 		}
 
 	#ifdef __cpp_lib_filesystem
-		int exists(const std::filesystem::path& fpath)
+		bool exists(const std::filesystem::path& fpath)
 		{
 			return fs::exists(fpath);
 		}
 
-		int dir_exists(const std::filesystem::path& path)
+		bool dir_exists(const std::filesystem::path& path)
 		{
 			return fs::exists(path);
 		}
