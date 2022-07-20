@@ -25,7 +25,7 @@ namespace Utils
 		std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
 		time_t tnow = std::chrono::system_clock::to_time_t(now);
 		tm *date = std::localtime(&tnow);
-		long ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+		auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		printf("%02i:%02i:%02i:%03li %s\n", date->tm_hour, date->tm_min, date->tm_sec, ms % 1000, buf);
 	}
 }
