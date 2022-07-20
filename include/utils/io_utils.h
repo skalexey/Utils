@@ -173,6 +173,8 @@ namespace utils
 		void reset_last_input();
 
 		bool ask_user(const std::string& question);
+
+		bool ask_line(std::string& to, const std::string& msg = "", const std::string& repeat_msg = "");
 	}
 }
 

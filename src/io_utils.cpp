@@ -130,6 +130,22 @@ namespace utils
 			}
 			throw std::string("Input stream failure");
         }
+
+		bool ask_line(std::string& to, const std::string& msg, const std::string& repeat_msg)
+		{
+			if (!msg.empty())
+				std::cout << msg;
+			bool tried = false;
+			do
+			{
+				if (tried)
+					std::cout << repeat_msg;
+				if (!utils::input::getline(std::cin, to))
+					return false;
+				tried = true;
+			} while (msg.empty());
+			return true;
+		}
 	}
 }
 
