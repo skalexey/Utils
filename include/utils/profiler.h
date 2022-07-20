@@ -5,7 +5,7 @@
 #include <chrono>
 #include <utils/datetime.h>
 
-#define PROFILER_ON
+//#define PROFILER_ON
 
 #ifdef PROFILER_ON
 #define PROFILE_DUR(expr) { \
