@@ -119,7 +119,7 @@ namespace utils
 
 			while (!std::cin.fail())
 			{
-				std::cin >> answer;
+				std::getline(std::cin, answer);
 				auto a = utils::str_tolower(answer);
 				if (a == "y" || a == "yes")
 					return true;
