@@ -13,6 +13,11 @@
 #endif
 #include "string_utils.h"
 
+#define A 54059 /* a prime */
+#define B 76963 /* another prime */
+#define C 86969 /* yet another prime */
+#define FIRSTH 37 /* also prime */
+
 namespace utils
 {
 	int count_substring(const std::string& where, const std::string& what)
@@ -98,5 +103,16 @@ namespace utils
 	bool parse_bool(std::string str)
 	{
 		return to_bool(str);
+	}
+
+	namespace string
+	{
+		unsigned hash(const std::string& s)
+		{
+			unsigned h = FIRSTH;
+			for (auto it = s.begin(); it != s.end(); ++it)
+				h = (h * A) ^ (*it * B);
+			return h; // or return h % C;
+		}
 	}
 }

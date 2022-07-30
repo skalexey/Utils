@@ -15,4 +15,8 @@ namespace utils
 	std::vector<std::string_view> split_of(const std::string_view& str, const std::string_view& delims);
 	bool to_bool(std::string str);
 	bool parse_bool(std::string str);
+	namespace string
+	{
+		unsigned hash(const std::string& s);
+	}
 }
