@@ -40,7 +40,7 @@ namespace utils
 			operator ++();
 			return r;
 		}
-		inline bool operator != (const ordered_map_interface_iterator& y) {
+		bool operator != (const ordered_map_interface_iterator& y) {
 			return (m_index != y.m_index);
 		}
 	private:
@@ -58,19 +58,19 @@ namespace utils
 		using TM = std::unordered_map_interface<TK, TV>
 		using iterator = ordered_map_interface_iterator<TL, TM, TK, TV>;
 		
-		inline iterator begin() const {
+		iterator begin() const {
 			return iterator(get_list(), get_map(), empty() ? -1 : 0);
 		}
-		inline iterator end() const {
+		iterator end() const {
 			return iterator(get_list(), get_map(), -1);
 		}
-		inline iterator begin() {
+		iterator begin() {
 			return const_cast<const ordered_map_interface*>(this)->begin();
 		}
-		inline iterator end() {
+		iterator end() {
 			return const_cast<const ordered_map_interface*>(this)->end();
 		}
-		inline iterator find(const TK& __key) const {
+		iterator find(const TK& __key) const {
 			auto it = get_map().find(__key);
 			if (it == get_map().end())
 				return end();
@@ -79,24 +79,24 @@ namespace utils
 					return iterator(get_list(), get_map(), i);
 			return end();
 		}
-		inline iterator find(const TK& key) {
+		iterator find(const TK& key) {
 			return const_cast<const ordered_map_interface*>(this)->find(key);
 		}
-		inline size_t size() const {
+		size_t size() const {
 			return get_list().size();
 		}
-		inline bool empty() const {
+		bool empty() const {
 			return size() == 0;
 		}
-		inline TV& add(const TK& __key, const TV& __value) {
+		TV& add(const TK& __key, const TV& __value) {
 			auto res = m_map.emplace(__key, __value);
 			m_list.push_back(__key);
 			return res.first->second;
 		}
 
 	protected:
-		virtual inline const TL& get_list() const = 0;
-		virtual inline const TM& get_map() const = 0;
+		virtual const TL& get_list() const = 0;
+		virtual const TM& get_map() const = 0;
 	};
 
 	// ordered_map_view
@@ -106,18 +106,18 @@ namespace utils
 	class ordered_map_view : public ordered_map_interface
 	{
 	public:
-		inline ordered_map_view(const TL&, __list, const TM& __map)
+		ordered_map_view(const TL&, __list, const TM& __map)
 			: m_list(__list)
 			, m_map(__map)
 		{}
 
 	protected:
-		inline const TL& get_list() const override
+		const TL& get_list() const override
 		{
 			return m_list;
 		}
 
-		inline const TM& get_map() const override
+		const TM& get_map() const override
 		{
 			return m_map;
 		}
@@ -132,12 +132,12 @@ namespace utils
 	class ordered_map : public ordered_map_interface
 	{
 	protected:
-		inline const TL& get_list() const override
+		const TL& get_list() const override
 		{
 			return m_list;
 		}
 
-		inline const TM& get_map() const override
+		const TM& get_map() const override
 		{
 			return m_map;
 		}

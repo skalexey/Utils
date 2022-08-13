@@ -20,11 +20,11 @@ namespace utils
 			: m_map(__map)
 			, m_index(__index)
 		{}
-		inline value_t operator *() {
+		value_t operator *() {
 			auto v = const_cast<const ordered_map_terator*>(this)->operator*();
 			return {const_cast<TK&>(v.first), const_cast<TV&>(v.second)};
 		}
-		inline const_value_t operator *() const {
+		const_value_t operator *() const {
 			auto it = m_map.begin() + m_index;
 			if (!it._valid())
 				throw "ordered_map_terator: Invalid iterator dereference";
@@ -32,19 +32,19 @@ namespace utils
 			auto& v = m_map.get_value(n);
 			return const_value_t(n, v);
 		}
-		inline ordered_map_terator& operator ++() {
+		ordered_map_terator& operator ++() {
 			if (m_index < m_map.size() - 1)
 				m_index++;
 			else if (m_index != -1)
 				m_index = -1;
 			return *this;
 		}
-		inline ordered_map_terator operator ++(int) {
+		ordered_map_terator operator ++(int) {
 			auto r = *this;
 			operator ++();
 			return r;
 		}
-		inline ordered_map_terator operator +(int __diff) const {
+		ordered_map_terator operator +(int __diff) const {
 			if (!_valid())
 				return m_map.end();
 			auto it = ordered_map_terator(m_map, m_index + __diff);
@@ -52,7 +52,7 @@ namespace utils
 				return it;
 			return m_map.end();
 		}
-		inline ordered_map_terator operator -(int __diff) const {
+		ordered_map_terator operator -(int __diff) const {
 			if (!_valid())
 				return m_map.end();
 			auto it = ordered_map_terator(m_map, m_index - __diff);
@@ -60,15 +60,15 @@ namespace utils
 				return it;
 			return m_map.end();
 		}
-		inline bool operator != (const ordered_map_terator& y) {
+		bool operator != (const ordered_map_terator& y) {
 			return (m_index != y.m_index);
 		}
-		inline bool operator == (const ordered_map_terator& y) {
+		bool operator == (const ordered_map_terator& y) {
 			return (m_index == y.m_index);
 		}
 		
 	protected:
-		inline bool _valid() const {
+		bool _valid() const {
 			return m_index >= 0 && m_index < m_map.size();
 		}
 		
@@ -89,58 +89,58 @@ namespace utils
 	public:
 		using iterator = ordered_map_terator<TK, TV>;
 		
-		inline iterator begin() const {
+		iterator begin() const {
 			if (empty())
 				return end();
 			return iterator(*this, 0);
 		}
-		inline iterator end() const {
+		iterator end() const {
 			return iterator(*this, -1);
 		}
-		inline iterator begin() {
+		iterator begin() {
 			return std::as_const(*this).begin();
 		}
-		inline iterator end() {
+		iterator end() {
 			return std::as_const(*this).end();
 		}
-		inline iterator find(const TK& __key) const {
+		iterator find(const TK& __key) const {
 			auto it = _get_map().find(__key);
 			if (it == _get_map().end())
 				return end();
 			return iterator(*this, it->second);
 		}
-		inline iterator find(const TK& key) {
+		iterator find(const TK& key) {
 			return const_cast<const ordered_map_interface*>(this)->find(key);
 		}
-		inline const TV& get_value(const TK& __key) const {
+		const TV& get_value(const TK& __key) const {
 			auto it = _get_map().find(__key);
 			return _get_list()[it->second];
 		}
-		inline TV& value(const TK& __key) {
+		TV& value(const TK& __key) {
 			return const_cast<TV&>(const_cast<ordered_map_interface*>(this)->get_value(__key));
 		}
-		inline const TK& get_key_at(int __index) const {
+		const TK& get_key_at(int __index) const {
 			return _get_keys()[__index];
 		}
-		inline int get_index(const TK& k) const {
+		int get_index(const TK& k) const {
 			auto it = _get_map().find(k);
 			if (it == _get_map().end())
 				return -1;
 			return it->second;
 		}
-		inline size_t size() const {
+		size_t size() const {
 			return _get_list().size();
 		}
-		inline bool empty() const {
+		bool empty() const {
 			return size() == 0;
 		}
-		inline TV& add(const TK& __key, const TV& __value) {
+		TV& add(const TK& __key, const TV& __value) {
 			auto res = _map().emplace(__key, _list().size());
 			_list().push_back(__value);
 			_keys().push_back(__key);
 			return _list().back();
 		}
-		inline TV& set(const TK& __key, const TV& __value) {
+		TV& set(const TK& __key, const TV& __value) {
 			auto index = get_index(__key);
 			if (index < 0)
 				return add(__key, __value);
@@ -151,7 +151,7 @@ namespace utils
 				return r;
 			}
 		}
-		inline bool erase(const TK& k) {
+		bool erase(const TK& k) {
 			auto it = _map().find(k);
 			if (it == _map().end())
 				return false;
@@ -164,7 +164,7 @@ namespace utils
 					i--;
 			return true;
 		}
-		inline bool erase_at(int __index) {
+		bool erase_at(int __index) {
 			if (__index < 0 || __index >= size())
 				return false;
 			erase(_get_keys(__index));
@@ -172,18 +172,18 @@ namespace utils
 
 	protected:
 		// Pure virtuals
-		virtual inline const TL& _get_list() const = 0;
-		virtual inline const TM& _get_map() const = 0;
-		virtual inline const TKI& _get_keys() const = 0;
+		virtual const TL& _get_list() const = 0;
+		virtual const TM& _get_map() const = 0;
+		virtual const TKI& _get_keys() const = 0;
 		
 		// Non-const versions
-		inline TL& _list() {
+		TL& _list() {
 			return const_cast<TL&>(_get_list());
 		}
-		inline TM& _map() {
+		TM& _map() {
 			return const_cast<TM&>(_get_map());
 		}
-		inline TKI& _keys() {
+		TKI& _keys() {
 			return const_cast<TKI&>(_get_keys());
 		}
 	};
@@ -205,17 +205,17 @@ namespace utils
 		using TKI = typename base::TKI;
 		
 	protected:
-		inline const TL& _get_list() const override
+		const TL& _get_list() const override
 		{
 			return m_list;
 		}
 
-		inline const TM& _get_map() const override
+		const TM& _get_map() const override
 		{
 			return m_map;
 		}
 		
-		inline const TKI& _get_keys() const override
+		const TKI& _get_keys() const override
 		{
 			return m_keys;
 		}
@@ -239,22 +239,22 @@ namespace utils
 		using TKI = typename TOM::TKI;
 		
 	public:
-		inline ordered_map_view(const TOM& __map)
+		ordered_map_view(const TOM& __map)
 			: m_map(__map)
 		{}
 
 	protected:
-		inline const TL& _get_list() const override
+		const TL& _get_list() const override
 		{
 			return m_map._get_list();
 		}
 
-		inline const TM& _get_map() const override
+		const TM& _get_map() const override
 		{
 			return m_map._get_map();
 		}
 		
-		inline const TKI& _get_keys() const override
+		const TKI& _get_keys() const override
 		{
 			return m_map._get_keys();
 		}

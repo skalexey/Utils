@@ -10,7 +10,7 @@ namespace interfaces
 	{
 	public:
 		virtual std::string to_string() const = 0;
-		inline operator std::string() const {
+		operator std::string() const {
 			return to_string();
 		}
 	};

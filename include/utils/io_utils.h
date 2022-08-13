@@ -156,6 +156,8 @@ namespace utils
 		struct cmd_info
 		{
 			std::string alias;
+			// If true is returned then the current input is repeaded in cycle.
+			// Otherwise - cancel the current input.
 			using f_t = std::function<bool()>;
 			f_t f;
 
