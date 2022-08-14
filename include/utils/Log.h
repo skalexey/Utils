@@ -61,6 +61,7 @@
 	
 	// Print and invoke an expression
 	#define LOG_EXPR(ex) LOG(#ex); ex
+	#define LOG_EXPR_LOG(ex, msg) logStream() << logPrefix << #ex << msg << logPostfix; ex
 	#define LOG_EXPR_VAL(ex) LOG(ex)
 	#define LOG_EXPR_AND_VAL(ex) LOG(#ex << ": " << ex)
 #else
@@ -83,6 +84,7 @@
 	#define LOG_INFO(msg)
 	#define LOG_VERBOSE(msg)
 	#define LOG_EXPR(ex)
+	#define LOG_EXPR_LOG(ex)
 	#define LOG_EXPR_VAL(ex)
 	#define LOG_EXPR_AND_VAL(ex)
 #endif
