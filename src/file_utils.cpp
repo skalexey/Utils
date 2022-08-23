@@ -1,6 +1,7 @@
 #include <type_traits>
 #include <fstream>
 #include <string>
+#include <chrono>
 #ifdef __cpp_lib_filesystem
 namespace fs = std::filesystem;
 #else

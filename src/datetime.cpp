@@ -12,6 +12,7 @@
 #include <sstream>
 #include <string>
 #include <stdio.h>
+#include <iomanip>
 #include "datetime.h"
 
 namespace ch = std::chrono;
