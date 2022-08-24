@@ -28,6 +28,12 @@ namespace math
 		RT operator * (const RT& r) const { return RT(rt_const_this) *= r; }
 		RT operator / (const RT& r) const { return RT(rt_const_this) /= r; }
 		RT normalized() const { return RT(rt_const_this).normalize(); }
+		RT proj(const T& vr) const {
+			auto sqlen_vr = vr.sqlength();
+			if (sqlen_vr == 0.f)
+				return vr;
+			return vr * RT(rt_const_this).dot(vr) / sqlen_vr;
+		}
 		template <typename R>
 		RT operator * (const R& r) const { return RT(rt_const_this) *= T(r); }
 		template <typename R>
