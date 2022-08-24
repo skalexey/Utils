@@ -9,7 +9,7 @@ namespace utils
 	namespace data 
 	{
 		std::string free_id(const std::string& desired, const id_check_t& pred) {
-			auto new_id = desired.empty() ? "new_prop" : desired;
+			auto new_id = desired.empty() ? "unnamed" : desired;
 			bool success = true;
 			if (pred(new_id))
 			{
