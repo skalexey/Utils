@@ -6,69 +6,71 @@ namespace math
 {
 	#define FOREACH_COMPONENT for (int i = 0; i < m_data.size(); i++)
 	#define ACCUMULATE(ex) auto sum = T(); FOREACH_COMPONENT sum += (ex);
+	#define rt_this static_cast<RT&>(*this)	
+	#define rt_const_this static_cast<const RT&>(*this)
 
-	template <typename T, const int S>
+	template <typename T, const int S, typename RT>
 	class vector
 	{
 	protected:
 		using data_t = std::array<T, S>;
-		using vector_t = vector<T, S>;
+		using vector_t = vector<T, S, RT>;
 
 	public:
 		// Constructors and assignment operators
 		vector() : m_data({}) {}
 		vector(const data_t& data) : m_data(data) {}
-
+		RT& operator = (const RT& r) { m_data = r.m_data; return rt_this; }
 		// Value returning operations
-		vector_t operator + (const vector_t& r) const { return vector_t(*this) += r; }
-		vector_t operator - (const vector_t& r) const { return vector_t(*this) -= r; };
-		vector_t operator - () const { return vector_t(*this) *= T(-1); }
-		vector_t operator * (const vector_t& r) const { return vector_t(*this) *= r; }
-		vector_t operator / (const vector_t& r) const { return vector_t(*this) /= r; }
-		vector_t normalized() const { return vector_t(*this).normalize(); }
+		RT operator + (const RT& r) const { return RT(rt_const_this) += r; }
+		RT operator - (const RT& r) const { return RT(rt_const_this) -= r; };
+		RT operator - () const { return RT(rt_const_this) *= T(-1); }
+		RT operator * (const RT& r) const { return RT(rt_const_this) *= r; }
+		RT operator / (const RT& r) const { return RT(rt_const_this) /= r; }
+		RT normalized() const { return RT(rt_const_this).normalize(); }
 		template <typename R>
-		vector_t operator * (const R& r) const { return vector_t(*this) *= T(r); }
+		RT operator * (const R& r) const { return RT(rt_const_this) *= T(r); }
 		template <typename R>
-		vector_t operator / (const R& r) const { return vector_t(*this) /= T(r); }
+		RT operator / (const R& r) const { return RT(rt_const_this) /= T(r); }
 
 		// Reference returning operations
-		vector_t& operator += (const vector_t& r) {
+		RT& operator += (const RT& r) {
 			FOREACH_COMPONENT
 				data(i) += r.data(i);
-			return *this;
+			return rt_this;
 		}
-		vector_t& operator -= (const vector_t& r) {
+		RT& operator -= (const RT& r) {
 			FOREACH_COMPONENT
 				data(i) -= r.data(i);
-			return *this;
+			return rt_this;
 		}
 		template <class R>
-		vector_t& operator *= (const R& s) {
+		RT& operator *= (const R& s) {
 			FOREACH_COMPONENT
 				data(i) *= s;
-			return (*this);
+			return rt_this;
 		}
 		template <class R>
-		vector_t& operator /= (const R& s) {
+		RT& operator /= (const R& s) {
 			FOREACH_COMPONENT
 				data(i) /= s;
-			return (*this);
+			return rt_this;
 		}
-		vector_t& operator *= (const vector_t& r) const {
+		RT& operator *= (const RT& r) const {
 			FOREACH_COMPONENT
 				data(i) *= r.data(i);
-			return *this;
+			return rt_this;
 		}
-		vector_t& operator /= (const vector_t& r) const {
+		RT& operator /= (const RT& r) const {
 			FOREACH_COMPONENT
 				data(i) /= r.data(i);
-			return *this;
+			return rt_this;
 		}
-		vector_t& normalize() { return operator/=(length()); }
-		vector_t& normalizeTo(T len) { return normalize(); *this *= len; }
+		RT& normalize() { return operator/=(length()); }
+		RT& normalizeTo(T len) { return normalize(); *this *= len; }
 
 		// Bool operators
-		bool operator == (const vector_t& r) const {
+		bool operator == (const RT& r) const {
 			FOREACH_COMPONENT
 				if (data(i) != r.data(i))
 					return false;
@@ -91,15 +93,5 @@ namespace math
 	protected:
 		data_t m_data;
 	};
-
-	// Base macros
-	#define OVERLOAD_OP(T, Base, op) T& op(const T& r) { Base::op(r); return *this; }
-	#define OVERLOAD_OP_CUSTOM(T, Base, op) \
-	template <typename C> \
-	T& op(const C& r) { Base::op(r); return *this; }
-	
-	// Derived classes macros
-	#define VEC_OVERLOAD_REF(op) OVERLOAD_OP(type, base, op)
-	#define VEC_OVERLOAD_REF_CUSTOM(op) OVERLOAD_OP_CUSTOM(type, base, op)
 }
 

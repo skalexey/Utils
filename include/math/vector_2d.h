@@ -3,11 +3,12 @@
 
 namespace math
 {
+	// Use CRTP pattern
 	template <typename T>
-	struct vector_2d : public vector<T, 2>
+	struct vector_2d : public vector<T, 2, vector_2d<T>>
 	{
-		using base = vector<T, 2>;
 		using type = vector_2d<T>;
+		using base = vector<T, 2, type>;
 
 		vector_2d()
 			: base()
@@ -30,25 +31,7 @@ namespace math
 		T& x;
 		T& y;
 		
-		// Mirrorred operators
-		VEC_OVERLOAD_REF(operator=)
-		VEC_OVERLOAD_REF(operator+=)
-		VEC_OVERLOAD_REF(operator-=)
-		VEC_OVERLOAD_REF(operator*=)
-		VEC_OVERLOAD_REF(operator/=)
-		VEC_OVERLOAD_REF_CUSTOM(operator*=)
-		VEC_OVERLOAD_REF_CUSTOM(operator/=)
-
-		type operator + (const type& r) const { return type(*this) += r; }
-		type operator - (const type& r) const { return type(*this) -= r; };
-		type operator - () const { return type(*this) *= T(-1); }
-		type operator * (const type& r) const { return type(*this) *= r; }
-		type operator / (const type& r) const { return type(*this) /= r; }
-		type normalized() const { return type(*this).normalize(); }
-		template <typename R>
-		type operator * (const R& r) const { return type(*this) *= T(r); }
-		template <typename R>
-		type operator / (const R& r) const { return type(*this) /= T(r); }
+		vector_2d& operator=(const vector_2d& r) { return base::operator=(r); }
 	};
 
 	using vector2 = vector_2d<float>;
