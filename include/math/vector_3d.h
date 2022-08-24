@@ -16,7 +16,7 @@ namespace math
 			, y(base::data(1))
 			, z(base::data(2))
 		{}
-		vector_3d(const vector_2d& r)
+		vector_3d(const vector_3d& r)
 			: base(r)
 			, x(base::data(0))
 			, y(base::data(1))
