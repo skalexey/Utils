@@ -28,7 +28,7 @@ namespace math
 		RT operator * (const RT& r) const { return RT(rt_const_this) *= r; }
 		RT operator / (const RT& r) const { return RT(rt_const_this) /= r; }
 		RT normalized() const { return RT(rt_const_this).normalize(); }
-		RT proj(const T& vr) const {
+		RT proj(const RT& vr) const {
 			auto sqlen_vr = vr.sqlength();
 			if (sqlen_vr == 0.f)
 				return vr;
