@@ -33,7 +33,7 @@ namespace utils
 
 	ch::system_clock::time_point parse_datetime(const std::string& str, const std::string& fmt)
 	{
-#if  __cplusplus >= 202002L && !defined(__APPLE__) // Use C++20 syntax
+#if  __cplusplus >= 202002L && !defined(__APPLE__) && !defined(__GNUC__) // Use C++20 syntax
 		ch::system_clock::time_point tp;
 		std::stringstream ss(str);
 		ss >> ch::parse(fmt, tp);

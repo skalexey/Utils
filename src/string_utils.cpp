@@ -59,10 +59,11 @@ namespace utils
 	)
 	{
 		std::vector<std::string_view> ret;
-#if defined(__cpp_lib_ranges)
-		auto v = std::views::split(str, delim);
-		std::copy(v.begin(), v.end(), std::back_inserter(ret));
-#else
+// TODO: support ranges version
+//#if defined(__cpp_lib_ranges)
+//		auto v = std::views::split(str, delim);
+//		std::copy(v.begin(), v.end(), std::back_inserter(ret));
+//#else
 		std::size_t p = std::string::npos, cur = std::string::npos;
 		do
 		{
@@ -70,7 +71,7 @@ namespace utils
 			p = str.find(delim, p);
 			ret.push_back(str.substr(cur, p - cur));
 		} while (p != std::string::npos);
-#endif
+//#endif
 		return ret;
 	}
 
