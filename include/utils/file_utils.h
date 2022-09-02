@@ -3,16 +3,14 @@
 #include <chrono>
 #include <fstream>
 #include <functional>
-#ifdef __cpp_lib_filesystem
-#include <filesystem>
-#endif
+#include "filesystem.h"
 
 namespace utils
 {
 	namespace file
 	{
 		const std::string& last_error();
-#ifdef __cpp_lib_filesystem
+#ifdef FILESYSTEM_SUPPORTED
 		bool exists(const std::filesystem::path& fpath);
 		bool dir_exists(const std::filesystem::path& path);
 		int copy_file(const std::filesystem::path& from_path, const std::filesystem::path& to_path, bool safe = false);

@@ -2,9 +2,7 @@
 #include <fstream>
 #include <string>
 #include <chrono>
-#ifdef __cpp_lib_filesystem
-namespace fs = std::filesystem;
-#else
+#ifndef FILESYSTEM_SUPPORTED
 #include <cstdio>
 #endif
 #include "file_utils.h"
@@ -30,7 +28,7 @@ namespace utils
 			last_error_msg = s;
 		}
 
-	#ifdef __cpp_lib_filesystem
+	#ifdef FILESYSTEM_SUPPORTED
 		bool same(const fs::path& f1, const fs::path& f2)
 	#else
 		bool same(const std::string& f1, const std::string& f2)
@@ -47,7 +45,7 @@ namespace utils
 			return std::ifstream(fpath.c_str()).good();
 		}
 
-	#ifdef __cpp_lib_filesystem
+	#ifdef FILESYSTEM_SUPPORTED
 		bool exists(const std::filesystem::path& fpath)
 		{
 			return fs::exists(fpath);
@@ -84,8 +82,9 @@ namespace utils
 				return 3;
 			}
 	#else
-			int copy_file(const std::string & from_path, const std::string & to_path, bool safe)
-				std::ifstream src(from_path, std::ios::binary);
+		int copy_file(const std::string & from_path, const std::string & to_path, bool safe)
+        {
+			std::ifstream src(from_path, std::ios::binary);
 
 			// Check if the copied file exists
 			if (!src.is_open())
@@ -111,7 +110,7 @@ namespace utils
 			return 0;
 		}
 
-	#ifdef __cpp_lib_filesystem
+	#ifdef FILESYSTEM_SUPPORTED
 		bool remove_file(const fs::path& fpath)
 		{
 			return fs::remove(fpath);
@@ -119,12 +118,14 @@ namespace utils
 	#else
 		bool remove_file(const std::string& fpath)
 		{
-			return std::remove(from_path.c_str()) == 0;
+			return std::remove(fpath.c_str()) == 0;
 		}
 	#endif
-
-
-	#ifdef __cpp_lib_filesystem
+        bool remove_file(const std::string& fpath, bool b)
+		{
+			return std::remove(fpath.c_str()) == 0;
+		}
+	#ifdef FILESYSTEM_SUPPORTED
 		int move_file(const fs::path& from_path, const fs::path& to_path, bool safe)
 	#else
 		int move_file(const std::string& from_path, const std::string& to_path, bool safe)
@@ -135,7 +136,7 @@ namespace utils
 				remove_file(from_path);
 			return ret;
 		}
-	#ifdef __cpp_lib_filesystem
+	#ifdef FILESYSTEM_SUPPORTED
 		int remove_last_line(const fs::path& fpath)
 	#else
 		int remove_last_line(const std::string& fpath)
@@ -175,8 +176,8 @@ namespace utils
 			return std::string((std::istreambuf_iterator<char>(f)),
 				(std::istreambuf_iterator<char>()));
 		}
-	#ifdef __cpp_lib_filesystem
-	#ifdef __APPLE__
+	#ifdef FILESYSTEM_SUPPORTED
+	#if defined(__APPLE__) || defined(__GNUC__)
 		inline constexpr long long __std_fs_file_time_epoch_adjustment = 0x19DB1DED53E8000LL; // TRANSITION, ABI
 		constexpr ch::seconds _Skipped_filetime_leap_seconds{ 27 };
 		constexpr ch::sys_days _Cutoff{
@@ -187,7 +188,7 @@ namespace utils
 			if (!utils::file::exists(fpath))
 				return std::chrono::system_clock::time_point();
 
-	#ifdef __APPLE__
+	#if defined(__APPLE__) || defined(__GNUC__)
 			auto lwt = fs::last_write_time(fpath).time_since_epoch();
 			ch::system_clock::now();
 			const auto ticks = lwt - ch::duration_cast<ch::seconds>(ch::file_clock::duration{ __std_fs_file_time_epoch_adjustment });
