@@ -1,5 +1,3 @@
-#pragma once
-
 #include <limits>
 #include "data_helper.h"
 #include "string_utils.h"

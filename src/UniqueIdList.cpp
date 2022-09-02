@@ -1,11 +1,10 @@
+#include <limits>
 #include <assert.h>
 #include "UniqueIdList.h"
 #include "string_utils.h"
 
 namespace dmb
 {
-
-
 	const std::string* UniqueIdList::at(int index) const
 	{
 		if (index < 0 || index >= mIdList.size())
