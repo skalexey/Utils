@@ -15,6 +15,8 @@ else()
 	set(CMAKE_CXX_STANDARD 20)
 endif()
 
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 option(INHERIT_PARENT_SRC "Adds all parent's source files" OFF)
 
 ## Set and add includes
