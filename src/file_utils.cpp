@@ -179,9 +179,6 @@ namespace utils
 	#ifdef FILESYSTEM_SUPPORTED
 	#if defined(__APPLE__) || defined(__GNUC__)
 		inline constexpr long long __std_fs_file_time_epoch_adjustment = 0x19DB1DED53E8000LL; // TRANSITION, ABI
-		constexpr ch::seconds _Skipped_filetime_leap_seconds{ 27 };
-		constexpr ch::sys_days _Cutoff{
-					ch::year_month_day{ch::year{2017}, ch::January, ch::day{1}} };
 	#endif
 		std::chrono::system_clock::time_point modif_time(const fs::path& fpath)
 		{
@@ -189,12 +186,10 @@ namespace utils
 				return std::chrono::system_clock::time_point();
 
 	#if defined(__APPLE__) || defined(__GNUC__)
-			auto lwt = fs::last_write_time(fpath).time_since_epoch();
-			ch::system_clock::now();
-			const auto ticks = lwt - ch::duration_cast<ch::seconds>(ch::file_clock::duration{ __std_fs_file_time_epoch_adjustment });
-			auto tt = ticks + ch::file_clock::duration(__std_fs_file_time_epoch_adjustment);
-			using _CommonType = std::common_type_t<ch::file_clock::duration, ch::seconds>;
-			auto sd = ch::duration_cast<ch::system_clock::duration>(tt);
+			auto tp = fs::last_write_time(fpath);
+			auto sctp = ch::time_point_cast<ch::system_clock::duration>(tp - ch::file_clock::now() + ch::system_clock::now());
+			auto lwt = sctp.time_since_epoch();
+			auto sd = ch::duration_cast<ch::system_clock::duration>(lwt);
 			return std::chrono::system_clock::time_point(sd);
 
 	#else
