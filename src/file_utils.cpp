@@ -177,9 +177,6 @@ namespace utils
 				(std::istreambuf_iterator<char>()));
 		}
 	#ifdef FILESYSTEM_SUPPORTED
-	#if defined(__APPLE__) || defined(__GNUC__)
-		inline constexpr long long __std_fs_file_time_epoch_adjustment = 0x19DB1DED53E8000LL; // TRANSITION, ABI
-	#endif
 		std::chrono::system_clock::time_point modif_time(const fs::path& fpath)
 		{
 			if (!utils::file::exists(fpath))
@@ -188,8 +185,7 @@ namespace utils
 	#if defined(__APPLE__) || defined(__GNUC__)
 			auto tp = fs::last_write_time(fpath);
 			auto sctp = ch::time_point_cast<ch::system_clock::duration>(tp - ch::file_clock::now() + ch::system_clock::now());
-			auto lwt = sctp.time_since_epoch();
-			auto sd = ch::duration_cast<ch::system_clock::duration>(lwt);
+			auto sd = ch::duration_cast<ch::system_clock::duration>(sctp.time_since_epoch());
 			return std::chrono::system_clock::time_point(sd);
 
 	#else
