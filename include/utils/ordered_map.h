@@ -10,61 +10,64 @@ namespace utils
 	class ordered_map_interface;
 
 	template <typename TK, typename TV>
-	class ordered_map_terator
+	class ordered_map_iterator
 	{
 	public:
 		using TM = ordered_map_interface<TK, TV>;
 		using value_t = std::pair<TK&, TV&>;
 		using const_value_t = std::pair<const TK&, const TV&>;
-		ordered_map_terator(const TM& __map, int __index)
+		ordered_map_iterator(const TM& __map, int __index)
 			: m_map(__map)
 			, m_index(__index)
 		{}
 		value_t operator *() {
-			auto v = const_cast<const ordered_map_terator*>(this)->operator*();
+			auto v = const_cast<const ordered_map_iterator*>(this)->operator*();
 			return {const_cast<TK&>(v.first), const_cast<TV&>(v.second)};
 		}
 		const_value_t operator *() const {
 			auto it = m_map.begin() + m_index;
 			if (!it._valid())
-				throw "ordered_map_terator: Invalid iterator dereference";
+				throw "ordered_map_iterator: Invalid iterator dereference";
 			auto& n = m_map.get_key_at(it.m_index);
 			auto& v = m_map.get_value(n);
 			return const_value_t(n, v);
 		}
-		ordered_map_terator& operator ++() {
+		ordered_map_iterator& operator ++() {
 			if (m_index < m_map.size() - 1)
 				m_index++;
 			else if (m_index != -1)
 				m_index = -1;
 			return *this;
 		}
-		ordered_map_terator operator ++(int) {
+		ordered_map_iterator operator ++(int) {
 			auto r = *this;
 			operator ++();
 			return r;
 		}
-		ordered_map_terator operator +(int __diff) const {
+		ordered_map_iterator operator +(int __diff) const {
 			if (!_valid())
 				return m_map.end();
-			auto it = ordered_map_terator(m_map, m_index + __diff);
+			auto it = ordered_map_iterator(m_map, m_index + __diff);
 			if (it._valid())
 				return it;
 			return m_map.end();
 		}
-		ordered_map_terator operator -(int __diff) const {
+		ordered_map_iterator operator -(int __diff) const {
 			if (!_valid())
 				return m_map.end();
-			auto it = ordered_map_terator(m_map, m_index - __diff);
+			auto it = ordered_map_iterator(m_map, m_index - __diff);
 			if (it._valid())
 				return it;
 			return m_map.end();
 		}
-		bool operator != (const ordered_map_terator& y) {
+		bool operator != (const ordered_map_iterator& y) {
 			return (m_index != y.m_index);
 		}
-		bool operator == (const ordered_map_terator& y) {
+		bool operator == (const ordered_map_iterator& y) {
 			return (m_index == y.m_index);
+		}
+		operator bool() const {
+			return *this != m_map.end();
 		}
 		
 	protected:
@@ -87,7 +90,7 @@ namespace utils
 		using TKI = std::vector<TK>;
 		
 	public:
-		using iterator = ordered_map_terator<TK, TV>;
+		using iterator = ordered_map_iterator<TK, TV>;
 		
 		iterator begin() const {
 			if (empty())
