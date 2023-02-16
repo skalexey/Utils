@@ -1,5 +1,5 @@
 ﻿// data_receiver.h
 
 #pragma once
-
-void data_receiver();
+#include <utils/data_receiver_memory.h>
+#include <utils/data_receiver_file.h>
