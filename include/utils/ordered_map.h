@@ -137,6 +137,11 @@ namespace utils
 		bool empty() const {
 			return size() == 0;
 		}
+		void clear() {
+			_list().clear();
+			_map().clear();
+			_keys().clear();
+		}
 		TV& add(const TK& __key, const TV& __value) {
 			auto res = _map().emplace(__key, _list().size());
 			_list().push_back(__value);
