@@ -170,12 +170,6 @@ namespace utils
 			return 0;
 		}
 
-		inline std::string file_contents_impl(const std::string& fpath)
-		{
-			std::ifstream f(fpath);
-			return std::string((std::istreambuf_iterator<char>(f)),
-				(std::istreambuf_iterator<char>()));
-		}
 	#ifdef FILESYSTEM_SUPPORTED
 		std::chrono::system_clock::time_point modif_time(const fs::path& fpath)
 		{
@@ -193,19 +187,10 @@ namespace utils
 	#endif
 		}
 
-		std::string contents(const fs::path& fpath)
-		{
-			return file_contents_impl(fpath.string());
-		}
 	#else
 		std::chrono::system_clock::time_point modif_time(const std::string& fpath)
 		{
 			throw("modif_time not supported without <filesystem>");
-		}
-
-		std::string contents(const std::string& fpath)
-		{
-			return file_contents_impl(fpath);
 		}
 	#endif
 	}

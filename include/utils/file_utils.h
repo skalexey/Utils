@@ -5,6 +5,17 @@
 #include <functional>
 #include "filesystem.h"
 
+namespace
+{
+	template <typename Container_t>
+	inline Container_t file_contents_impl(const std::string& fpath)
+	{
+		std::ifstream f(fpath);
+		return Container_t((std::istreambuf_iterator<char>(f)),
+			(std::istreambuf_iterator<char>()));
+	}
+}
+
 namespace utils
 {
 	namespace file
@@ -18,7 +29,10 @@ namespace utils
 		int remove_last_line(const std::filesystem::path& fpath);
 		bool remove_file(const std::filesystem::path& fpath);
 		std::chrono::system_clock::time_point modif_time(const std::filesystem::path& fpath);
-		std::string contents(const std::filesystem::path& fpath);
+		template <typename T = std::string>
+		T contents(const std::filesystem::path& fpath) {
+			return file_contents_impl<T>(fpath.string());
+		}
 		bool same(const std::filesystem::path& f1, const std::filesystem::path& f2);
 #else
 		bool exists(const std::string& fpath);
@@ -27,7 +41,10 @@ namespace utils
 		int remove_last_line(const std::string& fpath);
 		bool remove_file(const std::string& fpath);
 		std::chrono::system_clock::time_point modif_time(const std::string& fpath);
-		std::string contents(const std::string& fpath);
+		template <typename T = std::string>
+		T contents(const std::string& fpath) {
+			return file_contents_impl<T>(fpath);
+		}
 		bool same(const std::string& f1, const std::string& f2);
 #endif
 
