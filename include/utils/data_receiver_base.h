@@ -16,6 +16,7 @@ namespace utils
 			virtual bool receive(const Data_element_t* data, const std::size_t& size) = 0;
 			virtual const Data_element_t* data() const = 0;
 			virtual size_t size() const = 0;
+			virtual bool full() const = 0;
 		};
 	}
 }
