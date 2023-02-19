@@ -13,7 +13,7 @@ namespace utils
 			const endpoint_t& ep
 			, const query_t& query
 			, const fs::path& target_path
-			, const http_client::http_response_cb& on_response
+			, const http_response_cb& on_response
 		)
 		{
 			query_auth q(query, m_user_name, m_token);
