@@ -18,7 +18,7 @@ namespace utils
 	{
 		using resources_list = std::vector<std::pair<std::string, fs::path>>;
 
-		int sync_resources(anp::endpoint_t& ep, const std::string& url_path, const resources_list& resources)
+		int sync_resources(anp::endpoint_t& ep, const std::string& url_path, const resources_list& resources, const anp::void_cb& on_complete = {}, const anp::void_int_arg_cb& on_error = {})
 		{
 			using namespace anp;
 			using namespace utils::networking;
@@ -74,10 +74,16 @@ namespace utils
 			{
 				auto& r = resources[i];
 				if (!download(r.first, r.second))
+				{
+					if (on_error)
+						on_error(d.errcode());
+					MSG("");
 					return i + 1;
+				}
 				MSG("");
 			}
-			
+			if (on_complete)
+				on_complete();
 			return 0;
 		}
 	}
