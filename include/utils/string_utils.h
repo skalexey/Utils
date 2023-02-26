@@ -13,6 +13,7 @@ namespace utils
 	std::string format_str(const char* fmt, ...);
 	std::vector<std::string_view> split(const std::string_view& str, const std::string_view& delim);
 	std::vector<std::string_view> split_of(const std::string_view& str, const std::string_view& delims);
+	std::vector<std::string_view> split_repeated_delimeter(const std::string& str, const char delim);
 	bool to_bool(std::string str);
 	bool parse_bool(std::string str);
 	namespace string
