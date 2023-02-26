@@ -107,7 +107,7 @@ namespace utils
 			return fs::exists(path);
 		}
 
-		int copy_file(const fs::path& from_path, const fs::path& to_path, bool safe)
+		int copy(const fs::path& from_path, const fs::path& to_path, bool safe)
 		{
 			if (!fs::exists(from_path))
 				return 1;
@@ -120,7 +120,7 @@ namespace utils
 				fs::copy_options::skip_existing : fs::copy_options::overwrite_existing;
 			try
 			{
-				fs::copy_file(from_path, to_path, options);
+				fs::copy(from_path, to_path, options);
 			}
 			catch (fs::filesystem_error& e)
 			{
@@ -138,7 +138,7 @@ namespace utils
 			return lines_impl(path);
 		}
 
-		int copy_file(const std::string & from_path, const std::string & to_path, bool safe)
+		int copy(const std::string & from_path, const std::string & to_path, bool safe)
         {
 			std::ifstream src(from_path, std::ios::binary);
 
@@ -167,29 +167,29 @@ namespace utils
 		}
 
 	#ifdef FILESYSTEM_SUPPORTED
-		bool remove_file(const fs::path& fpath)
+		bool remove(const fs::path& fpath)
 		{
 			return fs::remove(fpath);
 		}
 	#else
-		bool remove_file(const std::string& fpath)
+		bool remove(const std::string& fpath)
 		{
 			return std::remove(fpath.c_str()) == 0;
 		}
 	#endif
-        bool remove_file(const std::string& fpath, bool b)
+        bool remove(const std::string& fpath, bool b)
 		{
 			return std::remove(fpath.c_str()) == 0;
 		}
 	#ifdef FILESYSTEM_SUPPORTED
-		int move_file(const fs::path& from_path, const fs::path& to_path, bool safe)
+		int move(const fs::path& from_path, const fs::path& to_path, bool safe)
 	#else
-		int move_file(const std::string& from_path, const std::string& to_path, bool safe)
+		int move(const std::string& from_path, const std::string& to_path, bool safe)
 	#endif
 		{
-			auto ret = copy_file(from_path, to_path, safe);
+			auto ret = copy(from_path, to_path, safe);
 			if (ret == 0)
-				remove_file(from_path);
+				utils::file::remove(from_path);
 			return ret;
 		}
 	#ifdef FILESYSTEM_SUPPORTED

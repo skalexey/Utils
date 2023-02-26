@@ -140,7 +140,7 @@ namespace utils
 		{
 			assert(!m_target.empty());
 			fs::path bac = m_target.parent_path() / fs::path(m_target.filename().string() + ".bac");
-			if (utils::file::copy_file(m_target, bac) == 0)
+			if (utils::file::copy(m_target, bac) == 0)
 			{
 				LOG_VERBOSE("Backup of the local file created in '" << bac << "'");
 				m_backup = bac;
@@ -152,7 +152,7 @@ namespace utils
 
 		bool downloader_with_version_control::replace_with_download()
 		{
-			if (utils::file::move_file(get_file_path(), m_target) == 0)
+			if (utils::file::move(get_file_path(), m_target) == 0)
 			{
 				m_is_file_updated = true;
 				LOG_VERBOSE("Download file successfully stored into the local file's path '" << m_target << "'");
@@ -182,14 +182,14 @@ namespace utils
 		{
 			if (!m_backup.empty())
 				if (!m_target.empty())
-					return utils::file::move_file(m_backup, m_target) == 0;
+					return utils::file::move(m_backup, m_target) == 0;
 			return false;
 		}
 
 		bool downloader_with_version_control::remove_backup()
 		{
 			if (!m_backup.empty())
-				return utils::file::remove_file(m_backup);
+				return utils::file::remove(m_backup);
 			return false;
 		}
 	}

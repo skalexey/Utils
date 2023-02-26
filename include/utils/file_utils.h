@@ -25,10 +25,10 @@ namespace utils
 #ifdef FILESYSTEM_SUPPORTED
 		bool exists(const std::filesystem::path& fpath);
 		bool dir_exists(const std::filesystem::path& path);
-		int copy_file(const std::filesystem::path& from_path, const std::filesystem::path& to_path, bool safe = false);
-		int move_file(const std::filesystem::path& from_path, const std::filesystem::path& to_path, bool safe = false);
+		int copy(const std::filesystem::path& from_path, const std::filesystem::path& to_path, bool safe = false);
+		int move(const std::filesystem::path& from_path, const std::filesystem::path& to_path, bool safe = false);
 		int remove_last_line(const std::filesystem::path& fpath);
-		bool remove_file(const std::filesystem::path& fpath);
+		bool remove(const std::filesystem::path& fpath);
 		std::chrono::system_clock::time_point modif_time(const std::filesystem::path& fpath);
 		template <typename T = std::string>
 		T contents(const std::filesystem::path& fpath) {
@@ -38,10 +38,10 @@ namespace utils
 		bool same(const std::filesystem::path& f1, const std::filesystem::path& f2);
 #else
 		bool exists(const std::string& fpath);
-		int copy_file(const std::string& from_path, const std::string& to_path, bool safe = false);
-		int move_file(const std::string& from_path, const std::string& to_path, bool safe = false);
+		int copy(const std::string& from_path, const std::string& to_path, bool safe = false);
+		int move(const std::string& from_path, const std::string& to_path, bool safe = false);
 		int remove_last_line(const std::string& fpath);
-		bool remove_file(const std::string& fpath);
+		bool remove(const std::string& fpath);
 		std::chrono::system_clock::time_point modif_time(const std::string& fpath);
 		template <typename T = std::string>
 		T contents(const std::string& fpath) {
