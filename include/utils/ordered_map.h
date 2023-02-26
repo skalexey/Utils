@@ -122,6 +122,14 @@ namespace utils
 		TV& value(const TK& __key) {
 			return const_cast<TV&>(const_cast<ordered_map_interface*>(this)->get_value(__key));
 		}
+		TV& at(int __index) {
+			auto& k = get_key_at(__index);
+			return value(k);
+		}
+		const TV& get_at(int __index) {
+			auto& k = get_key_at(__index);
+			return get_value(k);
+		}
 		const TK& get_key_at(int __index) const {
 			return _get_keys()[__index];
 		}
@@ -176,6 +184,10 @@ namespace utils
 			if (__index < 0 || __index >= size())
 				return false;
 			erase(_get_keys(__index));
+		}
+		void reserve(size_t __size) {
+			_list().reserve(__size);
+			_keys().reserve(__size);
 		}
 
 	protected:
