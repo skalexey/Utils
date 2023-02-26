@@ -15,11 +15,11 @@ bool get_identity(std::string* name = nullptr, std::string* pass = nullptr);
 std::string h(const std::string& s);
 bool ask_pass(std::string& s);
 bool ask_name(std::string& s);
-bool auth();
+int auth();
 const std::string& get_user_token();
 const std::string& get_user_name();
 vl::Object* get_identity_cfg_data();
-extern bool request_auth(const std::string& user_name, const std::string& token);
+extern int request_auth(const std::string& user_name, const std::string& token);
 
 // Function definitions
 const std::string& get_user_name()
@@ -51,7 +51,7 @@ vl::Object* get_identity_cfg_data()
 	return &identity_model_ptr->GetContent().GetData();
 }
 
-bool auth()
+int auth()
 {
 	vl::Object& data = identity_model_ptr->GetContent().GetData();
 	std::string user_name, token;
