@@ -106,6 +106,12 @@ namespace utils
 		iterator end() {
 			return std::as_const(*this).end();
 		}
+		const TL& get_list() const {
+			return _get_list();
+		}
+		const TKI& get_keys() const {
+			return _get_keys();
+		}
 		iterator find(const TK& __key) const {
 			auto it = _get_map().find(__key);
 			if (it == _get_map().end())
@@ -166,6 +172,16 @@ namespace utils
 				r = __value;
 				return r;
 			}
+		}
+		bool rename(const TK& __old_key, const TK& __new_key) {
+			auto it = _map().find(__old_key);
+			if (it == _map().end())
+				return false;
+			auto i = it->second;
+			_map().erase(it);
+			_map().emplace(__new_key, i);
+			_keys()[i] = __new_key;
+			return true;
 		}
 		bool erase(const TK& k) {
 			auto it = _map().find(k);
