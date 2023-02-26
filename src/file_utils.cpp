@@ -68,7 +68,7 @@ namespace utils
 			vector<string> o;
 			o.reserve(reserve_size);
 			fstream f;
-			f.open(path.c_str(), ios::in);
+			f.open(path.c_str(), ios::in | ios::binary);
 			if (f.is_open())
 			{
 				auto it = o.begin();
