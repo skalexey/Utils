@@ -18,7 +18,14 @@ namespace utils
 	{
 		using resources_list = std::vector<std::pair<std::string, fs::path>>;
 
-		int sync_resources(anp::endpoint_t& ep, const std::string& url_path, const resources_list& resources, const anp::void_cb& on_complete = {}, const anp::void_int_arg_cb& on_error = {})
+		int sync_resources(
+			anp::endpoint_t& ep
+			, const std::string& url_path_download
+			, const std::string& url_path_upload
+			, const resources_list& resources
+			, const anp::void_cb& on_complete = {}
+			, const anp::void_int_arg_cb& on_error = {}
+		)
 		{
 			using namespace anp;
 			using namespace utils::networking;
@@ -28,7 +35,7 @@ namespace utils
 			auto download = [&](const std::string& remote_path, const fs::path& local_path) -> bool {
 				MSG("Download remote version of resource '" << local_path.filename() << "'...");
 				query_t q;
-				q.path = url_path;
+				q.path = url_path_download;
 				q.values.add("p", remote_path);
 				if (d.download_file(ep, q, local_path, nullptr ) != http_client::erc::no_error)
 				{
@@ -41,7 +48,7 @@ namespace utils
 							if (utils::input::ask_user(
 								ss.str()))
 							{
-								if (!upload_file(local_path, ep))
+								if (!upload_file(local_path, ep, url_path_upload))
 									return false;
 							}
 							else
