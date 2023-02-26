@@ -1,87 +1,57 @@
 #pragma once
 
-#include <functional>
-#include <string>
+#include <utils/ui/Window.h>
 #include "imgui.h"
 
 namespace utils
 {
-	namespace ImGui
+	namespace imgui
 	{
-		class Window
+		class Window : public ui::Window
 		{
-			public:
-				Window() : m_position(0, 0), m_size(512, 512)
-				{}
-				Window(const ImVec2& position, const ImVec2& size)
-					: m_position(position), m_size(size)
-				{}
+			using base = ui::Window;
+		public:
+			Window() = default;
+			Window(const math::vector2& position, const math::vector2& size)
+				: base(position, size)
+			{}
+			void Show() override {
+				// Set window position
+				const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+				auto& s = main_viewport->Size;
+				auto& p = main_viewport->Pos;
+				auto& wp = main_viewport->WorkPos;
+				ImGui::SetNextWindowPos(
+					ImVec2(s.x * position().x, s.y * position().y)
+					, ImGuiCond_FirstUseEver
+				);
+				ImGui::SetNextWindowSize(
+					ImVec2(s.x * size().x, s.y * size().y)
+					, ImGuiCond_FirstUseEver
+				);
 
-				void Show() {
-					// Set window position
-					//const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-					//auto& s = main_viewport->Size;
-					//auto& p = main_viewport->Pos;
-					//auto& wp = main_viewport->WorkPos;
-					//ImGui::SetNextWindowPos(
-					//	ImVec2(s.x * m_position.x, s.y * m_position.y)
-					//	, ImGuiCond_FirstUseEver
-					//);
-					//ImGui::SetNextWindowSize(
-					//	ImVec2(s.x * m_size.x, s.y * m_size.y)
-					//	, ImGuiCond_FirstUseEver
-					//);
-
-					//// Create the window
-					//bool p_open = true;
-					//ImGuiWindowFlags window_flags = 0;
-					//if (!ImGui::Begin(Title(), &p_open, window_flags))
-					//{
-					//	// Early out if the window is collapsed, as an optimization.
-					//	ImGui::End();
-					//	return;
-					//}
-					//
-					//onShow();
-
-					//// Close button 
-					//if (!p_open)
-					//	Close();
-					//ImGui::End();
-					//return;
+				// Create the window
+				bool p_open = true;
+				ImGuiWindowFlags window_flags = 0;
+				if (!ImGui::Begin(Title(), &p_open, window_flags))
+				{
+					// Early out if the window is collapsed, as an optimization.
+					ImGui::End();
+					return;
 				}
+					
+				onShow();
 
-				void Close() {
-					if (m_on_close)
-						m_on_close();
-					onClose();
-				}
-
-				void SetOnShow(const std::function<void()>& on_show) {
-					m_on_show = on_show;
-				}
-
-				void SetOnClose(const std::function<void()>& on_close) {
-					m_on_close = on_close;
-				}
-
-				virtual const char* Title() const {
-					static std::string default_title = "Window";
-					return default_title.c_str();
-				};
-
-			protected:
-				virtual void onClose() {};
-				virtual void onShow() {
-					if (m_on_show)
-						m_on_show();
-				};
-
-			private:
-				ImVec2 m_position;
-				ImVec2 m_size;
-				std::function<void()> m_on_close;
-				std::function<void()> m_on_show;
+				// Close button 
+				if (!p_open)
+					Close();
+					
+				// End the window scope
+				ImGui::End();
+				return;
+			}
 		};
+
+		using WindowPtr = std::unique_ptr<Window>;
 	}
 }
