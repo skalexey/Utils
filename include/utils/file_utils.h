@@ -21,6 +21,7 @@ namespace utils
 	namespace file
 	{
 		const std::string& last_error();
+		int last_errcode();
 #ifdef FILESYSTEM_SUPPORTED
 		bool exists(const std::filesystem::path& fpath);
 		bool dir_exists(const std::filesystem::path& path);
@@ -33,6 +34,7 @@ namespace utils
 		T contents(const std::filesystem::path& fpath) {
 			return file_contents_impl<T>(fpath.string());
 		}
+		std::vector<std::string> lines(const std::filesystem::path& path);
 		bool same(const std::filesystem::path& f1, const std::filesystem::path& f2);
 #else
 		bool exists(const std::string& fpath);
@@ -45,6 +47,7 @@ namespace utils
 		T contents(const std::string& fpath) {
 			return file_contents_impl<T>(fpath);
 		}
+		std::vector<std::string> lines(const std::string& path);
 		bool same(const std::string& f1, const std::string& f2);
 #endif
 

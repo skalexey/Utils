@@ -9,18 +9,34 @@
 
 namespace ch = std::chrono;
 
+#ifndef UTILS_FILE_LOG_ERROR
+#define UTILS_FILE_LOG_ERROR(x)
+#endif
+
 namespace
 {
 	std::string last_error_msg;
+	int last_error_code = 0;
 }
 
 namespace utils
 {
 	namespace file
 	{
+		enum erc : int
+		{
+			no_error = 0,
+			cant_open = 1
+		};
+
 		const std::string& last_error()
 		{
 			return last_error_msg;
+		}
+
+		int last_errcode()
+		{
+			return last_error_code;
 		}
 
 		void set_last_error(const std::string& s)
@@ -40,12 +56,47 @@ namespace utils
 				== std::hash<std::string>{}(f2_contents);
 		}
 
-		bool exists(const std::string& fpath)
+		bool exists(const std::string &fpath)
 		{
 			return std::ifstream(fpath.c_str()).good();
 		}
 
+		std::vector<std::string> lines_impl(const std::string& path)
+		{
+			const int reserve_size = 1024;
+			using namespace std;
+			vector<string> o;
+			o.reserve(reserve_size);
+			fstream f;
+			f.open(path.c_str(), ios::in);
+			if (f.is_open())
+			{
+				auto it = o.begin();
+				std::string s;
+				while (getline(f, s))
+				{
+					o.resize(o.size() + 1);
+					o.back().swap(s);
+					if (o.size() == o.capacity())
+						o.reserve(o.capacity() + reserve_size);
+				}
+				f.close();
+			}
+			else
+			{
+				last_error_code = erc::cant_open;
+				UTILS_FILE_LOG_ERROR("Failed to open file '" << path << "'");
+			}
+			last_error_code = erc::no_error;
+			return o;
+		}
+
 	#ifdef FILESYSTEM_SUPPORTED
+		std::vector<std::string> lines(const std::filesystem::path &path)
+		{
+			return lines_impl(path.string());
+		}
+
 		bool exists(const std::filesystem::path& fpath)
 		{
 			return fs::exists(fpath);
@@ -82,6 +133,11 @@ namespace utils
 				return 3;
 			}
 	#else
+		std::vector<std::string> lines(const std::string& path)
+		{
+			return lines_impl(path);
+		}
+
 		int copy_file(const std::string & from_path, const std::string & to_path, bool safe)
         {
 			std::ifstream src(from_path, std::ios::binary);
