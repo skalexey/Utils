@@ -1,7 +1,7 @@
 ﻿// uploader_with_auth.cpp
 
-#include "uploader_with_auth.h"
-#include "query_auth.h"
+#include <utils/networking/uploader_with_auth.h>
+#include <utils/networking/query_auth.h>
 
 namespace utils
 {

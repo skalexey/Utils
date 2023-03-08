@@ -13,9 +13,27 @@
 #include <string>
 #include <stdio.h>
 #include <iomanip>
-#include "datetime.h"
+#include <utils/datetime.h>
 
 namespace ch = std::chrono;
+
+#if _MSC_VER && !__INTEL_COMPILER
+int setenv(const char* name, const char* value, int overwrite)
+{
+	int errcode = 0;
+	if (!overwrite) {
+		size_t envsize = 0;
+		errcode = getenv_s(&envsize, NULL, 0, name);
+		if (errcode || envsize) return errcode;
+	}
+	return _putenv_s(name, value);
+}
+
+int unsetenv(const char* name)
+{
+	return setenv(name, "", 1);
+}
+#endif
 
 namespace utils
 {

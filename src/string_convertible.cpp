@@ -2,7 +2,7 @@
 
 #include <ostream>
 #include <utils/Log.h>
-#include "interfaces/string_convertible.h"
+#include <interfaces/string_convertible.h>
 
 LOG_PREFIX("[string_convertible]: ");
 LOG_POSTFIX("\n");

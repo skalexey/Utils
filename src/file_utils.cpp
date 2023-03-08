@@ -2,10 +2,10 @@
 #include <fstream>
 #include <string>
 #include <chrono>
+#include <utils/file_utils.h>
 #ifndef FILESYSTEM_SUPPORTED
 #include <cstdio>
 #endif
-#include "file_utils.h"
 
 namespace ch = std::chrono;
 
@@ -61,7 +61,7 @@ namespace utils
 			return std::ifstream(fpath.c_str()).good();
 		}
 
-		std::vector<std::string> lines_impl(const std::string& path)
+		inline std::vector<std::string> lines_impl(const std::string& path)
 		{
 			const int reserve_size = 1024;
 			using namespace std;
@@ -75,6 +75,9 @@ namespace utils
 				std::string s;
 				while (getline(f, s))
 				{
+					if (!s.empty())
+						if (s.back() == '\r')
+							s.resize(s.size() - 1);
 					o.resize(o.size() + 1);
 					o.back().swap(s);
 					if (o.size() == o.capacity())
@@ -91,7 +94,26 @@ namespace utils
 			return o;
 		}
 
+		inline int create_impl(const std::string& path)
+		{
+			std::fstream f;
+			f.open(path.c_str(), std::ios::out);
+			if (f.is_open())
+				return 0;
+			return 1;
+		}
+
 	#ifdef FILESYSTEM_SUPPORTED
+		bool is_file_path(const fs::path& path)
+		{
+			return path.has_filename();
+		}
+		
+		int create(const fs::path& path)
+		{
+			return create_impl(path.string());
+		}
+
 		std::vector<std::string> lines(const std::filesystem::path &path)
 		{
 			return lines_impl(path.string());
@@ -133,6 +155,11 @@ namespace utils
 				return 3;
 			}
 	#else
+		int create(const std::string& path)
+		{
+			return create_impl(path);
+		}
+
 		std::vector<std::string> lines(const std::string& path)
 		{
 			return lines_impl(path);
@@ -231,8 +258,13 @@ namespace utils
 		{
 			if (!utils::file::exists(fpath))
 				return std::chrono::system_clock::time_point();
-
-	#if defined(__APPLE__) || defined(__GNUC__)
+	#if __cplusplus < 202002L
+			auto tp = fs::last_write_time(fpath);
+			auto now = std::filesystem::file_time_type::clock::now();
+			auto dur = ch::system_clock::time_point::duration(now.time_since_epoch().count() - tp.time_since_epoch().count());
+			auto r = ch::system_clock::now() - dur;
+			return r;
+	#elif defined(__APPLE__) || defined(__GNUC__)
 			auto tp = fs::last_write_time(fpath);
 			auto sctp = ch::time_point_cast<ch::system_clock::duration>(tp - ch::file_clock::now() + ch::system_clock::now());
 			auto sd = ch::duration_cast<ch::system_clock::duration>(sctp.time_since_epoch());

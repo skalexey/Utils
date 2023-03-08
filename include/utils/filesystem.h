@@ -1,6 +1,5 @@
 // We haven't checked which filesystem to include yet
 #ifndef INCLUDE_STD_FILESYSTEM_EXPERIMENTAL
-
 // Check for feature test macro for <filesystem>
 #   if defined(__cpp_lib_filesystem)
 #       define INCLUDE_STD_FILESYSTEM_EXPERIMENTAL 0

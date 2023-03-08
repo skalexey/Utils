@@ -3,10 +3,14 @@
 #include <DMBCore.h>
 #include <utils/io_utils.h>
 
+#ifndef AUTH_LOG_ERROR
+#define AUTH_LOG_ERROR(msg)
+#endif
+
 namespace
 {
 	const std::string empty_string;
-	extern std::unique_ptr<dmb::Model> identity_model_ptr;
+	std::unique_ptr<dmb::Model> identity_model_ptr;
 	extern const fs::path identity_path;
 }
 
@@ -45,7 +49,7 @@ vl::Object* get_identity_cfg_data()
 		if (!identity_model_ptr->Load(identity_path.string()))
 			if (!identity_model_ptr->Store(identity_path.string(), { true }))
 			{
-				LOG_ERROR("Can't create identity file");
+				AUTH_LOG_ERROR("Can't create identity file");
 				return nullptr;
 			}
 	return &identity_model_ptr->GetContent().GetData();

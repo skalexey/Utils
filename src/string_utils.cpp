@@ -10,7 +10,7 @@
 #if defined(__cpp_lib_ranges)
 #include <ranges>
 #endif
-#include "string_utils.h"
+#include <utils/string_utils.h>
 
 #define A 54059 /* a prime */
 #define B 76963 /* another prime */
@@ -89,24 +89,6 @@ namespace utils
 			ret.push_back(str.substr(cur, p - cur));
 		} while (p != std::string::npos);
 		return ret;
-	}
-
-	// Example: "a\t\t\tb\tc" -> {"a", "b", "c"}
-	std::vector<std::string_view> split_repeated_delimeter(const std::string& line, const char delim)
-	{
-		std::vector<std::string_view> out;
-		std::size_t tpos = 0, pos = 0;
-		while ((tpos = line.find("\t", pos)) != std::string::npos)
-		{
-			std::string_view s(line.data() + pos, line.data() + tpos - pos);
-			while (line.find(delim, tpos + 1) - tpos == 1)
-				tpos++;
-			pos = tpos + 1;
-			out.push_back(s);
-		}
-		if (line.size() - pos != 0)
-			out.push_back(std::string_view(line.data() + pos, line.data() + line.size()));
-		return out;
 	}
 
 	bool to_bool(std::string str)

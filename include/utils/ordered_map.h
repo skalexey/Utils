@@ -60,14 +60,14 @@ namespace utils
 				return it;
 			return m_map.end();
 		}
-		bool operator != (const ordered_map_iterator& y) {
+		bool operator != (const ordered_map_iterator& y) const {
 			return (m_index != y.m_index);
 		}
-		bool operator == (const ordered_map_iterator& y) {
+		bool operator == (const ordered_map_iterator& y) const {
 			return (m_index == y.m_index);
 		}
 		operator bool() const {
-			return *this != m_map.end();
+			return !operator==(m_map.end());
 		}
 		
 	protected:

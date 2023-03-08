@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <utils/filesystem.h>
 #include <http/downloader_decorator.h>
@@ -40,9 +41,26 @@ namespace utils
 				, const http_response_cb& on_response = {}
 			) override;
 
+			void download_file_async(
+				const endpoint_t& ep
+				, const result_cb& on_result = {}
+				, const query_t& query = {}
+				, const fs::path& target_path = {}
+				, const http_response_cb& on_response = {}
+			) override;
+
+			bool on_response(
+				const headers_t& headers
+				, const char* data
+				, std::size_t sz
+				, int status
+				, const http_response_cb& cb = {}
+			);
+
 		private:
 			std::string m_token;
 			std::string m_user_name;
 		};
+		using downloader_with_auth_ptr = std::shared_ptr<downloader_with_auth>;
 	}
 }
