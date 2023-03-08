@@ -3,62 +3,42 @@
 #include <memory>
 #include <functional>
 #include <string>
-#include <math/vector_2d.h>
+#include <utils/vec2.h>
+#include <utils/ui/widget.h>
 
 namespace utils
 {
 	namespace ui
 	{
-		class Window
+		class window : public widget
 		{
+			using base = widget;
+			using on_close_cb = base::on_hide_cb;
+
 			public:
-				Window() : m_position(0, 0), m_size(512, 512)
-				{}
-				Window(const math::vector2& position, const math::vector2& size)
-					: m_position(position), m_size(size)
-				{}
 
-				virtual void Show() {
-					onShow();
+				void close() {
+					set_visible(false);
+					on_close();
 				}
 
-				void Close() {
-					if (m_on_close)
-						m_on_close();
-					onClose();
+				void set_on_close(const on_close_cb& on_close) {
+					set_on_hide(on_close);
 				}
 
-				void SetOnShow(const std::function<void()>& on_show) {
-					m_on_show = on_show;
+				bool is_open() const {
+					return is_visible();
 				}
 
-				void SetOnClose(const std::function<void()>& on_close) {
-					m_on_close = on_close;
-				}
-
-				virtual const char* Title() const {
-					static std::string default_title = "Window";
-					return default_title.c_str();
+				const std::string& get_title() const override {
+					static std::string default_title = "window";
+					return default_title;
 				};
 
 			protected:
-				virtual void onClose() {};
-				virtual void onShow() {
-					if (m_on_show)
-						m_on_show();
-				};
-
-			protected:
-				math::vector2& position() { return m_position; }
-				math::vector2& size() { return m_size; }
-
-			private:
-				math::vector2 m_position;
-				math::vector2 m_size;
-				std::function<void()> m_on_close;
-				std::function<void()> m_on_show;
+				virtual void on_close() {}
 		};
 
-		using WindowPtr = std::unique_ptr<Window>;
+		using window_ptr = std::shared_ptr<window>;
 	}
 }

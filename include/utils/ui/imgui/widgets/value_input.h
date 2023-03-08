@@ -39,7 +39,7 @@ namespace ImGui
 		const on_update_t& GetOnUpdate() const { return m_on_update; }
 
 		bool Show() {
-			ImGui::Text(m_label.c_str());
+			ImGui::Text("%s", m_label.c_str());
 			ImGui::SameLine();
 			if (display())
 			{

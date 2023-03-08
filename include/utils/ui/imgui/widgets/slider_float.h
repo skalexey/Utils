@@ -37,7 +37,7 @@ namespace ImGui
 		}
 
 		bool Show() {
-			ImGui::Text(m_label.c_str());
+			ImGui::Text("%s", m_label.c_str());
 			ImGui::SameLine();
 			if (ImGui::SliderFloat(m_input_label.c_str(), &m_edit_value, m_min, m_max))
 			{
