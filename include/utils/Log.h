@@ -2,13 +2,15 @@
 
 #ifdef LOG_ON
 	#include <iostream>
+	#include <functional>
+	#include <ostream>
 
 	namespace
 	{
 		std::string logPrefix; // Prefix for LOG_* commands. Is set through LOG_PREFIX function
 		std::string logPostfix; // Postfix for LOG_* commands. Is set through LOG_POSTFIX function
 
-		auto logStream = []() -> std::ostream& {
+		std::function<std::ostream&()> logStream = []() -> std::ostream& {
 			return std::cout;
 		};
 
