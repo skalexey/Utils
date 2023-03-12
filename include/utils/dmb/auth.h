@@ -11,7 +11,7 @@ namespace
 {
 	const std::string empty_string;
 	std::unique_ptr<dmb::Model> identity_model_ptr;
-	extern const fs::path identity_path;
+	extern fs::path identity_path;
 }
 
 // Function declarations
@@ -92,9 +92,8 @@ bool get_identity(std::string* user_name, std::string* user_pass)
 	bool store = false;
 	if (name.empty())
 	{
-		name = "skalexey";
-		// if (!ask_name(name))
-			// return false;
+		if (!ask_name(name))
+			return false;
 		data["user"].AsObject().Set("name", name);
 		store = true;
 	}
@@ -104,9 +103,8 @@ bool get_identity(std::string* user_name, std::string* user_pass)
 	if (token.empty())
 	{
 		std::string pass;
-		pass = "unkantenaura";
-		// if (!ask_pass(pass))
-			// return false;
+		if (!ask_pass(pass))
+			return false;
 		token = h(pass);
 		data["user"].AsObject().Set("token", token);
 		store = true;
