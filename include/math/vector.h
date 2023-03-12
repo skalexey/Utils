@@ -53,23 +53,13 @@ namespace math
 		template <class R>
 		RT& operator *= (const R& s) {
 			FOREACH_COMPONENT
-				data(i) *= s;
+				data(i) *= s.data(i);
 			return rt_this;
 		}
 		template <class R>
 		RT& operator /= (const R& s) {
 			FOREACH_COMPONENT
-				data(i) /= s;
-			return rt_this;
-		}
-		RT& operator *= (const RT& r) const {
-			FOREACH_COMPONENT
-				data(i) *= r.data(i);
-			return rt_this;
-		}
-		RT& operator /= (const RT& r) const {
-			FOREACH_COMPONENT
-				data(i) /= r.data(i);
+				data(i) /= s.data(i);
 			return rt_this;
 		}
 		RT& normalize() { return operator/=(length()); }

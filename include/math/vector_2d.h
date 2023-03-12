@@ -15,11 +15,13 @@ namespace math
 			, x(base::data(0))
 			, y(base::data(1))
 		{}
+
 		vector_2d(const vector_2d& r)
 			: base(r) 
 			, x(base::data(0))
 			, y(base::data(1))
 		{}
+
 		vector_2d(T x, T y)
 			: base()
 			, x(base::data(0))
@@ -28,6 +30,13 @@ namespace math
 			base::data(0) = x;
 			base::data(1) = y;
 		}
+
+		template <typename CustomType>
+		vector_2d(const CustomType& v) : vector_2d(T(v.x), T(v.y)) {}
+
+		template <typename CustomType>
+		vector_2d(CustomType x, CustomType y) : vector_2d(T(x), T(y)) {}
+
 		T& x;
 		T& y;
 		
