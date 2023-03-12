@@ -25,13 +25,19 @@ namespace utils
 				// Setup SDL
 				// (Some versions of SDL before <2.0.10 appears to have performance/stalling issues on a minority of Windows systems,
 				// depending on whether SDL_INIT_GAMECONTROLLER is enabled or disabled.. updating to latest version of SDL is recommended!)
+				
 				if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
 				{
 					printf("Error: %s\n", SDL_GetError());
 					return -1;
 				}
 
-				// Setup window
+				SDL_DisplayMode DM;
+				SDL_GetCurrentDisplayMode(0, &DM);
+				auto Width = DM.w;
+				auto Height = DM.h;
+				SDL_Log("Display: %dx%d", Width, Height);
+
 				m_window = create_window();
 
 				// Setup SDL_Renderer instance
@@ -41,6 +47,9 @@ namespace utils
 					SDL_Log("Error creating SDL_Renderer!");
 					return -2;
 				}
+
+				SDL_RenderSetLogicalSize(m_renderer, m_resolution.x, m_resolution.y);
+
 				//SDL_RendererInfo info;
 				//SDL_GetRendererInfo(renderer, &info);
 				//SDL_Log("Current SDL_Renderer: %s", info.name);
@@ -72,11 +81,24 @@ namespace utils
 				//io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
 				//io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
 				//io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
-				ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\Arial.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+#ifdef ANDROID
+//  ImFontConfig font_cfg;
+//         font_cfg.FontDataOwnedByAtlas = false;
+//         font_cfg.MergeMode = false;
+//         font_cfg.MergeGlyphCenterV = true;
+//         io.Fonts->AddFontFromMemoryTTF(Roboto_TTF_Data, RobotoFont_TTF_DataSize, 18.0f, &font_cfg, io.Fonts->GetGlyphRangesCyrillic());
+				// ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\Arial.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+#else
+
+				ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\Arial.ttf", 28.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+#endif
 				//IM_ASSERT(font != NULL);
 				//io.Fonts->AddFontFromFileTTF("NotoSansCJKjp-Medium.otf", 20.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 
 
+				// io.FontGlobalScale = 1.5f;
+				// ImGuiStyle& style = ImGui::GetStyle();
+				// style.ScaleAllSizes(1.5f);
 				// Initial code
 				auto ret = init();
 
@@ -91,7 +113,7 @@ namespace utils
 						auto end = steady_clock::now();
 						ns = duration_cast<nanoseconds>(end - start).count();
 						start = end;
-					} while (update(float(ns) * 1e-9));
+					} while (update(float(ns) * float(1e-9)));
 				}
 							
 				// Cleanup
@@ -149,7 +171,7 @@ namespace utils
 			SDL_Window* ui::imgui::sdl_app::create_window()
 			{
 				SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-				return SDL_CreateWindow("ImGui SDL Application", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+				return SDL_CreateWindow("ImGui SDL Application", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_resolution.x, m_resolution.y, window_flags);
 			}
 		}
 	}
