@@ -4,7 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <functional>
-#include "filesystem.h"
+#include <utils/filesystem.h>
 
 namespace
 {
@@ -39,6 +39,8 @@ namespace utils
 		bool same(const fs::path& f1, const fs::path& f2);
 		int create(const fs::path& path);
 		bool is_file_path(const fs::path& path);
+		fs::path temp_directory_path();
+		bool is_directory(const fs::path& path);
 #else
 		bool exists(const std::string& fpath);
 		int copy(const std::string& from_path, const std::string& to_path, bool safe = false);
@@ -53,6 +55,8 @@ namespace utils
 		std::vector<std::string> lines(const std::string& path);
 		bool same(const std::string& f1, const std::string& f2);
 		int create(const std::string& path);
+		std::string temp_directory_path();
+		bool is_directory(const std::string& path);
 #endif
 
 		int remove_last_line_f(std::ifstream& f);

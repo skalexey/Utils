@@ -19,6 +19,10 @@ namespace
 	int last_error_code = 0;
 }
 
+#ifdef ANDROID
+	extern std::string android_get_temp_dir();
+#endif
+
 namespace utils
 {
 	namespace file
@@ -104,6 +108,19 @@ namespace utils
 		}
 
 	#ifdef FILESYSTEM_SUPPORTED
+		bool is_directory(const fs::path& path)
+		{
+			return fs::is_directory(path);
+		}
+		fs::path temp_directory_path()
+		{
+#ifdef ANDROID
+			return fs::path(android_get_temp_dir());
+#else
+			return fs::temp_directory_path();
+#endif
+		}
+
 		bool is_file_path(const fs::path& path)
 		{
 			return path.has_filename();
@@ -155,6 +172,38 @@ namespace utils
 				return 3;
 			}
 	#else
+		bool is_directory(const std::string& path)
+		{
+			struct stat s;
+			if (stat(path, &s) == 0)
+			{
+				if (s.st_mode & S_IFDIR)
+				{
+					return true;
+				}
+				else if (s.st_mode & S_IFREG)
+				{
+					// it's a file
+					return false;
+				}
+				else
+				{
+					// something else
+					return false;
+				}
+			}
+			else
+			{
+				// error
+				return false;
+			}
+		}
+
+		std::string temp_directory_path()
+		{
+			return std::tmpnam(nullptr);
+		}
+		
 		int create(const std::string& path)
 		{
 			return create_impl(path);
