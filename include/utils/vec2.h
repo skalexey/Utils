@@ -4,5 +4,6 @@
 
 namespace utils
 {
-	using vec2 = math::vector2;
+	using vec2f = math::vector_2d<float>;
+	using vec2i = math::vector_2d<int>;
 }

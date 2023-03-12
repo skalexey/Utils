@@ -2,7 +2,8 @@
 
 #include <memory>
 #include <utils/ui/widgets/label.h>
-#include "imgui.h"
+#include <utils/ui/imgui/widget.h>
+#include <imgui.h>
 
 namespace utils
 {
@@ -10,7 +11,7 @@ namespace utils
 	{
 		namespace imgui
 		{
-			class label : public utils::ui::label
+			class label : public imgui::widget, public utils::ui::label
 			{
 				using base = utils::ui::label;
 

@@ -19,10 +19,13 @@ namespace utils
 			class sdl_app : public utils::ui::app
 			{
 				using base = utils::ui::app;
-				using vec2 = math::vector_2d<int>;
 
 			public:
 				bool update(float dt) override final;
+
+				void set_resolution(const utils::vec2i& resolution) { m_resolution = resolution; }
+				void set_resolution(int x, int y) { m_resolution = { x, y }; }
+				const utils::vec2i& get_resolution() const { return m_resolution; }
 
 			protected:
 				virtual bool on_update(float dt) {
@@ -42,6 +45,7 @@ namespace utils
 			private:
 				SDL_Renderer* m_renderer = nullptr;
 				SDL_Window* m_window = nullptr;
+				utils::vec2i m_resolution = { 1024, 720 };
 			};
 		}
 	}

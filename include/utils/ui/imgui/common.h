@@ -1,18 +1,21 @@
 #pragma once
 
-#include "imgui.h"
+#include <imgui.h>
 
 namespace utils
 {
-	namespace imgui
+	namespace ui
 	{
-		void AlignForWidth(float width, float alignment = 0.5f)
+		namespace imgui
 		{
-			ImGuiStyle& style = ImGui::GetStyle();
-			float avail = ImGui::GetContentRegionAvail().x;
-			float off = (avail - width) * alignment;
-			if (off > 0.0f)
-				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+			inline void AlignForWidth(float width, float alignment = 0.5f)
+			{
+				ImGuiStyle& style = ImGui::GetStyle();
+				float avail = ImGui::GetContentRegionAvail().x;
+				float off = (avail - width) * alignment;
+				if (off > 0.0f)
+					ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+			}
 		}
 	}
 }

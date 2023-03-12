@@ -2,6 +2,7 @@
 
 #include <string>
 #include <utils/ui/widgets/text_input.h>
+#include <utils/ui/imgui/widget.h>
 
 namespace utils
 {
@@ -9,7 +10,7 @@ namespace utils
 	{
 		namespace imgui
 		{
-			class text_input : public utils::ui::text_input
+			class text_input : public imgui::widget, public utils::ui::text_input
 			{
 				using base = utils::ui::text_input;
 				

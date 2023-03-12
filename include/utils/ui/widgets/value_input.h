@@ -10,7 +10,7 @@ namespace utils
 	namespace ui
 	{
 		template <typename T>
-		class value_input : public widget
+		class value_input : public virtual widget
 		{
 			using base = widget;
 

@@ -25,7 +25,10 @@ namespace utils
 					m_ok_button = get_factory().create_button();
 					m_cancel_button = get_factory().create_button();
 					set_on_show([this]() {
-						on_show();
+						m_message_label->show();
+						m_ok_button->show();
+						m_cancel_button->show();
+						m_text_input->show();
 					});
 				}
 				dialog_input_text(
@@ -57,14 +60,6 @@ namespace utils
 
 				label& message_label() { return *m_message_label; }
 				text_input& text_input() { return *m_text_input; }
-
-			protected:
-				void on_show() override {
-					m_message_label->show();
-					m_ok_button->show();
-					m_cancel_button->show();
-					m_text_input->show();
-				};
 
 			protected:
 				label_ptr m_message_label;

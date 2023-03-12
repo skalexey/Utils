@@ -10,7 +10,7 @@ namespace utils
 {
 	namespace ui
 	{
-		class window : public widget
+		class window : public virtual widget
 		{
 			using base = widget;
 			using on_close_cb = base::on_hide_cb;

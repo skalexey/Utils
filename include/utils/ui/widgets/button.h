@@ -9,7 +9,7 @@ namespace utils
 {
 	namespace ui
 	{
-		class button : public widget
+		class button : public virtual widget
 		{
 		public:
 			using on_click_t = std::function<void(bool)>;

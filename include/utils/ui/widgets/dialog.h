@@ -20,7 +20,7 @@ namespace utils
 			// so it should be set using set_factory() method
 			{
 				// Default size
-				set_size({ 300, 200 });
+				set_size(vec2i(500, 320));
 				set_vertical_alignment(alignment::center);
 				set_horizontal_alignment(alignment::center);
 			}
@@ -36,11 +36,13 @@ namespace utils
 				return m_title;
 			}
 			void set_title(const std::string& title) { m_title = title; }
+			bool is_close_button_enabled() const { return m_use_close_button; }
+			bool set_close_button_enabled(bool enabled) { m_use_close_button = enabled; }
 
 		protected:
 			void on_show() override {
 				if (get_horizontal_alignment() == alignment::center && get_vertical_alignment() == alignment::center) {
-					set_position({0.5f, 0.5f}, {0.5f, 0.5f});
+					set_position_relative({ 0.5f, 0.5f }, { 0.5f, 0.5f });
 				}
 				base::on_show();
 			};
@@ -48,7 +50,7 @@ namespace utils
 		private:
 			widget_factory* m_factory = nullptr;
 			std::string m_title = "Dialog";
-
+			bool m_use_close_button = false;
 		};
 		// TODO: remove it as it is declared in fwd.h
 		using dialog_ptr = std::shared_ptr<dialog>;

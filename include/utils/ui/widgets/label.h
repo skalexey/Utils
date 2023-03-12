@@ -8,7 +8,7 @@ namespace utils
 {
 	namespace ui
 	{
-		class label : public widget
+		class label : public virtual widget
 		{
 		public:
 			label() = default;
