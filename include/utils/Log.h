@@ -31,7 +31,7 @@
 
 	// Is necessarily required for all LOCAL_LOG* functions
 	#define LOG_TITLE(title) namespace { const char* logTitle = title; } 
-	#define LOG_STREAM(s) namespace {logStream = s;}
+	#define LOG_STREAM(s) logStream = s;
 	#define LOCAL_LOG(msg) logStream() << "[" << logTitle << "] " << msg << "\n"
 	#ifdef LOG_LEVEL_DEBUG
 		#define LOG_DEBUG(msg) logStream() << logPrefix << "[D] " << msg << logPostfix
