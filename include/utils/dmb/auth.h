@@ -9,7 +9,6 @@
 
 namespace
 {
-	const std::string empty_string;
 	std::unique_ptr<dmb::Model> identity_model_ptr;
 	extern fs::path identity_path;
 }
@@ -30,6 +29,7 @@ const std::string& get_user_name()
 {
 	if (auto data_ptr = get_identity_cfg_data())
 		return (*data_ptr)["user"].AsObject().Get("name").AsString().Val();
+	static std::string empty_string;
 	return empty_string;
 }
 
@@ -37,6 +37,7 @@ const std::string& get_user_token()
 {
 	if (auto data_ptr = get_identity_cfg_data())
 		return (*data_ptr)["user"].AsObject().Get("token").AsString().Val();
+	static std::string empty_string;
 	return empty_string;
 }
 

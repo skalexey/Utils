@@ -9,9 +9,14 @@
 #include <utils/io_utils.h>
 #include <utils/filesystem.h>
 #include <utils/print_defs.h>
-#include <utils/dmb/auth.h>
+#include <utils/common.h>
 
-extern void ask_user(const std::string& question, const std::function<void(bool)>& on_answer, const char* yes_btn_text = nullptr, const char* no_btn_text = nullptr);
+extern void ask_user(
+	const std::string& question
+	, const utils::void_bool_cb& on_answer
+	, const char* yes_btn_text
+	, const char* no_btn_text
+);
 
 namespace
 {

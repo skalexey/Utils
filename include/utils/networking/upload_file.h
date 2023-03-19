@@ -6,7 +6,6 @@
 #include <utils/string_utils.h>
 #include <utils/filesystem.h>
 #include <utils/print_defs.h>
-#include <utils/dmb/auth.h>
 
 int upload_file(const fs::path& local_path, const anp::endpoint_t& ep, const std::string& url_path)
 {
