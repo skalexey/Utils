@@ -24,7 +24,7 @@ namespace
 		, const std::string& url_path_upload
 		, const std::string& remote_path
 		, const fs::path& local_path
-		, const utils::void_int_arg_cb& download_cb
+		, const utils::void_int_cb& download_cb
 	) {
 		using namespace utils::networking;
 		MSG("Download remote version of resource '" << local_path.filename() << "'...");
@@ -80,7 +80,7 @@ namespace
 		, const std::string& url_path_upload
 		, const resources_list& resources
 		, int i
-		, const utils::void_int_arg_cb& on_result
+		, const utils::void_int_cb& on_result
 	)
 	{
 		if (resources.empty())
@@ -112,7 +112,7 @@ namespace utils
 			, const std::string& url_path_download
 			, const std::string& url_path_upload
 			, const resources_list& resources
-			, const utils::void_int_arg_cb& on_result = {}
+			, const utils::void_int_cb& on_result = {}
 		)
 		{
 			using namespace anp;

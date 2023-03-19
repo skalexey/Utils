@@ -23,7 +23,7 @@ namespace utils
 			, const std::string& url_path_download
 			, const std::string& url_path_upload
 			, const resources_list& resources
-			, const anp::void_int_arg_cb& on_result = {}
+			, const anp::void_int_cb& on_result = {}
 		)
 		{
 			using namespace anp;

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <utils/ui/widgets/dialogs/dialog_with_buttons.h>
+#include <utils/common.h>
 
 namespace utils
 {
@@ -14,7 +15,7 @@ namespace utils
 			using base = utils::ui::dialog_with_buttons;
 
 			public:
-				using on_answer_t = std::function<void(bool)>;
+				using on_answer_t = utils::void_bool_cb;
 
 				dialog_message(
 					const std::string& msg

@@ -5,5 +5,7 @@
 namespace utils
 {
 	using void_cb = std::function<void()>;
-	using void_int_arg_cb = std::function<void(int)>;
+	using void_int_cb = std::function<void(int)>;
+	using void_bool_cb = std::function<void(bool)>;
+	using void_string_bool_cb = std::function<void(const std::string&, bool)>;
 }

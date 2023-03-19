@@ -6,6 +6,7 @@
 #include <utils/ui/widgets/button.h>
 #include <utils/ui/widgets/label.h>
 #include <utils/ui/widget_factory.h>
+#include <utils/common.h>
 
 namespace utils
 {
@@ -19,7 +20,7 @@ namespace utils
 			using base = utils::ui::dialog_with_buttons;
 
 			public:
-				using on_answer_t = std::function<void(bool)>;
+				using on_answer_t = utils::void_bool_cb;
 
 				dialog_yes_no()
 				{

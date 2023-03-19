@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <string>
+#include <utils/common.h>
 
 class app;
 

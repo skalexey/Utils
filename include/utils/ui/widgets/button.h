@@ -4,6 +4,7 @@
 #include <memory>
 #include <functional>
 #include <utils/ui/widget.h>
+#include <utils/common.h>
 
 namespace utils
 {
@@ -12,7 +13,7 @@ namespace utils
 		class button : public virtual widget
 		{
 		public:
-			using on_click_t = std::function<void(bool)>;
+			using on_click_t = utils::void_bool_cb;
 			using base = widget;
 
 			button() = default;
