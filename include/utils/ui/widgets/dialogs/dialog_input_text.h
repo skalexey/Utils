@@ -36,6 +36,8 @@ namespace utils
 					, const on_result_t& on_result
 					, const std::string& default_input_text
 					, const std::string& title
+					, const char* ok_btn_text = nullptr
+					, const char* cancel_btn_text = nullptr
 				)
 					: dialog_input_text()
 				{
@@ -44,13 +46,13 @@ namespace utils
 					m_text_input->set_value(default_input_text);
 					// TODO: remove this label
 					m_text_input->set_label("Answer");
-					m_ok_button->set_text("Ok");
+					m_ok_button->set_text(ok_btn_text ? ok_btn_text : "Ok");
 					m_ok_button->set_on_click([this](bool up) {
 						if (m_on_result)
 							m_on_result(m_text_input->get_value(), false);
 						close();
 					});
-					m_cancel_button->set_text("Cancel");
+					m_cancel_button->set_text(cancel_btn_text ? cancel_btn_text : "Cancel");
 					m_cancel_button->set_on_click([this](bool up) {
 						if (m_on_result)
 							m_on_result(m_text_input->get_value(), true);

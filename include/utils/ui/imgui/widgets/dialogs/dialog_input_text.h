@@ -25,7 +25,9 @@ namespace utils
 					, const on_result_t& on_result
 					, const std::string& default_input_text = {}
 					, const std::string& title = {}
-				) : imgui::dialog(), base(msg, on_result, default_input_text, title) {}
+					, const char* ok_btn_text = nullptr
+					, const char* cancel_btn_text = nullptr
+				) : imgui::dialog(), base(msg, on_result, default_input_text, title, ok_btn_text, cancel_btn_text) {}
 
 				void on_show() override {
 					imgui::dialog::on_show();
