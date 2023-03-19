@@ -7,6 +7,7 @@
 
 namespace utils
 {
+	std::string_view to_str(const char* str);
 	int count_substring(const std::string& where, const std::string& what);
 	std::string str_tolower(std::string s);
 	std::string str_toupper(std::string s);

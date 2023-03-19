@@ -19,6 +19,14 @@
 
 namespace utils
 {
+	std::string_view to_str(const char* str)
+	{
+		if (str == nullptr)
+			return {"nullptr"};
+		else
+			return {str};
+	}
+
 	int count_substring(const std::string& where, const std::string& what)
 	{
 		int cnt = 0;
