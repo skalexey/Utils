@@ -25,15 +25,8 @@ namespace utils
 				}
 
 			protected:
-				bool show_input() override {
-					// TODO: do smth with this
-					m_edit_value.resize(strlen(m_edit_value.c_str()));
-					return ImGui::InputText(m_input_label.c_str(), m_edit_value.data(), m_edit_value.capacity());
-				}
-				void show_text() override {
-					ImGui::Text("%s", m_label.c_str());
-					ImGui::SameLine();
-				}
+				bool show_input() override;
+				void show_text() override;
 			};
 		}
 	}
