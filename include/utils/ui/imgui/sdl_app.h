@@ -39,8 +39,12 @@ namespace utils
 					return 0;
 				};
 
+				void set_clear_color(const ImVec4& color) { m_clear_color = color; }
+				const ImVec4& get_clear_color() const { return m_clear_color; }
+				
 			protected:
 				virtual SDL_Window* create_window();
+				SDL_Window* get_window() { return m_window; }
 
 			protected:
 				ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
