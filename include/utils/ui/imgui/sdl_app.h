@@ -26,7 +26,10 @@ namespace utils
 				void set_resolution(const utils::vec2i& resolution) { m_resolution = resolution; }
 				void set_resolution(int x, int y) { m_resolution = { x, y }; }
 				const utils::vec2i& get_resolution() const { return m_resolution; }
-
+			
+			public:
+				static void request_keyboard();
+				
 			protected:
 				virtual bool on_update(float dt) {
 					return true;

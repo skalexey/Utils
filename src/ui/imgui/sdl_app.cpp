@@ -6,13 +6,19 @@
 #include <chrono>
 #include <SDL.h>
 #include <imgui.h>
-#include <imgui_impl_sdl.h>
+#include <imgui_internal.h>
+#include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer.h>
 #include <utils/ui/imgui/sdl_app.h>
-
+#include <utils/file_utils.h>
+#ifdef ANDROID
+#include "bridge.h"
+#endif
 #if !SDL_VERSION_ATLEAST(2,0,17)
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif
+
+int g_keyboard_request_count = 0;
 
 namespace utils
 {
@@ -130,6 +136,10 @@ namespace utils
 
 			bool sdl_app::update(float dt) {
 				assert(m_renderer);
+				// Every widget can request keyboard input by calling request_keyboard()
+				// in every frame which increments this counter
+				g_keyboard_request_count = 0;
+
 				// Poll and handle events (inputs, window resize, etc.)
 				// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
 				// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
@@ -156,6 +166,23 @@ namespace utils
 				{
 					base::update(dt);
 					active = on_update(dt);
+					if (SDL_HasScreenKeyboardSupport())
+					{
+						if (g_keyboard_request_count > 0)
+						{
+							if (!SDL_IsScreenKeyboardShown(get_window()))
+							{
+								
+								// SDL_Rect r = { m_resolution.x + 60, m_resolution.y + 30, m_resolution.x - 180, m_resolution.y - 60 };
+								SDL_Rect r = { 0, 0, 0, 0 };
+								SDL_SetTextInputRect(&r);
+								SDL_StartTextInput();
+							}
+						}
+						else
+							if (SDL_IsScreenKeyboardShown(get_window()))
+								SDL_StopTextInput();
+					}
 				}
 
 				// Rendering
@@ -172,6 +199,11 @@ namespace utils
 			{
 				SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 				return SDL_CreateWindow("ImGui SDL Application", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_resolution.x, m_resolution.y, window_flags);
+			}
+
+			void ui::imgui::sdl_app::request_keyboard()
+			{
+				g_keyboard_request_count++;
 			}
 		}
 	}
