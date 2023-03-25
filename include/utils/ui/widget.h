@@ -59,12 +59,12 @@ namespace utils
 					return default_title;
 				};
 				virtual vec2i get_screen_size() const = 0;
-				virtual const vec2i& get_position() { return m_position; }
-				virtual const vec2i& get_size() { return m_size; }
-				const vec2f& get_relative_position() {
+				virtual const vec2i& get_position() const { return m_position; }
+				virtual const vec2i& get_size() const { return m_size; }
+				const vec2f& get_relative_position() const {
 					return vec2f(get_position()) / vec2f(get_screen_size());
 				}
-				const vec2f& get_relative_size() {
+				const vec2f& get_relative_size() const {
 					return vec2f(get_size()) / vec2f(get_screen_size());
 				}
 				void set_position(const vec2i& pos ) { m_position = pos; }
