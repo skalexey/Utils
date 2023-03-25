@@ -63,7 +63,7 @@ namespace math
 			return rt_this;
 		}
 		RT& normalize() { return operator/=(length()); }
-		RT& normalizeTo(T len) { return normalize(); *this *= len; }
+		RT& normalize_to(T len) { return normalize(); *this *= len; }
 
 		// Bool operators
 		bool operator == (const RT& r) const {
@@ -72,9 +72,9 @@ namespace math
 					return false;
 			return true;
 		}
-		bool operator > (const vector_t& r) const { return sqlength() > r.sqlength(); }
-		bool operator < (const vector_t& r) const { return sqlength() < r.sqlength(); }
-		bool operator != (const vector_t& r) const { return !operator==(r); }
+		bool operator > (const RT& r) const { return sqlength() > r.sqlength(); }
+		bool operator < (const RT& r) const { return sqlength() < r.sqlength(); }
+		bool operator != (const RT& r) const { return !operator==(r); }
 
 		// Value returning operations
 		T length() const { return (T)std::sqrt(sqlength()); }
