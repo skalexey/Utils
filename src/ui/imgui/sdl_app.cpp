@@ -40,10 +40,11 @@ namespace utils
 
 				SDL_DisplayMode DM;
 				SDL_GetCurrentDisplayMode(0, &DM);
-				auto Width = DM.w;
-				auto Height = DM.h;
-				SDL_Log("Display: %dx%d", Width, Height);
+				auto sw = DM.w;
+				auto sh = DM.h;
+				SDL_Log("Display: %dx%d", sw, sh);
 
+				m_resolution.y = m_resolution.x / (sw / sh);
 				m_window = create_window();
 
 				// Setup SDL_Renderer instance
