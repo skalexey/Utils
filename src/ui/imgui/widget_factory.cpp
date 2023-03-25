@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utils/ui/imgui/widgets/text.h>
 #include <utils/ui/imgui/widgets/label.h>
 #include <utils/ui/imgui/widgets/button.h>
 #include <utils/ui/imgui/widgets/text_input.h>
@@ -9,6 +10,11 @@ utils::ui::imgui::widget_factory& utils::ui::imgui::widget_factory::instance()
 {
 	static widget_factory instance;
 	return instance;
+}
+
+utils::ui::text_ptr utils::ui::imgui::widget_factory::create_text() const
+{
+	return std::make_shared<utils::ui::imgui::text>();
 }
 
 utils::ui::label_ptr utils::ui::imgui::widget_factory::create_label() const

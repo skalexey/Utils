@@ -3,32 +3,20 @@
 #include <memory>
 #include <string>
 #include <utils/ui/widget.h>
+#include <utils/ui/widgets/text.h>
 
 namespace utils
 {
 	namespace ui
 	{
-		class label : public virtual widget
+		class label : public text
 		{
 		public:
 			label() = default;
 			label(const std::string& label)
-				: widget()
-				, m_text(label) 
+				: text()
 			{}
 
-			void set_text(const std::string& text) {
-				m_text = text;
-			}
-
-			const std::string& get_text() const {
-				return m_text;
-			}
-
-			virtual void on_show() override = 0;
-
-		private:
-			std::string m_text;
 		};
 		using label_ptr = std::shared_ptr<label>;
 	}

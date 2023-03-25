@@ -5,7 +5,7 @@
 #include <optional>
 #include <utils/ui/widgets/dialog.h>
 #include <utils/ui/widgets/button.h>
-#include <utils/ui/widgets/label.h>
+#include <utils/ui/widgets/text.h>
 #include <utils/ui/widget_factory.h>
 
 namespace utils
@@ -19,11 +19,12 @@ namespace utils
 
 			dialog_with_buttons()
 			{
+				set_auto_resize(true);
 				set_title("Dialog With Buttons");
 				// Factory here is supposed to be already set in the implementation class
-				set_message_label(get_factory().create_label());
+				set_message_text(get_factory().create_text());
 				set_on_show([this]() {
-					m_lbl_message->show();
+					m_text_message->show();
 					for (auto& btn : m_buttons)
 						btn->show();
 				});
@@ -47,7 +48,7 @@ namespace utils
 					add_button(action.first, action.second);
 			}
 
-			label& message_label() { return *m_lbl_message; }
+			text& message_text() { return *m_text_message; }
 
 			void add_button(const std::string& text, const button::on_click_t& on_click = nullptr) {
 				auto btn = get_factory().create_button();
@@ -57,24 +58,24 @@ namespace utils
 			}
 			void set_message(const std::string& message)
 			{
-				if (!m_lbl_message)
-					m_lbl_message = get_factory().create_label();
-				m_lbl_message->set_text(message);
+				if (!m_text_message)
+					m_text_message = get_factory().create_text();
+				m_text_message->set_text(message);
 			}
 
 		protected:
 			void add_button(const ui::button_ptr& btn) {
 				m_buttons.push_back(btn);
 			}
-			void set_message_label(const label_ptr& lbl) {
-				m_lbl_message = lbl;
+			void set_message_text(const text_ptr& lbl) {
+				m_text_message = lbl;
 			}
 
 		protected:
 			std::vector<button_ptr> m_buttons;
 
 		private:
-			label_ptr m_lbl_message;
+			text_ptr m_text_message;
 		};
 		using dialog_with_buttons_ptr = std::unique_ptr<dialog_with_buttons>;
 	}

@@ -3,7 +3,6 @@
 #include <memory>
 #include <utils/ui/widgets/label.h>
 #include <utils/ui/imgui/widget.h>
-#include <imgui.h>
 
 namespace utils
 {
@@ -19,9 +18,7 @@ namespace utils
 				label() = default;
 				label(const std::string& label) : base(label) {}
 
-				void on_show() override {
-					ImGui::Text("%s", get_text().c_str());
-				}
+				void on_show() override;
 			};
 			using label_ptr = std::unique_ptr<label>;
 		}

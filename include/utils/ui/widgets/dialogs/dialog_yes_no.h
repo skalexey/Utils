@@ -78,7 +78,7 @@ namespace utils
 				}
 
 				virtual void message_label_show() {
-					message_label().show();
+					message_text().show();
 				}
 
 				void on_answer(bool answer) {
