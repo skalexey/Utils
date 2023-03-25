@@ -24,27 +24,46 @@ namespace utils
 				font->Scale = 1.5f;
 				// Set window position
 				auto& pos = get_position();
+				auto& sz = get_size();
+
 				ImGui::SetNextWindowPos(
 					ImVec2(float(pos.x), float(pos.y))
 					, pos == m_last_position ? ImGuiCond_Appearing : ImGuiCond_Always
 				);
 				m_last_position = pos;
-				auto& sz = get_size();
 				ImGui::SetNextWindowSize(
 					ImVec2(float(sz.x), float(sz.y))
 					, sz == m_last_size ? ImGuiCond_Appearing : ImGuiCond_Always
 				);
 				m_last_size = sz;
 				// Create the window
+
+				ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse;
+				
+				if (is_auto_resize())
+					window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
+
+				auto label = utils::format_str("%s##", get_title().c_str());
 				bool p_open = true;
 				auto p_open_ptr = is_close_button_enabled() ? &p_open : nullptr;
-				ImGuiWindowFlags window_flags = 0;
-				// TODO: check if we should use a static buffer
-				if (!ImGui::Begin(utils::format_str("%s##", get_title().c_str()).c_str(), p_open_ptr, window_flags))
+				if (is_modal())
 				{
-					// Early out if the window is collapsed, as an optimization.
-					ImGui::End();
-					return;
+					ImGui::OpenPopup(label.c_str());
+					if (!ImGui::BeginPopupModal(label.c_str(), p_open_ptr, window_flags))
+					{
+						// Early out if the window is collapsed, as an optimization.
+						ImGui::EndPopup();
+						return;
+					}
+				}
+				else
+				{
+					if (!ImGui::Begin(label.c_str(), p_open_ptr, window_flags))
+					{
+						// Early out if the window is collapsed, as an optimization.
+						ImGui::End();
+						return;
+					}
 				}
 
 				base::on_show();
@@ -54,7 +73,10 @@ namespace utils
 					close();
 
 				// End the window scope
-				ImGui::End();
+				if (is_modal())
+					ImGui::EndPopup();
+				else
+					ImGui::End();
 				return;
 			}
 		}
