@@ -24,6 +24,7 @@ namespace utils
 					, const std::string& title
 				)
 				{
+					set_title(title);
 					add_button(get_factory().create_button());
 					set_message(msg);
 					set_on_answer(on_answer);
