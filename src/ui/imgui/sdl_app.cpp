@@ -150,11 +150,33 @@ namespace utils
 				bool active = true;
 				while (SDL_PollEvent(&event))
 				{
-					ImGui_ImplSDL2_ProcessEvent(&event);
-					if (event.type == SDL_QUIT)
-						active = false;
-					if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(m_window))
-						active = false;
+					auto& io = ImGui::GetIO();
+#ifdef ANDROID
+					if (event.type != SDL_TEXTINPUT)
+#endif
+						ImGui_ImplSDL2_ProcessEvent(&event);
+					switch (event.type)
+					{
+						case SDL_TEXTINPUT:
+							SDL_Log("SDL_TEXTINPUT: '%s'", event.text.text);
+						break;
+
+						case SDL_TEXTEDITING:
+							SDL_Log("SDL_TEXTEDITING: '%s' [%d, %d]", event.edit.text, event.edit.start, event.edit.length);
+							if (auto state = ImGui::GetInputTextState(ImGui::GetActiveID()))
+								state->ClearText();
+							io.AddInputCharactersUTF8(event.text.text);
+						break;
+
+						case SDL_QUIT:
+							active = false;
+						break;
+
+						case SDL_WINDOWEVENT:
+							if (event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(m_window))
+								active = false;
+						break;
+					}
 				}
 
 				// Start the Dear ImGui frame
