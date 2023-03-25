@@ -88,17 +88,17 @@ namespace utils
 				//io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
 				//io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
 #ifdef ANDROID
-//  ImFontConfig font_cfg;
-//         font_cfg.FontDataOwnedByAtlas = false;
-//         font_cfg.MergeMode = false;
-//         font_cfg.MergeGlyphCenterV = true;
-//         io.Fonts->AddFontFromMemoryTTF(Roboto_TTF_Data, RobotoFont_TTF_DataSize, 18.0f, &font_cfg, io.Fonts->GetGlyphRangesCyrillic());
-				// ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\Arial.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+				auto resources_dir = android_get_temp_dir();
+				auto fpath = resources_dir + "/arial.ttf";
+				if (!utils::file::exists(fpath))
+					android_copy_assets();
+				ImFont* font = io.Fonts->AddFontFromFileTTF((resources_dir + "/arial.ttf").c_str(), 18.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+				
 #else
 
-				ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\Arial.ttf", 28.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
+				ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\Arial.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesCyrillic());
 #endif
-				//IM_ASSERT(font != NULL);
+				IM_ASSERT(font != NULL);
 				//io.Fonts->AddFontFromFileTTF("NotoSansCJKjp-Medium.otf", 20.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 
 
