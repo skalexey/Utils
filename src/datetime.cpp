@@ -63,6 +63,9 @@ namespace utils
 		{	// Parse as UTC time
 			auto tz = std::getenv("TZ");
 			setenv("TZ", "UTC", 1);
+#if _MSC_VER && !__INTEL_COMPILER
+			_tzset(); // This applies TZ variable changes
+#endif
 			std::tm tm{};
 			std::stringstream ss(str);
 			ss >> std::get_time(&tm, fmt.c_str());
@@ -71,6 +74,9 @@ namespace utils
 				setenv("TZ", tz, 1);
 			else
 				unsetenv("TZ");
+#if _MSC_VER && !__INTEL_COMPILER
+			_tzset();
+#endif
 			return std::chrono::system_clock::from_time_t(t);
 		}
 		else
