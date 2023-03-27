@@ -2,6 +2,15 @@
 #include <fstream>
 #include <string>
 #include <chrono>
+#include <sys/types.h>
+#include <sys/stat.h>
+#ifndef WIN32
+#include <unistd.h>
+#endif
+#ifdef WIN32
+#define stat _stat
+#endif
+
 #include <utils/file_utils.h>
 #ifndef FILESYSTEM_SUPPORTED
 #include <cstdio>
@@ -308,11 +317,19 @@ namespace utils
 			if (!utils::file::exists(fpath))
 				return std::chrono::system_clock::time_point();
 	#if __cplusplus < 202002L
+		#if defined(_WIN32)
 			auto tp = fs::last_write_time(fpath);
 			auto now = std::filesystem::file_time_type::clock::now();
 			auto dur = ch::system_clock::time_point::duration(now.time_since_epoch().count() - tp.time_since_epoch().count());
 			auto r = ch::system_clock::now() - dur;
 			return r;
+		#else
+			// This code words on Windows too
+			struct stat result;
+			if(stat(fpath.string().c_str(), &result)==0)
+				return std::chrono::system_clock::from_time_t(result.st_mtime);
+			return std::chrono::system_clock::time_point();
+		#endif
 	#elif defined(__APPLE__) || defined(__GNUC__)
 			auto tp = fs::last_write_time(fpath);
 			auto sctp = ch::time_point_cast<ch::system_clock::duration>(tp - ch::file_clock::now() + ch::system_clock::now());
