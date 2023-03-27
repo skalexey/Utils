@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <sstream>
 #include <utils/networking/downloader_with_auth.h>
 #include <utils/networking/downloader_with_version_control.h>
 #include <utils/networking/upload_file.h>
@@ -37,26 +36,49 @@ namespace
 		q.path = url_path_download;
 		q.values.add("p", remote_path);
 		std::string s;
+
+		auto upload = [=]() {
+			auto retcode = upload_file(local_path, ep, url_path_upload);
+			// TODO: process error here
+			d->update_last_version();
+			download_cb(retcode);
+		};
+
 		d->download_file_async(ep, [=](int code) {
 			auto ask_for_replace = [=]() {
 				ask_user("Replace with the downloaded version?", [=](bool yes) {
 					if (yes)
-						d->replace_with_download();
-					download_cb(0);
+						download_cb(d->replace_with_download());
+					else
+						download_cb(0);
 				});
 			};
 			if (code == downloader_with_version_control::erc::uncommitted_changes)
 			{
-				std::stringstream ss;
-				ss << "You have changes in '" << local_path << "'.\nWould you like to upload your file to the remote?";
 				ask_user(
-					ss.str()
+					STR("You have changes in '" << local_path << "'.\nWould you like to upload your file to the remote?")
 					, [=](bool yes)
 					{
 						if (yes)
-							download_cb(upload_file(local_path, ep, url_path_upload));
+							upload();
 						else
 							ask_for_replace();
+					}
+				);
+			}
+			else if (code == downloader_with_version_control::erc::uncommitted_old_changes)
+			{
+				ask_user(
+					STR("You have changes in '" << local_path << ", but there is a newer version available'.\nReplace your file with the downloaded version?")
+					, [=](bool yes)
+					{
+						if (yes)
+							download_cb(d->replace_with_download());
+						else
+							ask_user("Upload your file to the remote?", [=](bool yes) {
+								if (yes)
+									upload();
+							});
 					}
 				);
 			}

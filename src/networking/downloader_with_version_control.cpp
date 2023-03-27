@@ -24,8 +24,6 @@ namespace utils
 			, const http_response_cb& on_response
 		)
 		{
-			m_target = target_path;
-
 			return base::download_file(
 				ep
 				, query
@@ -42,8 +40,6 @@ namespace utils
 			, const http_response_cb& on_response
 		)
 		{
-			m_target = target_path;
-
 			base::download_file_async(
 				ep
 				, on_result
@@ -51,6 +47,18 @@ namespace utils
 				, target_path
 				, std::bind(&downloader_with_version_control::on_response, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, on_response)
 			);
+		}
+
+		fs::path downloader_with_version_control::get_last_version_path() const
+		{
+			return m_target.string() + ".last";
+		}
+
+		void downloader_with_version_control::on_before_download(const fs::path& target_path)
+		{
+			m_target = target_path;
+			m_last_version_modified = utils::file::exists(get_last_version_path()) 
+				&& !utils::file::same(m_target, get_last_version_path());
 		}
 
 		bool downloader_with_version_control::on_response(
@@ -122,36 +130,26 @@ namespace utils
 
 				// Check the modification time
 				LOG_DEBUG("Check the modification time");
+			#ifdef LOG_LEVEL_DEBUG
+				auto local_time = utils::time_to_string(local_mtp);
+				auto remote_time = utils::time_to_string(remote_mtp);
+			#endif
+				LOG_DEBUG("local_time: " << local_time);
+				LOG_DEBUG("remote_time: " << remote_time);
 				if (local_mtp < remote_mtp)
-				{
 					LOG_DEBUG("m_f_tp < remote_mtp (" << utils::time_to_string(local_mtp) << ", " << utils::time_to_string(remote_mtp) << ")");
-					// Overwrite with the download
-					if (content_differs)
-					{
-						if (!backup_local_file())
-							notify(erc::backup_error);
-						else
-						{
-							if (replace_with_download())
-								notify(http_client::erc::no_error);
-							else
-								notify(erc::store_download_error);
-						}
-					}
-					else
-						notify(http_client::erc::no_error);
-				}
+				else // The local file is newer;
+					LOG_DEBUG("The local file is newer");
+
+				if (content_differs)
+					notify(m_last_version_modified ? 
+						local_mtp < remote_mtp ? erc::uncommitted_old_changes : erc::uncommitted_changes
+						: replace_with_download()
+					);
 				else
 				{
-					// The local file is newer;
-					LOG_DEBUG("The local file is newer");
-					if (content_differs)
-						notify(erc::uncommitted_changes);
-					else
-					{
-						LOG_DEBUG("Files contents are the same");
-						notify(http_client::erc::no_error);
-					}
+					LOG_DEBUG("Files contents are the same");
+					notify(http_client::erc::no_error);
 				}
 			}
 			return true;
@@ -176,16 +174,20 @@ namespace utils
 			return false;
 		}
 
-		bool downloader_with_version_control::replace_with_download()
+		int downloader_with_version_control::replace_with_download()
 		{
+			if (!backup_local_file())
+				return erc::backup_error;
 			if (utils::file::move(get_file_path(), m_target) == 0)
 			{
+				if (utils::file::copy(m_target, get_last_version_path()) != 0)
+					return erc::update_last_version_error;
 				m_is_file_updated = true;
 				LOG_VERBOSE("Download file successfully stored into the local file's path '" << m_target << "'");
-				return true;
+				return http_client::erc::no_error;
 			}
 			LOG_ERROR("Error while placing the downloaded file '" << get_file_path() << "' into the target path '" << m_target << "'");
-			return false;
+			return erc::store_download_error;
 		}
 
 		void downloader_with_version_control::on_notify(int ec)
@@ -216,6 +218,13 @@ namespace utils
 		{
 			if (!m_backup.empty())
 				return utils::file::remove(m_backup);
+			return false;
+		}
+
+		bool downloader_with_version_control::update_last_version()
+		{
+			if (!m_target.empty())
+				return utils::file::copy(m_target, get_last_version_path()) == 0;
 			return false;
 		}
 	}
