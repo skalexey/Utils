@@ -13,9 +13,9 @@ namespace utils
 			// Order of inheritance is important here as imgui::dialog sets the widget factory first
 			class dialog_with_buttons: public imgui::dialog, public ui::dialog_with_buttons
 			{
-				using base = ui::dialog_with_buttons;
-
 			public:
+				using base = ui::dialog_with_buttons;
+				
 				dialog_with_buttons() : imgui::dialog(), base() {};
 				dialog_with_buttons(
 					const std::string& msg
@@ -26,6 +26,9 @@ namespace utils
 				void on_show() override {
 					utils::ui::imgui::dialog::on_show();
 				}
+
+			private:
+				WIDGET_REGISTRATOR(imgui::widget_factory, dialog_with_buttons);
 			};
 		}
 	}

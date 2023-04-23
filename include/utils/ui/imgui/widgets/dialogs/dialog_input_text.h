@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <utils/ui/imgui/fwd.h>
 #include <utils/ui/imgui/widgets/label.h>
 #include <utils/ui/imgui/widgets/text_input.h>
 #include <utils/ui/widgets/dialogs/dialog_input_text.h>
@@ -16,9 +17,9 @@ namespace utils
 			// Order of inheritance is important here as imgui::dialog sets the widget factory first
 			class dialog_input_text : public imgui::dialog, public ui::dialog_input_text
 			{
-				using base = ui::dialog_input_text;
-
 			public:
+				using base = ui::dialog_input_text;
+				
 				dialog_input_text() : imgui::dialog(), base() {}
 				dialog_input_text(
 					const std::string& msg
@@ -32,6 +33,9 @@ namespace utils
 				void on_show() override {
 					imgui::dialog::on_show();
 				}
+
+			private:
+				WIDGET_REGISTRATOR(imgui::widget_factory, imgui::dialog_input_text);
 			};
 		}
 	}

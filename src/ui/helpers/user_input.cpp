@@ -1,7 +1,7 @@
 #include <utils/ui/app.h>
-#include <utils/ui/imgui/widgets/dialogs/dialog_yes_no.h>
-#include <utils/ui/imgui/widgets/dialogs/dialog_message.h>
-#include <utils/ui/imgui/widgets/dialogs/dialog_input_text.h>
+#include <utils/ui/widgets/dialogs/dialog_yes_no.h>
+#include <utils/ui/widgets/dialogs/dialog_message.h>
+#include <utils/ui/widgets/dialogs/dialog_input_text.h>
 #include <utils/ui/helpers/user_input.h>
 #include <utils/Log.h>
 #include <utils/common.h>
@@ -22,7 +22,12 @@ namespace utils
 			)
 			{
 				LOG("ask_user: '" << question << "' ['" << utils::to_str(yes_btn_text) << "'; '" << utils::to_str(no_btn_text) << "']\n");
-				auto d = std::make_shared<imgui::dialog_yes_no>(question, on_answer, yes_btn_text, no_btn_text, "Question");
+				auto d = m_app->get_factory().create<dialog_yes_no>();
+				d->set_on_answer(on_answer);
+				d->set_message(question);
+				d->set_yes_text(yes_btn_text ? yes_btn_text : "Yes");
+				d->set_no_text(no_btn_text ? no_btn_text : "No");
+				d->set_title("Question");
 				m_app->add_on_update([=](float dt) {
 					return d->show();
 				});
@@ -35,10 +40,13 @@ namespace utils
 			)
 			{
 				LOG("show_message: '" << message << "' ['" << utils::to_str(ok_btn_text) << "']\n");
-				auto d = std::make_shared<imgui::dialog_message>(message, [=](bool) {
+				auto d = m_app->get_factory().create<dialog_message>();
+				d->set_message(message);
+				d->set_on_answer([=](bool) {
 					if (on_close)
 						on_close();
-				}, ok_btn_text);
+				});
+				d->set_ok_text(ok_btn_text ? ok_btn_text : "Ok");
 				m_app->add_on_update([=](float dt) {
 					return d->show();
 				});
@@ -53,16 +61,16 @@ namespace utils
 			)
 			{
 				LOG("ask_line: '" << msg << "' ['" << utils::to_str(ok_btn_text) << "'; '" << utils::to_str(cancel_btn_text) << "']\n");
-				auto d = std::make_shared<utils::ui::imgui::dialog_input_text>(
-					msg
-					, [=](const std::string& path, bool cancelled) {
-						on_answer(path, cancelled);
-					}
-					, default_value
-					, ""
-					, ok_btn_text
-					, cancel_btn_text
-				);
+				auto d = m_app->get_factory().create<dialog_input_text>();
+				// TODO: move this all into an Init() method.
+				d->message_label().set_text(msg);
+				d->set_on_result([=](const std::string& path, bool cancelled) {
+					on_answer(path, cancelled);
+				});
+				d->text_input().set_value(default_value);
+				d->text_input().set_label("");
+				d->ok_button().set_text(ok_btn_text ? ok_btn_text : "Ok");
+				d->cancel_button().set_text(cancel_btn_text ? cancel_btn_text : "Cancel");
 				m_app->add_on_update([=](float dt) {
 					return d->show();
 				});

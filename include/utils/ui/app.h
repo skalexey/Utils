@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <list>
-#include <utils/ui/widget.h>
+#include <utils/ui/fwd.h>
 
 namespace utils
 {
@@ -54,6 +54,8 @@ namespace utils
 			void exit(int erc) {
 				throw run_exception(erc);
 			}
+
+			virtual const widget_factory& get_factory() const = 0;
 
 		private:
 			on_update_list_t m_on_update;

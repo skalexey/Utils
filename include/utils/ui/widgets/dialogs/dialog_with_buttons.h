@@ -22,7 +22,7 @@ namespace utils
 				set_auto_resize(true);
 				set_title("Dialog With Buttons");
 				// Factory here is supposed to be already set in the implementation class
-				set_message_text(get_factory().create_text());
+				set_message_text(get_factory().create<ui::text>());
 				set_on_show([this]() {
 					m_text_message->show();
 					for (auto& btn : m_buttons)
@@ -51,7 +51,7 @@ namespace utils
 			text& message_text() { return *m_text_message; }
 
 			void add_button(const std::string& text, const button::on_click_t& on_click = nullptr) {
-				auto btn = get_factory().create_button();
+				auto btn = get_factory().create<ui::button>();
 				btn->set_text(text);
 				btn->set_on_click(on_click);
 				add_button(btn);
@@ -59,7 +59,7 @@ namespace utils
 			void set_message(const std::string& message)
 			{
 				if (!m_text_message)
-					m_text_message = get_factory().create_text();
+					m_text_message = get_factory().create<ui::text>();
 				m_text_message->set_text(message);
 			}
 

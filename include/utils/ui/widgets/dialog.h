@@ -25,7 +25,9 @@ namespace utils
 				set_horizontal_alignment(alignment::center);
 			}
 
-			void set_factory(widget_factory& factory) { m_factory = &factory; }
+			void set_factory(widget_factory& factory) {
+				m_factory = &factory;
+			}
 			
 			const widget_factory& get_factory() const {
 				assert(m_factory && "Forgot to call set_factory()?");

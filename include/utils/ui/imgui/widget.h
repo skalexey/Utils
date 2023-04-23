@@ -1,6 +1,6 @@
 #pragma once
 
-#include <imgui.h>
+#include <memory>
 #include <utils/ui/widget.h>
 
 namespace utils
@@ -12,10 +12,7 @@ namespace utils
 			class widget : public virtual ui::widget
 			{
 				public:
-					vec2i get_screen_size() const override {
-						auto& s = ImGui::GetIO().DisplaySize;
-						return vec2i(s.x, s.y);
-					}
+					vec2i get_screen_size() const override;
 			};
 
 			using widget_ptr = std::shared_ptr<imgui::widget>;

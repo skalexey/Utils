@@ -1,9 +1,11 @@
 #pragma once
 
-#include <utils/ui/widgets/text.h>
-#include <utils/ui/widgets/label.h>
-#include <utils/ui/widgets/button.h>
-#include <utils/ui/widgets/text_input.h>
+#include <cstdarg>
+#include <memory>
+#include <typeinfo>
+#include <unordered_map>
+#include <functional>
+#include <utils/ui/fwd.h>
 
 namespace utils
 {
@@ -12,11 +14,19 @@ namespace utils
 		class widget_factory
 		{
 		public:
-			// TODO: use variadic arguments list
-			virtual text_ptr create_text() const { return nullptr; };
-			virtual label_ptr create_label() const { return nullptr; };
-			virtual button_ptr create_button() const { return nullptr; };
-			virtual text_input_ptr create_text_input() const { return nullptr; };
+			template <typename T>
+			std::shared_ptr<T> create() const {
+				auto& creators = get_creators();
+				auto it = creators.find(typeid(T).name());
+				if (it != creators.end())
+					return std::dynamic_pointer_cast<T>(it->second());
+				return nullptr;
+			}
+
+		protected:
+			using creator_t = std::function<widget_ptr()>;
+			using creators_t = std::unordered_map<std::string, creator_t>;
+			virtual creators_t& get_creators() const = 0;
 		};
 	}
 }

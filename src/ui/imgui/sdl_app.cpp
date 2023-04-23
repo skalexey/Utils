@@ -11,6 +11,7 @@
 #include <imgui_impl_sdlrenderer.h>
 #include <utils/ui/imgui/sdl_app.h>
 #include <utils/file_utils.h>
+#include <utils/ui/imgui/widget_factory.h>
 #ifdef ANDROID
 #include "bridge.h"
 #endif
@@ -26,6 +27,11 @@ namespace utils
 	{
 		namespace imgui
 		{
+			const ui::widget_factory& sdl_app::get_factory() const
+			{
+				return imgui::widget_factory::instance();
+			}
+			
 			int sdl_app::on_run() {
 
 				// Setup SDL

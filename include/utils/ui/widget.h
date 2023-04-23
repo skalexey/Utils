@@ -113,5 +113,20 @@ namespace utils
 		};
 
 		using widget_ptr = std::shared_ptr<widget>;
+
+		template <typename Factory_t, typename Widget_t>
+		struct registrator
+		{
+			using widget_t = Widget_t;
+			using factory_t = Factory_t;
+			registrator() {
+				factory_t::register_creator<widget_t::base, widget_t>();
+			}
+		};
+		#define WIDGET_REGISTRATOR(factory_t, widget_t) \
+			using registrator_t = utils::ui::registrator<factory_t, widget_t>; \
+			static registrator_t s_registrator;
+		
+		#define REGISTER_WIDGET(owner_t) owner_t::registrator_t owner_t::s_registrator;
 	}
 }

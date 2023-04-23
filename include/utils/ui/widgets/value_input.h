@@ -52,7 +52,7 @@ namespace utils
 
 			void set_label(const std::string& label) {
 				m_label = label;
-				m_input_label = utils::format_str("##%s", m_label.c_str());
+				m_input_label = utils::format_str("%s##Answer", m_label.c_str());
 			}
 
 			const T& get_value() const { return m_edit_value; }

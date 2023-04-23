@@ -11,7 +11,7 @@ namespace utils
 		{
 			imgui::dialog::dialog()
 			{
-				set_factory(widget_factory::instance());
+				set_factory(imgui::widget_factory::instance());
 				set_title("ImGui Dialog");
 			}
 

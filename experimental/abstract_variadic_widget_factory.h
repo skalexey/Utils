@@ -14,12 +14,6 @@ namespace utils
 		class widget_factory
 		{
 		public:
-			// TODO: use variadic arguments list
-			virtual text_ptr create_text() const { return nullptr; };
-			virtual label_ptr create_label() const { return nullptr; };
-			virtual button_ptr create_button() const { return nullptr; };
-			virtual text_input_ptr create_text_input() const { return nullptr; };
-			
 			//TODO: support variadic arguments
 			//template <typename T, typename... TArgs>
 			//std::shared_ptr<T> create(TArgs... args) const {

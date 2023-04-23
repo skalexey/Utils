@@ -20,10 +20,20 @@ namespace utils
 				using on_result_t = std::function<void(const std::string& result, bool cancelled)>;
 				dialog_input_text() {
 					// Factory here is supposed to be already created in the implementation class
-					m_message_label = get_factory().create_label();
-					m_text_input = get_factory().create_text_input();
-					m_ok_button = get_factory().create_button();
-					m_cancel_button = get_factory().create_button();
+					m_message_label = get_factory().create<ui::label>();
+					m_text_input = get_factory().create<ui::text_input>();
+					m_ok_button = get_factory().create<ui::button>();
+					m_cancel_button = get_factory().create<ui::button>();
+					m_ok_button->set_on_click([this](bool up) {
+						if (m_on_result)
+							m_on_result(m_text_input->get_value(), false);
+						close();
+					});
+					m_cancel_button->set_on_click([this](bool up) {
+						if (m_on_result)
+							m_on_result(m_text_input->get_value(), true);
+						close();
+					});
 					set_on_show([this]() {
 						m_message_label->show();
 						m_ok_button->show();
@@ -41,28 +51,23 @@ namespace utils
 				)
 					: dialog_input_text()
 				{
-					m_on_result = on_result;
+					set_on_result(on_result);
 					m_message_label->set_text(msg);
 					m_text_input->set_value(default_input_text);
 					// TODO: remove this label
-					m_text_input->set_label("Answer");
+					m_text_input->set_label(title);
 					m_ok_button->set_text(ok_btn_text ? ok_btn_text : "Ok");
-					m_ok_button->set_on_click([this](bool up) {
-						if (m_on_result)
-							m_on_result(m_text_input->get_value(), false);
-						close();
-					});
 					m_cancel_button->set_text(cancel_btn_text ? cancel_btn_text : "Cancel");
-					m_cancel_button->set_on_click([this](bool up) {
-						if (m_on_result)
-							m_on_result(m_text_input->get_value(), true);
-						close();
-					});
 				}
 
 				label& message_label() { return *m_message_label; }
 				text_input& text_input() { return *m_text_input; }
+				button& ok_button() { return *m_ok_button; }
+				button& cancel_button() { return *m_cancel_button; }
 
+				void set_on_result(const on_result_t& on_result) {
+					m_on_result = on_result;
+				}
 			protected:
 				label_ptr m_message_label;
 				button_ptr m_ok_button;

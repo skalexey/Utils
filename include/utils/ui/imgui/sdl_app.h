@@ -3,10 +3,10 @@
 
 #pragma once
 
+#include <utils/ui/imgui/fwd.h>
 #include <utils/ui/app.h>
-#include <math/vector_2d.h>
+#include <utils/vec2.h>
 #include <imgui.h>
-
 struct SDL_Renderer;
 struct SDL_Window;
 
@@ -16,7 +16,7 @@ namespace utils
 	{
 		namespace imgui
 		{
-			class sdl_app : public utils::ui::app
+			class sdl_app : public virtual utils::ui::app
 			{
 				using base = utils::ui::app;
 
@@ -31,6 +31,7 @@ namespace utils
 				static void request_keyboard();
 				
 			protected:
+				const ui::widget_factory& get_factory() const override;
 				virtual bool on_update(float dt) {
 					return true;
 				}

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utils/ui/imgui/fwd.h>
 #include <utils/ui/widgets/dialog.h>
 #include <utils/ui/imgui/widget.h>
 
@@ -17,6 +18,7 @@ namespace utils
 				// We don't pass the title as argument because of virtual inheritance
 				dialog();
 				void on_show() override;
+				
 			private:
 				vec2i m_last_size;
 				vec2i m_last_position;

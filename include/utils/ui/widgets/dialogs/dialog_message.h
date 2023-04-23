@@ -17,21 +17,25 @@ namespace utils
 			public:
 				using on_answer_t = utils::void_bool_cb;
 
+				dialog_message() {
+					add_button(get_factory().create<ui::button>());
+					ok_button().set_on_click([this](bool up) {
+						this->on_answer(true);
+					});
+				};
+
 				dialog_message(
 					const std::string& msg
 					, const on_answer_t& on_answer
 					, const char* ok_text
 					, const std::string& title
 				)
+					: dialog_message()
 				{
 					set_title(title);
-					add_button(get_factory().create_button());
 					set_message(msg);
 					set_on_answer(on_answer);
 					ok_button().set_text(ok_text ? ok_text : ok_text_default.c_str());
-					ok_button().set_on_click([this](bool up) {
-						this->on_answer(true);
-					});
 				}
 
 				void set_on_answer(const on_answer_t& on_answer) {

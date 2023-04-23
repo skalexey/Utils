@@ -25,8 +25,16 @@ namespace utils
 				dialog_yes_no()
 				{
 					set_title("Dialog Yes No");
-					add_button(get_factory().create_button());
-					add_button(get_factory().create_button());
+					add_button(get_factory().create<ui::button>());
+					add_button(get_factory().create<ui::button>());
+					yes_button().set_on_click([this](bool up) {
+						if (up)
+							this->on_answer(true);
+					});
+					no_button().set_on_click([this](bool up) {
+						if (up)
+							this->on_answer(false);
+					});
 				}
 
 				dialog_yes_no(
@@ -43,15 +51,7 @@ namespace utils
 					set_message(msg);
 					set_on_answer(on_answer);
 					yes_button().set_text(yes_text ? yes_text : yes_text_default.c_str());
-					yes_button().set_on_click([this](bool up) {
-						if (up)
-							this->on_answer(true);
-					});
 					no_button().set_text(no_text ? no_text : no_text_default.c_str());
-					no_button().set_on_click([this](bool up) {
-						if (up)
-							this->on_answer(false);
-					});
 				}
 
 				void set_on_answer(const on_answer_t& on_answer) {
