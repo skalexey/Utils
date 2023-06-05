@@ -11,13 +11,22 @@ namespace utils
 	{
 		namespace imgui
 		{
-			class text : public imgui::widget, public utils::ui::text
+			class text : public imgui::widget, public ui::text
 			{
 			public:
 				using base = ui::text;
 
-				text() = default;
-				text(const std::string& text) : base(text) {}
+				text(ui::node* parent = nullptr)
+					: ui::node(parent)
+					, base(parent)
+					, imgui::widget(parent)
+				{};
+
+				text(ui::node* parent, const std::string& text)
+					: ui::node(parent)
+					, base(parent, text)
+					, imgui::widget(parent)
+				{}
 
 				void on_show() override;
 

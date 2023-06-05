@@ -7,12 +7,14 @@
 #include <functional>
 #include <string>
 #include <utils/vec2.h>
+#include <utils/ui/fwd.h>
+#include <utils/ui/node.h>
 
 namespace utils
 {
 	namespace ui
 	{
-		class widget
+		class widget : public virtual node
 		{
 			public:
 				using on_show_cb = std::function<void()>;
@@ -27,6 +29,12 @@ namespace utils
 					, top
 					, bottom
 				};
+
+				widget(node* parent = nullptr) : node(parent) {}
+
+				virtual int post_construct() {
+					return 0;
+				}
 
 				bool show() {
 					on_before_show();
@@ -61,10 +69,10 @@ namespace utils
 				virtual vec2i get_screen_size() const = 0;
 				virtual const vec2i& get_position() const { return m_position; }
 				virtual const vec2i& get_size() const { return m_size; }
-				const vec2f& get_relative_position() const {
+                const vec2f get_relative_position() const {
 					return vec2f(get_position()) / vec2f(get_screen_size());
 				}
-				const vec2f& get_relative_size() const {
+                const vec2f get_relative_size() const {
 					return vec2f(get_size()) / vec2f(get_screen_size());
 				}
 				void set_position(const vec2i& pos ) { m_position = pos; }
@@ -109,7 +117,7 @@ namespace utils
 				on_hide_cb m_on_hide;
 				on_show_cb m_on_show;
 				on_show_cb m_on_before_show;
-				bool m_is_visible = true;
+				bool m_is_visible = false;
 		};
 
 		using widget_ptr = std::shared_ptr<widget>;
@@ -119,14 +127,14 @@ namespace utils
 		{
 			using widget_t = Widget_t;
 			using factory_t = Factory_t;
-			registrator() {
-				factory_t::register_creator<widget_t::base, widget_t>();
+            registrator() {
+                factory_t::template register_creator<typename widget_t::base, widget_t>();
 			}
 		};
 		#define WIDGET_REGISTRATOR(factory_t, widget_t) \
 			using registrator_t = utils::ui::registrator<factory_t, widget_t>; \
 			static registrator_t s_registrator;
 		
-		#define REGISTER_WIDGET(owner_t) owner_t::registrator_t owner_t::s_registrator;
+        #define REGISTER_WIDGET(owner_t) owner_t::registrator_t owner_t::s_registrator;
 	}
 }

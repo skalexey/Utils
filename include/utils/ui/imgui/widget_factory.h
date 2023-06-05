@@ -1,7 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-#include <functional>
 #include <memory>
 #include <utils/ui/widget_factory.h>
 
@@ -21,8 +19,10 @@ namespace utils
 				static void register_creator() {
 					if (!m_creators)
 						m_creators = new creators_t();
-					(*m_creators)[typeid(Base).name()] = []() {
-						return std::make_shared<Final>();
+					(*m_creators)[typeid(Base).name()] = [](ui::node* parent) {
+						auto ptr = std::make_shared<Final>(parent);
+						ptr->post_construct(); // Allow to run code after the constructor worked out
+						return ptr;
 					};
 				}
 

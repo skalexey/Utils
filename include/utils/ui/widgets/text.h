@@ -11,10 +11,11 @@ namespace utils
 		class text : public virtual widget
 		{
 		public:
-			text() = default;
-			text(const std::string& text)
-				: widget()
-				, m_text(text) 
+			text(node* parent = nullptr) : widget(parent) {};
+			
+			text(node* parent, const std::string& text)
+				: widget(parent)
+				, m_text(text)
 			{}
 
 			void set_text(const std::string& text) {

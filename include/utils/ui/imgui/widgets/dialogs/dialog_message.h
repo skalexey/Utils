@@ -16,14 +16,16 @@ namespace utils
 			public:
 				using base = utils::ui::dialog_message;
 				
+				dialog_message(ui::node* parent = nullptr);
+
 				dialog_message(
-					const std::string& msg
-					, const base::on_answer_t& on_answer
+					ui::node* parent
+					, const std::string& msg
+					, const base::on_answer_t& on_answer = {}
 					, const char* ok_text = nullptr
 					, const std::string& title = {}
 				);
 
-				dialog_message() = default;
 			protected:
 				void on_show() override {
 					imgui::dialog::on_show();
@@ -32,6 +34,7 @@ namespace utils
 				void button_ok_show() override;
 
 			private:
+				void init();
 				WIDGET_REGISTRATOR(imgui::widget_factory, dialog_message);
 			};
 		}

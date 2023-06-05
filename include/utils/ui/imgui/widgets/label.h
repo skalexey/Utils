@@ -11,19 +11,29 @@ namespace utils
 	{
 		namespace imgui
 		{
-			class label : public imgui::widget, public utils::ui::label
+			class label : public imgui::widget, public ui::label
 			{
 			public:
 				using base = ui::label;
 
-				label() = default;
-				label(const std::string& label) : base(label) {}
+				label(ui::node* parent = nullptr)
+					: ui::node(parent)
+					, base(parent)
+					, imgui::widget(parent)
+				{}
+
+				label(ui::node* parent, const std::string& label)
+					: ui::node(parent)
+					, base(parent, label)
+					, imgui::widget(parent)
+				{}
 
 				void on_show() override;
 
 			protected:
 				WIDGET_REGISTRATOR(imgui::widget_factory, label);
 			};
+			
 			using label_ptr = std::shared_ptr<label>;
 		}
 	}

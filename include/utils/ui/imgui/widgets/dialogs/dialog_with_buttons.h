@@ -16,15 +16,25 @@ namespace utils
 			public:
 				using base = ui::dialog_with_buttons;
 				
-				dialog_with_buttons() : imgui::dialog(), base() {};
+				dialog_with_buttons(ui::node* parent = nullptr)
+					: ui::node(parent)
+					, base(parent)
+					, imgui::dialog(parent)
+				{}
+
 				dialog_with_buttons(
-					const std::string& msg
-					, const actions_t& actions
+					ui::node* parent
+					, const std::string& msg
+					, const actions_t& actions = {}
 					, const std::optional<std::string>& title = {}
-				) : imgui::dialog(), base(msg, actions, title) {}
+				)
+					: ui::node(parent)
+					, base(parent, msg, actions, title)
+					, imgui::dialog(parent)
+				{}
 
 				void on_show() override {
-					utils::ui::imgui::dialog::on_show();
+					imgui::dialog::on_show();
 				}
 
 			private:

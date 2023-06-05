@@ -11,12 +11,25 @@ namespace utils
 	{
 		namespace imgui
 		{
-			class button : public imgui::widget, public utils::ui::button
+			class button : public imgui::widget, public ui::button
 			{
 			public:
-				using base = utils::ui::button;
-				button() = default;
-				button(const std::string& label, const on_click_t& on_click = nullptr) : base(label, on_click) {}
+				using base = ui::button;
+				
+				button(ui::node* parent = nullptr) 
+					: ui::node(parent)
+					, base(parent)
+					, imgui::widget(parent)
+				{}
+
+				button(	ui::node* parent
+						, const std::string& label
+						, const on_click_t& on_click = nullptr
+				)
+					: ui::node(parent)
+					, base(parent, label, on_click)
+					, imgui::widget(parent)
+				{}
 
 				void on_show() override;
 

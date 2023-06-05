@@ -11,13 +11,31 @@ namespace utils
 		{
 			REGISTER_WIDGET(imgui::dialog_yes_no);
 
-			dialog_yes_no::dialog_yes_no(
-				const std::string& msg
+			imgui::dialog_yes_no::dialog_yes_no(ui::node* parent)
+				: ui::node(parent)
+				, base(parent)
+				, imgui::dialog(parent)
+			{
+				init();
+			}
+
+			imgui::dialog_yes_no::dialog_yes_no::dialog_yes_no(
+				ui::node* parent
+				, const std::string& msg
 				, const on_answer_t& on_answer
 				, const char* yes_text
 				, const char* no_text
 				, const std::optional<std::string>& title
-			) : imgui::dialog(), base(msg, on_answer, yes_text, no_text, title) {
+			)
+				: ui::node(parent)
+				, base(parent, msg, on_answer, yes_text, no_text, title)
+				, imgui::dialog(parent)
+			{
+				init();	
+			}
+
+			void imgui::dialog_yes_no::init()
+			{
 				yes_button().set_on_before_show([this]() {
 					ImGuiStyle& style = ImGui::GetStyle();
 					float width = 0.0f;
@@ -34,7 +52,7 @@ namespace utils
 					ImGui::SameLine();
 				});
 			}
-
+			
 			void imgui::dialog_yes_no::button_yes_show()
 			{
 				base::button_yes_show();

@@ -11,7 +11,7 @@ namespace utils
 		class window_controller
 		{
 		public:
-			window_controller(const utils::ui::app& app) : m_app(app) {}
+			window_controller(utils::ui::app& app) : m_app(app) {}
 			virtual bool show();
 			const widget_factory& get_factory() const;
 
@@ -25,7 +25,7 @@ namespace utils
 
 		private:
 			utils::ui::window_ptr m_view;
-			const utils::ui::app& m_app;
+			utils::ui::app& m_app;
 		};
 		using window_controller_ptr = std::shared_ptr<window_controller>;
 	}

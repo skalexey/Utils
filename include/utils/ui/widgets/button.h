@@ -16,9 +16,10 @@ namespace utils
 			using on_click_t = utils::void_bool_cb;
 			using base = widget;
 
-			button() = default;
-			button(const std::string& label, const on_click_t& on_click = nullptr)
-				: base()
+			button(node* parent = nullptr): base(parent) {}
+
+			button(node* parent, const std::string& label, const on_click_t& on_click = nullptr)
+				: base(parent)
 				, m_label(label) 
 				, m_on_click(on_click)
 			{}
@@ -33,8 +34,11 @@ namespace utils
 
 			virtual void on_show() override = 0;
 
+			virtual void on_set_text(const std::string& text) {}
+
 			void set_text(const std::string& text) {
 				m_label = text;
+				on_set_text(m_label);
 			}
 
 			const std::string& get_text() const {

@@ -22,7 +22,7 @@ namespace utils
 			)
 			{
 				LOG("ask_user: '" << question << "' ['" << utils::to_str(yes_btn_text) << "'; '" << utils::to_str(no_btn_text) << "']\n");
-				auto d = m_app->get_factory().create<dialog_yes_no>();
+				auto d = m_app->get_factory().create<dialog_yes_no>(m_app);
 				d->set_on_answer(on_answer);
 				d->set_message(question);
 				d->set_yes_text(yes_btn_text ? yes_btn_text : "Yes");
@@ -40,7 +40,7 @@ namespace utils
 			)
 			{
 				LOG("show_message: '" << message << "' ['" << utils::to_str(ok_btn_text) << "']\n");
-				auto d = m_app->get_factory().create<dialog_message>();
+				auto d = m_app->get_factory().create<dialog_message>(m_app);
 				d->set_message(message);
 				d->set_on_answer([=](bool) {
 					if (on_close)
@@ -61,7 +61,7 @@ namespace utils
 			)
 			{
 				LOG("ask_line: '" << msg << "' ['" << utils::to_str(ok_btn_text) << "'; '" << utils::to_str(cancel_btn_text) << "']\n");
-				auto d = m_app->get_factory().create<dialog_input_text>();
+				auto d = m_app->get_factory().create<dialog_input_text>(m_app);
 				// TODO: move this all into an Init() method.
 				d->message_label().set_text(msg);
 				d->set_on_result([=](const std::string& path, bool cancelled) {

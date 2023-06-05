@@ -3,8 +3,6 @@
 #include <memory>
 #include <string>
 #include <utils/ui/imgui/fwd.h>
-#include <utils/ui/imgui/widgets/label.h>
-#include <utils/ui/imgui/widgets/text_input.h>
 #include <utils/ui/widgets/dialogs/dialog_input_text.h>
 #include <utils/ui/imgui/widgets/dialog.h>
 
@@ -20,15 +18,25 @@ namespace utils
 			public:
 				using base = ui::dialog_input_text;
 				
-				dialog_input_text() : imgui::dialog(), base() {}
+				dialog_input_text(ui::node* parent = nullptr)
+					: ui::node(parent)
+					, base(parent)
+					, imgui::dialog(parent)
+				{}
+
 				dialog_input_text(
-					const std::string& msg
-					, const on_result_t& on_result
+					ui::node* parent
+					, const std::string& msg
+					, const on_result_t& on_result = {}
 					, const std::string& default_input_text = {}
 					, const std::string& title = {}
 					, const char* ok_btn_text = nullptr
 					, const char* cancel_btn_text = nullptr
-				) : imgui::dialog(), base(msg, on_result, default_input_text, title, ok_btn_text, cancel_btn_text) {}
+				)
+					: ui::node(parent)
+					, base(parent, msg, on_result, default_input_text, title, ok_btn_text, cancel_btn_text)
+					, imgui::dialog(parent)
+				{}
 
 				void on_show() override {
 					imgui::dialog::on_show();

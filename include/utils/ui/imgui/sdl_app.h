@@ -1,12 +1,10 @@
 // 
-// Application UI logic controller.
+// ImGui-SDL Application UI logic controller.
 
 #pragma once
 
-#include <utils/ui/imgui/fwd.h>
-#include <utils/ui/app.h>
-#include <utils/vec2.h>
-#include <imgui.h>
+#include <utils/ui/imgui/app.h>
+
 struct SDL_Renderer;
 struct SDL_Window;
 
@@ -16,44 +14,32 @@ namespace utils
 	{
 		namespace imgui
 		{
-			class sdl_app : public virtual utils::ui::app
+			class sdl_app : public imgui::app
 			{
-				using base = utils::ui::app;
+				using base = imgui::app;
 
 			public:
+				sdl_app(int argc, char* argv[])
+					: ui::node(nullptr)
+					, ui::app(argc, argv)
+					, base::app(argc, argv)
+				{}
 				bool update(float dt) override final;
 
-				void set_resolution(const utils::vec2i& resolution) { m_resolution = resolution; }
-				void set_resolution(int x, int y) { m_resolution = { x, y }; }
-				const utils::vec2i& get_resolution() const { return m_resolution; }
-			
 			public:
 				static void request_keyboard();
 				
 			protected:
-				const ui::widget_factory& get_factory() const override;
-				virtual bool on_update(float dt) {
-					return true;
-				}
 				int on_run() override final;
-				virtual int init() {
-					return 0;
-				};
-
-				void set_clear_color(const ImVec4& color) { m_clear_color = color; }
-				const ImVec4& get_clear_color() const { return m_clear_color; }
+				void cleanup() override final;
 				
 			protected:
 				virtual SDL_Window* create_window();
 				SDL_Window* get_window() { return m_window; }
 
-			protected:
-				ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
 			private:
 				SDL_Renderer* m_renderer = nullptr;
 				SDL_Window* m_window = nullptr;
-				utils::vec2i m_resolution = { 1024, 720 };
 			};
 		}
 	}

@@ -12,25 +12,30 @@ namespace utils
 		{
 			const std::string ok_text_default = "ok";
 
-			using base = utils::ui::dialog_with_buttons;
+			using base = dialog_with_buttons;
 
 			public:
 				using on_answer_t = utils::void_bool_cb;
 
-				dialog_message() {
-					add_button(get_factory().create<ui::button>());
+				dialog_message(node* parent = nullptr)
+					: base(parent)
+				{}
+
+				int post_construct() {
+					add_button(get_factory().create<ui::button>(this));
 					ok_button().set_on_click([this](bool up) {
 						this->on_answer(true);
 					});
-				};
-
-				dialog_message(
-					const std::string& msg
+					return 0;
+				}
+				
+				// In place of a constructor as we only support default one
+				virtual void init(
+				    const std::string& msg
 					, const on_answer_t& on_answer
 					, const char* ok_text
 					, const std::string& title
 				)
-					: dialog_message()
 				{
 					set_title(title);
 					set_message(msg);

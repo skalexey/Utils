@@ -15,9 +15,12 @@ namespace utils
 			using base = widget;
 
 		public:
+			value_input(node* parent = nullptr) : base(parent) {}
+			
 			using on_update_t = std::function<void(const T&)>;
 			value_input(
-				const std::string& label = {}
+				node* parent
+				, const std::string& label
 				, const T& default_value = {}
 				, const on_update_t& on_update = nullptr
 			)

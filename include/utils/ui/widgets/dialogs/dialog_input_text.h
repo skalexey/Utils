@@ -18,12 +18,23 @@ namespace utils
 
 			public:
 				using on_result_t = std::function<void(const std::string& result, bool cancelled)>;
-				dialog_input_text() {
+				dialog_input_text(node* parent = nullptr)
+					: base(parent)
+				{
 					// Factory here is supposed to be already created in the implementation class
-					m_message_label = get_factory().create<ui::label>();
-					m_text_input = get_factory().create<ui::text_input>();
-					m_ok_button = get_factory().create<ui::button>();
-					m_cancel_button = get_factory().create<ui::button>();
+					set_on_show([this]() {
+						m_message_label->show();
+						m_ok_button->show();
+						m_cancel_button->show();
+						m_text_input->show();
+					});
+				}
+				int post_construct() override
+				{
+					m_message_label = get_factory().create<ui::label>(this);
+					m_text_input = get_factory().create<ui::text_input>(this);
+					m_ok_button = get_factory().create<ui::button>(this);
+					m_cancel_button = get_factory().create<ui::button>(this);
 					m_ok_button->set_on_click([this](bool up) {
 						if (m_on_result)
 							m_on_result(m_text_input->get_value(), false);
@@ -40,16 +51,17 @@ namespace utils
 						m_cancel_button->show();
 						m_text_input->show();
 					});
+					return 0;
 				}
-				dialog_input_text(
-					const std::string& msg
-					, const on_result_t& on_result
-					, const std::string& default_input_text
-					, const std::string& title
+				// In place of a constructor as we only support default one
+				virtual void init(
+				    const std::string& msg
+					, const on_result_t& on_result = {}
+					, const std::string& default_input_text = {}
+					, const std::string& title = {}
 					, const char* ok_btn_text = nullptr
 					, const char* cancel_btn_text = nullptr
 				)
-					: dialog_input_text()
 				{
 					set_on_result(on_result);
 					m_message_label->set_text(msg);
@@ -68,6 +80,7 @@ namespace utils
 				void set_on_result(const on_result_t& on_result) {
 					m_on_result = on_result;
 				}
+				
 			protected:
 				label_ptr m_message_label;
 				button_ptr m_ok_button;

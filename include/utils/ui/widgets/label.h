@@ -12,9 +12,10 @@ namespace utils
 		class label : public text
 		{
 		public:
-			label() = default;
-			label(const std::string& label)
-				: text()
+			label(node* parent = nullptr) : text(parent) {}
+			
+			label(node* parent, const std::string& label)
+				: text(parent, label)
 			{}
 
 		};

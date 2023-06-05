@@ -3,7 +3,7 @@
 #include <utils/io_utils.h>
 #include <utils/ui/imgui/widgets/text_input.h>
 #include <utils/ui/imgui/sdl_app.h>
-#include <utils/ui/imgui/widgets/text_input.h>
+#include <utils/ui/imgui/widget_factory.h>
 
 namespace utils
 {
@@ -11,6 +11,8 @@ namespace utils
 	{
 		namespace imgui
 		{
+			REGISTER_WIDGET(imgui::text_input);
+
             bool imgui::text_input::show_input()
 			{
 				// TODO: do smth with this resize:
@@ -28,6 +30,7 @@ namespace utils
 				{
 					auto& p = get_position();
 					auto& s = get_size();
+					// TODO: abstract
 					SDL_Rect rec = { p.x, p.y, s.x, s.y };
 					SDL_SetTextInputRect(&rec);
 					sdl_app::request_keyboard();

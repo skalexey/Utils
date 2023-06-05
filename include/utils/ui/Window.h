@@ -16,7 +16,8 @@ namespace utils
 			using on_close_cb = base::on_hide_cb;
 
 			public:
-
+				window(node* parent = nullptr) : base(parent) {}
+				
 				void close() {
 					set_visible(false);
 					on_close();

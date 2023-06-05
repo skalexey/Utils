@@ -8,6 +8,9 @@ namespace utils
 	{
 		namespace imgui
 		{
+			class entity;
+			class node;
+			class app;
 			class sdl_app;
 			class widget;
 			class window;
@@ -17,6 +20,8 @@ namespace utils
 			class label;
 			class button;
 			class text_input;
+			using entity_ptr = std::shared_ptr<entity>;
+			using node_ptr = std::shared_ptr<node>;
 			using window_ptr = std::shared_ptr<window>;
 			using widget_ptr = std::shared_ptr<widget>;
 			using dialog_ptr = std::shared_ptr<dialog>;

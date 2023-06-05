@@ -15,7 +15,8 @@ namespace utils
 			using base = window;
 
 		public:
-			dialog()
+			dialog(node* parent = nullptr)
+				: base(parent)
 			// We don't pass a factory into the constructor because of virtual inheritance,
 			// so it should be set using set_factory() method
 			{
@@ -23,15 +24,6 @@ namespace utils
 				set_size(vec2i(500, 320));
 				set_vertical_alignment(alignment::center);
 				set_horizontal_alignment(alignment::center);
-			}
-
-			void set_factory(widget_factory& factory) {
-				m_factory = &factory;
-			}
-			
-			const widget_factory& get_factory() const {
-				assert(m_factory && "Forgot to call set_factory()?");
-				return *m_factory;
 			}
 
 			const std::string& get_title() const override {
@@ -57,7 +49,6 @@ namespace utils
 			};
 
 		private:
-			widget_factory* m_factory = nullptr;
 			std::string m_title = "Dialog";
 			bool m_use_close_button = false;
 			bool m_is_modal = false;

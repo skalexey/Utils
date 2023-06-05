@@ -1,6 +1,5 @@
 #include <utils/string_utils.h>
 #include <utils/ui/imgui/widgets/dialog.h>
-#include <utils/ui/imgui/widget_factory.h>
 #include <imgui.h>
 
 namespace utils
@@ -9,9 +8,11 @@ namespace utils
 	{
 		namespace imgui
 		{
-			imgui::dialog::dialog()
+			imgui::dialog::dialog(ui::node* parent)
+				: ui::node(parent)
+				, ui::dialog(parent)
+				, imgui::window(parent)
 			{
-				set_factory(imgui::widget_factory::instance());
 				set_title("ImGui Dialog");
 			}
 

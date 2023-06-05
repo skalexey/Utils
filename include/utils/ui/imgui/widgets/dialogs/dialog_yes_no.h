@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <utils/ui/widgets/dialogs/dialog_yes_no.h>
 #include <utils/ui/imgui/widgets/dialog.h>
 
@@ -9,16 +10,18 @@ namespace utils
 	{
 		namespace imgui
 		{
+			// Order of inheritance is important here as imgui::dialog sets the widget factory first
 			class dialog_yes_no : public imgui::dialog, public ui::dialog_yes_no
 			{
 			public:
 				using base = ui::dialog_yes_no;
 				
-				// Order of initialization is important here as imgui::dialog sets the widget factory first
-				dialog_yes_no() : imgui::dialog(), base() {}
+				dialog_yes_no(ui::node* parent = nullptr);
+
 				dialog_yes_no(
-					const std::string& msg
-					, const on_answer_t& on_answer
+					ui::node* parent
+					, const std::string& msg
+					, const on_answer_t& on_answer = {}
 					, const char* yes_text = nullptr
 					, const char* no_text = nullptr
 					, const std::optional<std::string>& title = {}
@@ -32,6 +35,7 @@ namespace utils
 				void button_yes_show() override;
 			
 			private:
+				void init();
 				WIDGET_REGISTRATOR(imgui::widget_factory, imgui::dialog_yes_no);
 			};
 		}
