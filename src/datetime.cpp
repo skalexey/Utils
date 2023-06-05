@@ -14,10 +14,11 @@
 #include <stdio.h>
 #include <iomanip>
 #include <utils/datetime.h>
+#include <utils/system_macros.h>
 
 namespace ch = std::chrono;
 
-#if _MSC_VER && !__INTEL_COMPILER
+#ifdef IS_WINDOWS
 int setenv(const char* name, const char* value, int overwrite)
 {
 	int errcode = 0;
@@ -63,7 +64,7 @@ namespace utils
 		{	// Parse as UTC time
 			auto tz = std::getenv("TZ");
 			setenv("TZ", "UTC", 1);
-#if _MSC_VER && !__INTEL_COMPILER
+#ifdef IS_WINDOWS
 			_tzset(); // This applies TZ variable changes
 #endif
 			std::tm tm{};
@@ -74,7 +75,7 @@ namespace utils
 				setenv("TZ", tz, 1);
 			else
 				unsetenv("TZ");
-#if _MSC_VER && !__INTEL_COMPILER
+#ifdef IS_WINDOWS
 			_tzset();
 #endif
 			return std::chrono::system_clock::from_time_t(t);
