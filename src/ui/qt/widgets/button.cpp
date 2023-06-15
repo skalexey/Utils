@@ -10,6 +10,8 @@
 #include <utils/ui/qt/app.h>
 #include <utils/ui/qt/widgets/button.h>
 #include <utils/ui/qt/widget_factory.h>
+#include <utils/ui/qt/widgets/button_model.h>
+
 #include <utils/Log.h>
 
 LOG_PREFIX("[qt::button] ");
@@ -20,14 +22,7 @@ namespace utils
 	namespace ui
 	{
 		namespace qt
-		{
-			void button_model::buttonClicked() {
-				LOG("buttonClicked");
-			}
-			void button_model::buttonClicked(QString &in) {
-				LOG("buttonClicked(" << in.toStdString() << "");
-			}
-
+        {
 			REGISTER_WIDGET(qt::button);
 
 			int qt::button::init()

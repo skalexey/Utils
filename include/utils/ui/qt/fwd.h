@@ -17,6 +17,7 @@ namespace utils
 			class text;
 			class label;
 			class button;
+			class button_model;
 			class text_input;
 			using window_ptr = std::shared_ptr<window>;
 			using widget_ptr = std::shared_ptr<widget>;

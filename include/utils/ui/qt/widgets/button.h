@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <qobject.h>
 #include <utils/ui/qt/fwd.h>
 #include <utils/ui/widgets/button.h>
 #include <utils/ui/qt/widget.h>
@@ -13,18 +12,7 @@ namespace utils
 	namespace ui
 	{
 		namespace qt
-		{
-			class button_model : public QObject
-			{
-				Q_OBJECT
-			public:
-				explicit button_model(QObject* parent = 0) : QObject(parent) {}
-
-			public slots:
-				void buttonClicked();
-				void buttonClicked(QString &in);
-			};
-
+        {
 			class button : public qt::widget, public ui::button
 			{
 			public:
