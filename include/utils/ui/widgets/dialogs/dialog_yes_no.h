@@ -24,7 +24,13 @@ namespace utils
 
 				dialog_yes_no(node* parent = nullptr)
 					: base(parent)
+				{}
+
+				int post_construct() override
 				{
+					auto retcode = base::post_construct();
+					if (retcode != 0)
+						return retcode;
 					set_title("Dialog Yes No");
 					add_button(get_factory().create<ui::button>(this));
 					add_button(get_factory().create<ui::button>(this));
@@ -36,17 +42,16 @@ namespace utils
 						if (up)
 							this->on_answer(false);
 					});
+					return 0;
 				}
 
-				dialog_yes_no(
-					node* parent
-					, const std::string& msg
+				virtual void init(
+					const std::string& msg
 					, const on_answer_t& on_answer = {}
 					, const char* yes_text = nullptr
 					, const char* no_text = nullptr
 					, const std::optional<std::string>& title = {}
 				)
-					: dialog_yes_no(parent)
 				{
 					if (title.has_value())
 						set_title(title.value());

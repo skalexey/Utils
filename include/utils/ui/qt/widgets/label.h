@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <utils/ui/qt/fwd.h>
 #include <utils/ui/widgets/label.h>
 #include <utils/ui/qt/widget.h>
@@ -16,22 +17,18 @@ namespace utils
 			public:
 				using base = ui::label;
 
-				label(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, base(parent)
-					, qt::widget(parent)
-				{}
-
-				label(ui::node* parent, const std::string& label)
-					: ui::node(parent)
-					, base(parent, label)
-					, qt::widget(parent)
-				{}
+				label(ui::node* parent = nullptr, const std::string& label = "");
 
 				void on_show() override;
-
+				void set_text(const std::string& text) override;
+				const std::string& get_text() const override;
+				
 			protected:
 				WIDGET_REGISTRATOR(qt::widget_factory, label);
+
+			private:
+				mutable std::string m_tmp_text; // Needed as get_text() returns const std::string&,
+				// but Qt can only return std::string created from QString which in turn is created
 			};
 			
 			using label_ptr = std::shared_ptr<label>;

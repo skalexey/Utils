@@ -19,6 +19,9 @@ namespace utils
 
 			dialog_with_buttons(node* parent = nullptr)
 				: dialog(parent)
+			{}
+
+			int post_construct() override
 			{
 				set_auto_resize(true);
 				set_title("Dialog With Buttons");
@@ -29,6 +32,7 @@ namespace utils
 					for (auto& btn : m_buttons)
 						btn->show();
 				});
+				return 0;
 			}
 
 			// In place of a constructor as we only support default one

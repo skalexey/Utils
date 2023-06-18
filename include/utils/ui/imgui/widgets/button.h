@@ -22,15 +22,6 @@ namespace utils
 					, imgui::widget(parent)
 				{}
 
-				button(	ui::node* parent
-						, const std::string& label
-						, const on_click_t& on_click = nullptr
-				)
-					: ui::node(parent)
-					, base(parent, label, on_click)
-					, imgui::widget(parent)
-				{}
-
 				void on_show() override;
 
 				const vec2i& text_size();

@@ -18,26 +18,7 @@ namespace utils
 			public:
 				using base = ui::button;
 
-				button(ui::node* parent = nullptr) 
-					: ui::node(parent)
-					, base(parent)
-					, qt::widget(parent)
-				{
-					init();
-				}
-
-				button( ui::node* parent
-						, const std::string& label
-						, const on_click_t& on_click = nullptr
-				)
-					: ui::node(parent)
-					, base(parent, label, on_click)
-					, qt::widget(parent)
-				{
-					init();
-				}
-
-				int init();
+				button(ui::node* parent = nullptr); 
 
 				void on_show() override;
 
@@ -48,6 +29,7 @@ namespace utils
 				}
 
 				void on_set_text(const std::string& text) override;
+				void on_set_on_click(const on_click_t& on_click) override;
 
 			private:
 				vec2i m_calculated_size;

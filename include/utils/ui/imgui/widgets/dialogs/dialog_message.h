@@ -16,15 +16,13 @@ namespace utils
 			public:
 				using base = utils::ui::dialog_message;
 				
-				dialog_message(ui::node* parent = nullptr);
+				dialog_message(ui::node* parent = nullptr)
+					: ui::node(parent)
+					, base(parent)
+					, imgui::dialog(parent)
+				{}
 
-				dialog_message(
-					ui::node* parent
-					, const std::string& msg
-					, const base::on_answer_t& on_answer = {}
-					, const char* ok_text = nullptr
-					, const std::string& title = {}
-				);
+				int post_construct() override;
 
 			protected:
 				void on_show() override {

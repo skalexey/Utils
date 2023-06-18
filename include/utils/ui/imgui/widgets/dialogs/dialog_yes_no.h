@@ -16,16 +16,21 @@ namespace utils
 			public:
 				using base = ui::dialog_yes_no;
 				
-				dialog_yes_no(ui::node* parent = nullptr);
+				dialog_yes_no(ui::node* parent = nullptr)
+					: ui::node(parent)
+					, base(parent)
+					, imgui::dialog(parent)
+				{}
 
-				dialog_yes_no(
-					ui::node* parent
-					, const std::string& msg
+				int post_construct() override;
+
+				void init(
+					const std::string& msg
 					, const on_answer_t& on_answer = {}
 					, const char* yes_text = nullptr
 					, const char* no_text = nullptr
 					, const std::optional<std::string>& title = {}
-				);
+				) override;
 
 				void on_show() override {
 					imgui::dialog::on_show();
@@ -35,7 +40,6 @@ namespace utils
 				void button_yes_show() override;
 			
 			private:
-				void init();
 				WIDGET_REGISTRATOR(imgui::widget_factory, imgui::dialog_yes_no);
 			};
 		}

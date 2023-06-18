@@ -24,20 +24,6 @@ namespace utils
 					, imgui::dialog(parent)
 				{}
 
-				dialog_input_text(
-					ui::node* parent
-					, const std::string& msg
-					, const on_result_t& on_result = {}
-					, const std::string& default_input_text = {}
-					, const std::string& title = {}
-					, const char* ok_btn_text = nullptr
-					, const char* cancel_btn_text = nullptr
-				)
-					: ui::node(parent)
-					, base(parent, msg, on_result, default_input_text, title, ok_btn_text, cancel_btn_text)
-					, imgui::dialog(parent)
-				{}
-
 				void on_show() override {
 					imgui::dialog::on_show();
 				}

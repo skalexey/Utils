@@ -15,7 +15,7 @@ namespace utils
 			}
 			
 			// All the dynamic casts require a fully defined type.
-			imgui::app& imgui::node::app() const
+			imgui::app& imgui::node::app()
 			{
 				return dynamic_cast<imgui::app&>(base::app());
 			}

@@ -20,6 +20,7 @@ namespace utils
 				dialog(ui::node* parent = nullptr);
 				void on_before_show() override;
 				void on_show() override;
+				void on_set_title() override;
 				QObject* content_qobject() override;
 				
 			private:
@@ -28,6 +29,7 @@ namespace utils
 			private:
 				vec2i m_last_size;
 				vec2i m_last_position;
+				QObject* m_content = nullptr;
 			};
 			using dialog_ptr = std::shared_ptr<dialog>;
 		}

@@ -22,6 +22,10 @@ namespace utils
 				{}
 
 				int post_construct() {
+					auto retcode = base::post_construct();
+					if (retcode != 0)
+						return retcode;
+					set_title("Message");
 					add_button(get_factory().create<ui::button>(this));
 					ok_button().set_on_click([this](bool up) {
 						this->on_answer(true);

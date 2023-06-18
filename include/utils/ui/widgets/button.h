@@ -18,15 +18,19 @@ namespace utils
 
 			button(node* parent = nullptr): base(parent) {}
 
-			button(node* parent, const std::string& label, const on_click_t& on_click = nullptr)
-				: base(parent)
-				, m_label(label) 
-				, m_on_click(on_click)
-			{}
+			void init(const std::string& label, const on_click_t& on_click = nullptr)
+			{
+				m_label = label;
+				m_on_click = on_click;
+			}
 
 			void set_on_click(const on_click_t& on_click) {
 				m_on_click = on_click;
+				on_set_on_click(on_click);
 			}
+
+			virtual void on_set_on_click(const on_click_t& on_click) {}
+
 			void on_click(bool up) const {
 				if (m_on_click)
 					m_on_click(up);

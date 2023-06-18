@@ -18,6 +18,7 @@ namespace utils
 
 			public:
 				using on_result_t = std::function<void(const std::string& result, bool cancelled)>;
+
 				dialog_input_text(node* parent = nullptr)
 					: base(parent)
 				{
@@ -29,8 +30,10 @@ namespace utils
 						m_text_input->show();
 					});
 				}
+
 				int post_construct() override
 				{
+					set_title("Provide your input");
 					m_message_label = get_factory().create<ui::label>(this);
 					m_text_input = get_factory().create<ui::text_input>(this);
 					m_ok_button = get_factory().create<ui::button>(this);
@@ -53,6 +56,7 @@ namespace utils
 					});
 					return 0;
 				}
+
 				// In place of a constructor as we only support default one
 				virtual void init(
 				    const std::string& msg

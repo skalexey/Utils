@@ -16,17 +16,13 @@ namespace utils
 			public:
 				using base = utils::ui::dialog_message;
 				
-				dialog_message(ui::node* parent = nullptr);
+				dialog_message(ui::node* parent = nullptr)
+					: ui::node(parent)
+					, base(parent)
+					, qt::dialog(parent)
+				{}
 
-				// In place of a constructor as we only support default one
-				void init(
-				    const std::string& msg
-					, const base::on_answer_t& on_answer = {}
-					, const char* ok_text = nullptr
-					, const std::string& title = {}
-				) override;
-				
-				void post_constructed();
+				int post_construct() override;
 
 			protected:
 				void on_show() override {

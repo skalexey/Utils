@@ -2,7 +2,6 @@
 
 #include <utils/Log.h>
 #include <utils/ui/qt/widgets/button_model.h>
-// #include "moc_button_model.cpp"
 
 LOG_PREFIX("[qt::button_model]: ");
 LOG_POSTFIX("\n");
@@ -15,9 +14,13 @@ namespace utils
         {
             void button_model::buttonClicked() {
 				LOG("buttonClicked");
+				if (m_on_click)
+					m_on_click(true);
 			}
 			void button_model::buttonClicked(QString &in) {
 				LOG("buttonClicked(" << in.toStdString() << "");
+				if (m_on_click)
+					m_on_click(true);
 			}
 		}
 	}

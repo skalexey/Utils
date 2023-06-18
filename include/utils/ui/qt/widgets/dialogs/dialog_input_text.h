@@ -24,17 +24,6 @@ namespace utils
 					, qt::dialog(parent)
 				{}
 
-				 // In place of a constructor as we only support default one
-				void init(
-					const std::string& msg
-					, const on_result_t& on_result = {}
-					, const std::string& default_input_text = {}
-					, const std::string& title = {}
-					, const char* ok_btn_text = nullptr
-					, const char* cancel_btn_text = nullptr
-				) override
-				{}
-
 				void on_show() override {
 					qt::dialog::on_show();
 				}

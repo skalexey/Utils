@@ -69,7 +69,7 @@ namespace utils
 				});
 				d->text_input().set_value(default_value);
 				d->text_input().set_label("");
-				d->ok_button().set_text(ok_btn_text ? ok_btn_text : "Ok");
+				d->ok_button().set_text(ok_btn_text ? ok_btn_text : "Submit");
 				d->cancel_button().set_text(cancel_btn_text ? cancel_btn_text : "Cancel");
 				m_app->add_on_update([=](float dt) {
 					return d->show();

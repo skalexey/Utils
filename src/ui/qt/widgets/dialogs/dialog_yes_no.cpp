@@ -10,31 +10,11 @@ namespace utils
 		{
 			REGISTER_WIDGET(qt::dialog_yes_no);
 
-			qt::dialog_yes_no::dialog_yes_no(ui::node* parent)
-				: ui::node(parent)
-				, base(parent)
-				, qt::dialog(parent)
+			int qt::dialog_yes_no::post_construct()
 			{
-				shared_constructor();
-			}
-
-			qt::dialog_yes_no::dialog_yes_no::dialog_yes_no(
-				ui::node* parent
-				, const std::string& msg
-				, const on_answer_t& on_answer
-				, const char* yes_text
-				, const char* no_text
-				, const std::optional<std::string>& title
-			)
-				: ui::node(parent)
-				, base(parent, msg, on_answer, yes_text, no_text, title)
-				, qt::dialog(parent)
-			{
-				shared_constructor();
-			}
-
-			void dialog_yes_no::shared_constructor()
-			{
+				auto retcode = base::post_construct();
+				if (retcode != 0)
+					return retcode;
 				yes_button().set_on_before_show([this]() {
 					// qtStyle& style = qt::GetStyle();
 					// float width = 0.0f;
@@ -50,6 +30,18 @@ namespace utils
 					// qt::Dummy({ 60, 0 });
 					// qt::SameLine();
 				});
+				return 0;
+			}
+
+			void qt::dialog_yes_no::init(
+				const std::string& msg
+				, const on_answer_t& on_answer
+				, const char* yes_text
+				, const char* no_text
+				, const std::optional<std::string>& title
+			)
+			{
+				base::init(msg, on_answer, yes_text, no_text, title);
 			}
 
 			void qt::dialog_yes_no::button_yes_show()

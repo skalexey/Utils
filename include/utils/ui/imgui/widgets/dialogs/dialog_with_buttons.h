@@ -22,17 +22,6 @@ namespace utils
 					, imgui::dialog(parent)
 				{}
 
-				dialog_with_buttons(
-					ui::node* parent
-					, const std::string& msg
-					, const actions_t& actions = {}
-					, const std::optional<std::string>& title = {}
-				)
-					: ui::node(parent)
-					, base(parent, msg, actions, title)
-					, imgui::dialog(parent)
-				{}
-
 				void on_show() override {
 					imgui::dialog::on_show();
 				}

@@ -1,9 +1,16 @@
 #pragma once
 
+#include <thread>
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
+#include <limits>
+#include <cassert>
 #include <functional>
 #include <list>
 #include <utils/ui/fwd.h>
 #include <utils/ui/node.h>
+#include <utils/common.h>
 
 namespace utils
 {
@@ -27,7 +34,12 @@ namespace utils
 			app(int argc, char* argv[])
 				: ui::node(nullptr)
 				, m_args{argc, argv}
+				, m_thread_id(std::this_thread::get_id())
 			{}
+
+			std::thread::id get_thread_id() const {
+				return m_thread_id;
+			}
 
 			int run() {
 				// Catch exit() function calls.
@@ -67,6 +79,8 @@ namespace utils
 				m_on_update.push_back(on_update);
 			}
 
+			int do_in_main_thread(const utils::int_cb& job);
+
 			void exit(int erc) {
 				throw run_exception(erc);
 			}
@@ -89,6 +103,7 @@ namespace utils
 		private:
 			args_t m_args;
 			on_update_list_t m_on_update;
+			std::thread::id m_thread_id;
 		};
 	}
 }

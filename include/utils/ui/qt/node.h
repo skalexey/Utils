@@ -58,6 +58,10 @@ namespace utils
 					return m_object;
 				} // = 0; // TODO: set it to 0 then
 
+				virtual QObject* get_qobject() const {
+					return m_object;
+				} // = 0; // TODO: set it to 0 then
+
 				virtual QObject* content_qobject() {
 					return m_object;
 				} // = 0; // TODO: set it to 0 then

@@ -13,9 +13,7 @@ namespace utils
 		public:
 			using base = value_input<std::string>;
 			
-			text_input(node* parent = nullptr) : base(parent) {
-				m_edit_value.reserve(256);
-			}
+			text_input(node* parent = nullptr) : base(parent) {}
 
 			text_input(
 				node* parent = nullptr

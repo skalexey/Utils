@@ -25,18 +25,23 @@ namespace utils
         {
 			REGISTER_WIDGET(qt::button);
 
-			int qt::button::init()
+			qt::button::button(ui::node* parent)
+				: ui::node(parent)
+				, base(parent)
+				, qt::widget(parent)
 			{
-				const QUrl url(u"qrc:QtGUI/Button.qml"_qs);
-				QVariantMap initialProperties;
-				initialProperties["text"] = QString(get_text().c_str());
-				m_model = new button_model();
-				initialProperties["model"] = QVariant::fromValue(m_model);
-				auto r = qt::node::init(url, initialProperties);
-				if (r != 0)
-					return r;
-				m_model->setParent(qobject());
-				return 0;
+				app().do_in_main_thread([self = this]() {
+					const QUrl url(u"qrc:QtGUI/Button.qml"_qs);
+					QVariantMap initialProperties;
+					initialProperties["text"] = QString(self->get_text().c_str());
+					self->m_model = new button_model();
+					initialProperties["model"] = QVariant::fromValue(self->m_model);
+					auto r = self->qt::node::init(url, initialProperties);
+					if (r != 0)
+						return r;
+					self->m_model->setParent(self->qobject());
+					return 0;
+				});
 
 				// QQuickItem* parentLayout = rootItem->findChild<QQuickItem*>("yourGridLayoutId");
 				// if (parentLayout) {
@@ -48,21 +53,26 @@ namespace utils
 				// }
 			}
 
-			void button::on_show()
+			void qt::button::on_set_on_click(const on_click_t& on_click)
+			{
+				m_model->set_on_click(on_click);
+			}
+
+			void qt::button::on_show()
 			{
 				// if (qt::Button(get_text().c_str(), sz))
 				// 	on_click(true);
 				qt::widget::on_show();
 			}
 
-			const vec2i& button::text_size()
+			const vec2i& qt::button::text_size()
 			{
 				// auto s = qt::CalcTextSize(get_text().c_str());
 				// return m_calculated_size = { (int)s.x, (int)s.y };
 				return m_calculated_size;
 			}
 
-			void button::on_set_text(const std::string& text)
+			void qt::button::on_set_text(const std::string& text)
 			{
 				qobject()->setProperty("text", QString(text.c_str()));
 			}

@@ -1,4 +1,4 @@
-#include <cassert>
+#include <QtGlobal>
 #include <QQuickWindow>
 #include <QUrl>
 #include <QString>
@@ -31,46 +31,50 @@ namespace utils
 
 			int qt::dialog::init()
 			{
-				const QUrl url(u"qrc:QtGUI/Dialog.qml"_qs);
-				QVariantMap initialProperties;
-				initialProperties["title"] = QString(get_title().c_str());
-				auto r = qt::node::init(url, initialProperties);
-				assert(qobject());
-				if (r != 0)
-					return r;
+				return app().do_in_main_thread([self = this] {
+					const QUrl url(u"qrc:QtGUI/Dialog.qml"_qs);
+					QVariantMap initialProperties;
+					initialProperties["title"] = QString(self->get_title().c_str());
+					auto r = self->qt::node::init(url, initialProperties);
+					Q_ASSERT(self->qobject());
+					if (r != 0)
+						return r;
 
-				QVariant result = qobject()->property("show");
-				if (result.canConvert<QJSValue>()) {
-					QJSValue jsFunction = result.value<QJSValue>();
-					if (jsFunction.isCallable()) {
-						QJSValueList args;
-						QJSValue returnValue = jsFunction.call(args);
+					self->m_content = self->qobject()->findChild<QObject*>("content");
+
+					QVariant result = self->qobject()->property("show");
+					if (result.canConvert<QJSValue>()) {
+						QJSValue jsFunction = result.value<QJSValue>();
+						if (jsFunction.isCallable()) {
+							QJSValueList args;
+							QJSValue returnValue = jsFunction.call(args);
+						}
 					}
-				}
 
-				return 0;
+					return 0;
+				});
+			}
+
+			void qt::dialog::on_set_title()
+			{
+ 				if (auto object = qobject())
+					object->setProperty("title", QString(get_title().c_str()));
 			}
 
 			QObject* qt::dialog::content_qobject()
 			{
-				QVariant contentItemVariant = qobject()->property("contentItem");
-        		QObject *contentItem = contentItemVariant.value<QObject*>();
-				return contentItem;
+				return m_content;
 			}
 
 			void qt::dialog::on_before_show()
 			{
 				qt::window::on_before_show();
-				if (!is_open())
-					set_title("test not open");
-				else
-					set_title("open open");
 			}
 
 			void qt::dialog::on_show()
 			{
 				if (!qobject())
-					assert(init() == 0);
+					Q_ASSERT(init() == 0);
 
 				if (!is_open())
 					return;

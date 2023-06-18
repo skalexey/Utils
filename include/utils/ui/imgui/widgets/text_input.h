@@ -24,14 +24,24 @@ namespace utils
 					: ui::node(parent)
 					, base(parent, label, default_value, on_update)
 					, imgui::widget(parent)
-				{}
+				{
+					m_edit_value.reserve(256);
+				}
+
+				const std::string& get_value() const override;
+				void set_value(const std::string& value) override;
 
 			protected:
 				bool show_input() override;
 				void show_text() override;
+				void on_set_label() override;
 
 			private:
 				WIDGET_REGISTRATOR(imgui::widget_factory, imgui::text_input);
+
+			private:
+				std::string m_input_label;
+				std::string m_edit_value;
 			};
 		}
 	}

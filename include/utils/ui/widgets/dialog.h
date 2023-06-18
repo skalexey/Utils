@@ -29,7 +29,11 @@ namespace utils
 			const std::string& get_title() const override {
 				return m_title;
 			}
-			void set_title(const std::string& title) { m_title = title; }
+			void set_title(const std::string& title) {
+				m_title = title;
+				on_set_title();
+			}
+			virtual void on_set_title() {}
 			
 			bool is_close_button_enabled() const { return m_use_close_button; }
 			bool set_close_button_enabled(bool enabled) { m_use_close_button = enabled; }

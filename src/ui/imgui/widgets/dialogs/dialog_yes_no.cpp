@@ -11,31 +11,11 @@ namespace utils
 		{
 			REGISTER_WIDGET(imgui::dialog_yes_no);
 
-			imgui::dialog_yes_no::dialog_yes_no(ui::node* parent)
-				: ui::node(parent)
-				, base(parent)
-				, imgui::dialog(parent)
+			int imgui::dialog_yes_no::post_construct()
 			{
-				init();
-			}
-
-			imgui::dialog_yes_no::dialog_yes_no::dialog_yes_no(
-				ui::node* parent
-				, const std::string& msg
-				, const on_answer_t& on_answer
-				, const char* yes_text
-				, const char* no_text
-				, const std::optional<std::string>& title
-			)
-				: ui::node(parent)
-				, base(parent, msg, on_answer, yes_text, no_text, title)
-				, imgui::dialog(parent)
-			{
-				init();	
-			}
-
-			void imgui::dialog_yes_no::init()
-			{
+				auto retcode = base::post_construct();
+				if (retcode != 0)
+					return retcode;
 				yes_button().set_on_before_show([this]() {
 					ImGuiStyle& style = ImGui::GetStyle();
 					float width = 0.0f;
@@ -51,8 +31,20 @@ namespace utils
 					ImGui::Dummy({ 60, 0 });
 					ImGui::SameLine();
 				});
+				return 0;
 			}
-			
+
+			void imgui::dialog_yes_no::init(
+				const std::string& msg
+				, const on_answer_t& on_answer
+				, const char* yes_text
+				, const char* no_text
+				, const std::optional<std::string>& title
+			)
+			{
+				base::init(msg, on_answer, yes_text, no_text, title);	
+			}
+
 			void imgui::dialog_yes_no::button_yes_show()
 			{
 				base::button_yes_show();

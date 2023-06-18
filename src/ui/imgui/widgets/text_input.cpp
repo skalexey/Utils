@@ -37,10 +37,26 @@ namespace utils
 				}
 				return ret;
 			}
+
 			void imgui::text_input::show_text()
 			{
-				ImGui::Text("%s", m_label.c_str());
+				ImGui::Text("%s", get_label().c_str());
 				ImGui::SameLine();
+			}
+
+			void imgui::text_input::on_set_label()
+			{
+				m_input_label = utils::format_str("%s##Answer", get_label().c_str());
+			}
+
+			const std::string& imgui::text_input::get_value() const
+			{
+				return m_edit_value;
+			}
+
+			void imgui::text_input::set_value(const std::string& value)
+			{
+				m_edit_value = value;
 			}
 		}
 	}
