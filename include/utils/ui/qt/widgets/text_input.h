@@ -19,23 +19,16 @@ namespace utils
 			public:
 				using base = utils::ui::text_input;
 
-				text_input(
-					ui::node* parent = nullptr
-					, const std::string& label = {}
-					, const std::string& default_value = {}
-					, const on_update_t& on_update = nullptr
-				);
-
-			const std::string& get_value() const override;
-			void set_value(const std::string& value) override;
-			const QQuickItem* get_text_field() const;
-			const QQuickItem* get_label() const;
-			QQuickItem* text_field();
-			QQuickItem* label();
+				const std::string& get_value() const override;
+				void set_value(const std::string& value) override;
+				const QQuickItem* get_text_field() const;
+				const QQuickItem* get_label() const;
+				QQuickItem* text_field();
+				QQuickItem* label();
 
 			protected:
-				bool show_input() override;
-				void show_text() override;
+				int init() override;
+				void on_set_on_new_value() override;
 
 			private:
 				WIDGET_REGISTRATOR(qt::widget_factory, text_input);

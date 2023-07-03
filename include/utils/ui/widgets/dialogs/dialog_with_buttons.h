@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <optional>
-#include <utils/ui/widgets/dialog.h>
+#include <utils/ui/widgets/dialogs/modal_dialog.h>
 #include <utils/ui/widgets/button.h>
 #include <utils/ui/widgets/text.h>
 #include <utils/ui/widget_factory.h>
@@ -12,31 +12,13 @@ namespace utils
 {
 	namespace ui
 	{
-		class dialog_with_buttons : public virtual dialog
+		class dialog_with_buttons : public virtual modal_dialog
 		{
 		public:
 			using actions_t = std::vector<std::pair<std::string, button::on_click_t>>;
 
-			dialog_with_buttons(node* parent = nullptr)
-				: dialog(parent)
-			{}
-
-			int post_construct() override
-			{
-				set_auto_resize(true);
-				set_title("Dialog With Buttons");
-				// Factory here is supposed to be already set in the implementation class
-				set_message_text(get_factory().create<ui::text>(this));
-				set_on_show([this]() {
-					m_text_message->show();
-					for (auto& btn : m_buttons)
-						btn->show();
-				});
-				return 0;
-			}
-
 			// In place of a constructor as we only support default one
-			virtual void init(
+			virtual void construct(
 			    const std::string& msg
 				, const actions_t& actions
 				, const std::optional<std::string>& title = {}
@@ -69,6 +51,15 @@ namespace utils
 			}
 
 		protected:
+			int init() override
+			{
+				set_auto_resize(true);
+				set_title("Dialog With Buttons");
+				// Factory here is supposed to be already set in the implementation class
+				set_message_text(get_factory().create<ui::text>(this));
+				return 0;
+			}
+			
 			void add_button(const ui::button_ptr& btn) {
 				m_buttons.push_back(btn);
 			}

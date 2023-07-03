@@ -16,12 +16,6 @@ namespace utils
 			public:
 				using base = ui::dialog_with_buttons;
 				
-				dialog_with_buttons(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, base(parent)
-					, imgui::dialog(parent)
-				{}
-
 				void on_show() override {
 					imgui::dialog::on_show();
 				}

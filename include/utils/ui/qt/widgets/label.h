@@ -17,15 +17,15 @@ namespace utils
 			public:
 				using base = ui::label;
 
-				label(ui::node* parent = nullptr, const std::string& label = "");
-
-				void on_show() override;
 				void set_text(const std::string& text) override;
 				const std::string& get_text() const override;
 				
 			protected:
-				WIDGET_REGISTRATOR(qt::widget_factory, label);
+				int init() override;
 
+			private:
+				WIDGET_REGISTRATOR(qt::widget_factory, label);
+				
 			private:
 				mutable std::string m_tmp_text; // Needed as get_text() returns const std::string&,
 				// but Qt can only return std::string created from QString which in turn is created

@@ -3,6 +3,7 @@
 #include <optional>
 #include <utils/ui/widgets/dialogs/dialog_yes_no.h>
 #include <utils/ui/qt/widgets/dialog.h>
+#include <utils/common_macros.h>
 
 namespace utils
 {
@@ -15,16 +16,7 @@ namespace utils
 			public:
 				using base = ui::dialog_yes_no;
 				
-				// Order of initialization is important here as qt::dialog sets the widget factory first
-				dialog_yes_no(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, base(parent)
-					, qt::dialog(parent)
-				{}
-
-				int post_construct() override;
-
-				void init(
+				void construct(
 					const std::string& msg
 					, const on_answer_t& on_answer = {}
 					, const char* yes_text = nullptr
@@ -40,6 +32,11 @@ namespace utils
 				void button_yes_show() override;
 			
 			private:
+				int init() override {
+					RETURN_IF_NE_0(qt::dialog::init());
+					return base::init();
+				}
+
 				WIDGET_REGISTRATOR(qt::widget_factory, qt::dialog_yes_no);
 			};
 		}

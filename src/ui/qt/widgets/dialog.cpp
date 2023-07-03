@@ -1,7 +1,8 @@
-#include <QtGlobal>
-#include <QQuickWindow>
 #include <QUrl>
 #include <QString>
+#include <QtGlobal>
+#include <QQuickItem>
+#include <QQuickWindow>
 #include <utils/string_utils.h>
 #include <utils/ui/qt/widgets/dialog.h>
 #include <utils/ui/qt/app.h>
@@ -20,45 +21,47 @@ namespace utils
 	{
 		namespace qt
 		{
-			qt::dialog::dialog(ui::node* parent)
-				: ui::node(parent)
-				, ui::dialog(parent)
-				, qt::window(parent)
+			qt::dialog::dialog()
 			{
 				set_title("qt Dialog");
-				init();
 			}
 
 			int qt::dialog::init()
 			{
-				return app().do_in_main_thread([self = this] {
-					const QUrl url(u"qrc:QtGUI/Dialog.qml"_qs);
-					QVariantMap initialProperties;
-					initialProperties["title"] = QString(self->get_title().c_str());
-					auto r = self->qt::node::init(url, initialProperties);
-					Q_ASSERT(self->qobject());
-					if (r != 0)
-						return r;
+				const QUrl url(u"qrc:QtGUI/Dialog.qml"_qs);
+				QVariantMap initial_properties;
+				initial_properties["title"] = QString(get_title().c_str());
+				initial_properties["modal"] = is_modal();
+				auto r = qt::node::init(url, initial_properties);
+				Q_ASSERT(qobject());
+				if (r != 0)
+					return r;
 
-					self->m_content = self->qobject()->findChild<QObject*>("content");
+				m_content = qobject()->findChild<QObject*>("content");
 
-					QVariant result = self->qobject()->property("show");
-					if (result.canConvert<QJSValue>()) {
-						QJSValue jsFunction = result.value<QJSValue>();
-						if (jsFunction.isCallable()) {
-							QJSValueList args;
-							QJSValue returnValue = jsFunction.call(args);
-						}
+				QVariant result = qobject()->property("show");
+				if (result.canConvert<QJSValue>()) {
+					QJSValue jsFunction = result.value<QJSValue>();
+					if (jsFunction.isCallable()) {
+						QJSValueList args;
+						// LOG_DEBUG("Call jsFunction from thread '" << std::this_thread::get_id() << "'");
+						QJSValue returnValue = jsFunction.call(args);
 					}
+				}
 
-					return 0;
-				});
+				return 0;
 			}
 
 			void qt::dialog::on_set_title()
 			{
  				if (auto object = qobject())
 					object->setProperty("title", QString(get_title().c_str()));
+			}
+
+			void qt::dialog::on_set_modal()
+			{
+				if (auto object = qobject())
+					object->setProperty("modal", is_modal());
 			}
 
 			QObject* qt::dialog::content_qobject()
@@ -71,13 +74,10 @@ namespace utils
 				qt::window::on_before_show();
 			}
 
-			void qt::dialog::on_show()
+			bool qt::dialog::qt_dialog_update(float dt)
 			{
-				if (!qobject())
-					Q_ASSERT(init() == 0);
-
 				if (!is_open())
-					return;
+					return false;
 
 				// Qt-dialog-specific stuff
 				// if (is_auto_resize())
@@ -86,18 +86,14 @@ namespace utils
 				// auto label = utils::format_str("%s##", get_title().c_str());
 				// bool p_open = true;
 				// auto p_open_ptr = is_close_button_enabled() ? &p_open : nullptr;
-				if (is_modal())
-				{
-				}
-				else
-				{
-				}
+				return on_qt_dialog_update(dt);
+			}
 
-				base::on_show();
-
-				// Close button
-				// if (!p_open)
-				// 	close();
+			bool qt::dialog::on_update(float dt)
+			{
+				if (!qt_dialog_update(dt))
+					return false;
+				return base::on_update(dt);
 			}
 		}
 	}

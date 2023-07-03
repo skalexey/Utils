@@ -10,10 +10,10 @@ namespace utils
 	{
 		namespace imgui
 		{
-			void imgui::window::on_show()
+			bool imgui::window::on_update(float dt)
 			{
 				if (!is_open())
-					return;
+					return false;
 				// Set window position
 				auto& pos = get_position();
 				ImGui::SetNextWindowPos(
@@ -34,10 +34,14 @@ namespace utils
 				{
 					// Early out if the window is collapsed, as an optimization.
 					ImGui::End();
-					return;
+					return true;
 				}
 					
-				base::on_show();
+				if (!base::on_update(dt))
+					return false;
+
+				if (!on_imgui_window_update(dt))
+					return false;
 
 				// Close button
 				if (!p_open)
@@ -45,7 +49,7 @@ namespace utils
 					
 				// End the window scope
 				ImGui::End();
-				return;
+				return true;
 			}
 		}
 	}

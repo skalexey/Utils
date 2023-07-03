@@ -1,10 +1,6 @@
 #pragma once
 
 #include <thread>
-#include <mutex>
-#include <atomic>
-#include <condition_variable>
-#include <limits>
 #include <cassert>
 #include <functional>
 #include <list>
@@ -18,22 +14,23 @@ namespace utils
 	{
 		class app : public virtual ui::node
 		{
+			using base = ui::node;
+
 			class run_exception
 			{
 			public:
 				run_exception(int erc) : m_erc(erc) {}
 				int get_erc() const { return m_erc; }
+				
 			private:
 				int m_erc = -1;
 			};
 
 		public:
-			using on_update_t = std::function<bool(float dt)>;
 			using on_update_list_t = std::list<on_update_t>;
 
 			app(int argc, char* argv[])
-				: ui::node(nullptr)
-				, m_args{argc, argv}
+				: m_args{argc, argv}
 				, m_thread_id(std::this_thread::get_id())
 			{}
 
@@ -53,29 +50,22 @@ namespace utils
 					return ex.get_erc();
 				}
 			}
-			virtual bool update(float dt) {
+
+			bool update(float dt) override {
+				if (!base::update(dt))
+					return false;
 				for (auto it = m_on_update.begin(); it != m_on_update.end();)
 					if (!(*it)(dt))
 						it = m_on_update.erase(it);
 					else
 						++it;
-				// return !m_on_update.empty();
-				return on_update(dt);
-			}
-
-			virtual bool on_update(float dt) {
-				return true;
 			}
 
 			virtual int on_run() {
 				return 0;
 			}
 
-			virtual int init() {
-					return 0;
-			}
-
-			void add_on_update(const on_update_t& on_update) {
+			void add_on_update(const base::on_update_t& on_update) {
 				m_on_update.push_back(on_update);
 			}
 

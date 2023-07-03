@@ -15,17 +15,15 @@ namespace utils
 			using base = widget;
 
 		public:
-			value_input(node* parent = nullptr) : base(parent) {}
-			
 			using on_update_t = std::function<void(const T&)>;
+			using on_new_value_t = std::function<void(const T&)>;
+
 			value_input(
-				node* parent
-				, const std::string& label
+				const std::string& label
 				, const T& default_value = {}
 				, const on_update_t& on_update = nullptr
 			)
-				: base()
-				, m_default_value(default_value)
+				: m_default_value(default_value)
 				, m_on_update(on_update)
 			{
 				if (!label.empty())
@@ -57,9 +55,6 @@ namespace utils
 			}
 
 			void on_show() override {
-				show_text();
-				if (show_input())
-					on_update();
 			}
 
 			void set_label(const std::string& label) {
@@ -78,13 +73,40 @@ namespace utils
 				return m_label;
 			}
 
+			void set_on_new_value(const on_new_value_t& on_new_value) {
+				m_on_new_value = on_new_value;
+				on_set_on_new_value();
+			}
+
+			const on_new_value_t& get_on_new_value() const {
+				return m_on_new_value;
+			}
+
 		protected:
-			virtual bool show_input() = 0;
-			virtual void show_text() = 0;
+			virtual bool update_input(float dt) {
+				return true;
+			}
+
+			virtual bool update_text(float dt) {
+				return true;
+			}
+
 			virtual void on_set_label() {};
+			virtual void on_set_on_new_value() {}
+			
+			bool on_update(float dt) override final {
+				if (!ui::node::on_update(dt))
+					return false;
+				if (!update_text(dt))
+					return false;
+				if (!update_input(dt))
+					return false;
+				return true;
+			}
 
 		private:
 			on_update_t m_on_update;
+			on_new_value_t m_on_new_value;
 			T m_default_value;
 			std::string m_label;
 		};

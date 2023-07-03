@@ -13,14 +13,11 @@ namespace utils
 		public:
 			using base = value_input<std::string>;
 			
-			text_input(node* parent = nullptr) : base(parent) {}
-
 			text_input(
-				node* parent = nullptr
-				, const std::string& label = {}
+				const std::string& label = {}
 				, const std::string& default_value = {}
 				, const on_update_t& on_update = nullptr
-			) : base(parent, label, default_value, on_update) {}
+			) : base(label, default_value, on_update) {}
 		};
 		//using text_input = value_input<std::string>;
 		using text_input_ptr = std::shared_ptr<text_input>;

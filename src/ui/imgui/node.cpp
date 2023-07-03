@@ -8,8 +8,7 @@ namespace utils
 	{
 		namespace imgui
 		{
-			imgui::node::node(ui::node* parent)
-				: base(parent)
+			imgui::node::node()
 			{
 				set_factory(imgui::widget_factory::instance());
 			}

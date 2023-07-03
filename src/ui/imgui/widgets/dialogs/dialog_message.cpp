@@ -11,23 +11,18 @@ namespace utils
 		{
 			REGISTER_WIDGET(imgui::dialog_message);
 
-			int imgui::dialog_message::post_construct()
+			imgui::dialog_message::dialog_message()
 			{
-				auto retcode = base::post_construct();
-				if (retcode != 0)
-					return retcode;
-				ok_button().set_on_before_show([this]() {
-					ImGuiStyle& style = ImGui::GetStyle();
-					float width = 0.0f;
-					width += ok_button().get_size().x;
-					utils::ui::imgui::AlignForWidth(width);
+				do_on_post_construct([self = this] {
+					self->ok_button().set_on_before_update([self](float dt) {
+						ImGuiStyle& style = ImGui::GetStyle();
+						float width = 0.0f;
+						width += self->ok_button().get_size().x;
+						utils::ui::imgui::AlignForWidth(width);
+						return true;
+					});
+					return 0;
 				});
-				return 0;
-			}
-
-			void imgui::dialog_message::button_ok_show()
-			{
-				base::button_ok_show();
 			}
 		}
 	}

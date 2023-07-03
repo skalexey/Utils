@@ -17,14 +17,13 @@ namespace utils
 			public:
 				using on_answer_t = utils::void_bool_cb;
 
-				dialog_message(node* parent = nullptr)
-					: base(parent)
-				{}
-
-				int post_construct() {
-					auto retcode = base::post_construct();
-					if (retcode != 0)
-						return retcode;
+				dialog_message() {
+					do_on_post_construct([self = this] {
+						return self->this_on_post_construct();
+					});
+				}
+				
+				int this_on_post_construct() {
 					set_title("Message");
 					add_button(get_factory().create<ui::button>(this));
 					ok_button().set_on_click([this](bool up) {
@@ -34,7 +33,7 @@ namespace utils
 				}
 				
 				// In place of a constructor as we only support default one
-				virtual void init(
+				virtual void construct(
 				    const std::string& msg
 					, const on_answer_t& on_answer
 					, const char* ok_text

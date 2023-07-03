@@ -6,6 +6,7 @@
 #include <utils/ui/widgets/button.h>
 #include <utils/ui/widgets/label.h>
 #include <utils/ui/widget_factory.h>
+#include <utils/common_macros.h>
 #include <utils/common.h>
 
 namespace utils
@@ -22,30 +23,13 @@ namespace utils
 			public:
 				using on_answer_t = utils::void_bool_cb;
 
-				dialog_yes_no(node* parent = nullptr)
-					: base(parent)
-				{}
-
-				int post_construct() override
-				{
-					auto retcode = base::post_construct();
-					if (retcode != 0)
-						return retcode;
-					set_title("Dialog Yes No");
-					add_button(get_factory().create<ui::button>(this));
-					add_button(get_factory().create<ui::button>(this));
-					yes_button().set_on_click([this](bool up) {
-						if (up)
-							this->on_answer(true);
+				dialog_yes_no() {
+					do_on_post_construct([self = this] {
+						return self->this_on_post_construct();
 					});
-					no_button().set_on_click([this](bool up) {
-						if (up)
-							this->on_answer(false);
-					});
-					return 0;
 				}
 
-				virtual void init(
+				virtual void construct(
 					const std::string& msg
 					, const on_answer_t& on_answer = {}
 					, const char* yes_text = nullptr
@@ -91,6 +75,23 @@ namespace utils
 				void on_answer(bool answer) {
 					m_on_answer(answer);
 					close();
+				}
+
+			private:
+				int this_on_post_construct()
+				{
+					set_title("Dialog Yes No");
+					add_button(get_factory().create<ui::button>(this));
+					add_button(get_factory().create<ui::button>(this));
+					yes_button().set_on_click([self = this](bool up) {
+						if (up)
+							self->on_answer(true);
+					});
+					no_button().set_on_click([self = this](bool up) {
+						if (up)
+							self->on_answer(false);
+					});
+					return 0;
 				}
 
 			private:

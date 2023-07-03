@@ -17,14 +17,22 @@ namespace utils
 
 			public:
 				// We don't pass the title as argument because of virtual inheritance
-				dialog(ui::node* parent = nullptr);
-				void on_before_show() override;
-				void on_show() override;
-				void on_set_title() override;
+				dialog();
 				QObject* content_qobject() override;
 				
+			protected:
+				void on_before_show() override;
+				void on_set_title() override;
+				int init() override;
+				void on_set_modal() override;
+				bool qt_dialog_update(float dt);
+				
+				virtual bool on_qt_dialog_update(float dt) {
+					return true;
+				}
+
 			private:
-				int init();
+				bool on_update(float dt) override final;
 
 			private:
 				vec2i m_last_size;

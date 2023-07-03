@@ -3,6 +3,7 @@
 #include <optional>
 #include <utils/ui/widgets/dialogs/dialog_with_buttons.h>
 #include <utils/ui/qt/widgets/dialog.h>
+#include <utils/common_macros.h>
 
 namespace utils
 {
@@ -16,20 +17,14 @@ namespace utils
 			public:
 				using base = ui::dialog_with_buttons;
 				
-				dialog_with_buttons(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, base(parent)
-					, qt::dialog(parent)
-				{}
-
 				// In place of a constructor as we only support default one
-				void init(
+				void construct(
 				    const std::string& msg
 					, const actions_t& actions = {}
 					, const std::optional<std::string>& title = {}
-				) override
+				)
 				{
-					base::init(msg, actions, title);
+					base::construct(msg, actions, title);
 				}
 
 				void on_show() override {
@@ -37,6 +32,10 @@ namespace utils
 				}
 
 			private:
+				int init() override {
+					RETURN_IF_NE_0(qt::dialog::init());
+					return ui::dialog_with_buttons::init();
+				}
 				WIDGET_REGISTRATOR(qt::widget_factory, dialog_with_buttons);
 			};
 		}

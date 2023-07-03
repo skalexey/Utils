@@ -2,25 +2,25 @@
 
 #include <vector>
 #include <string>
-#include <utils/ui/widgets/dialog.h>
+#include <utils/ui/widgets/dialogs/modal_dialog.h>
 #include <utils/ui/widgets/button.h>
 #include <utils/ui/widgets/label.h>
 #include <utils/ui/widgets/text_input.h>
 #include <utils/ui/widget_factory.h>
+#include <utils/common_macros.h>
 
 namespace utils
 {
 	namespace ui
 	{
-		class dialog_input_text : public virtual dialog
+		class dialog_input_text : public virtual modal_dialog
 		{
 			using base = dialog;
 
 			public:
 				using on_result_t = std::function<void(const std::string& result, bool cancelled)>;
 
-				dialog_input_text(node* parent = nullptr)
-					: base(parent)
+				dialog_input_text()
 				{
 					// Factory here is supposed to be already created in the implementation class
 					set_on_show([this]() {
@@ -29,36 +29,14 @@ namespace utils
 						m_cancel_button->show();
 						m_text_input->show();
 					});
-				}
 
-				int post_construct() override
-				{
-					set_title("Provide your input");
-					m_message_label = get_factory().create<ui::label>(this);
-					m_text_input = get_factory().create<ui::text_input>(this);
-					m_ok_button = get_factory().create<ui::button>(this);
-					m_cancel_button = get_factory().create<ui::button>(this);
-					m_ok_button->set_on_click([this](bool up) {
-						if (m_on_result)
-							m_on_result(m_text_input->get_value(), false);
-						close();
+					do_on_post_construct([self = this] {
+						return self->this_on_post_construct();
 					});
-					m_cancel_button->set_on_click([this](bool up) {
-						if (m_on_result)
-							m_on_result(m_text_input->get_value(), true);
-						close();
-					});
-					set_on_show([this]() {
-						m_message_label->show();
-						m_ok_button->show();
-						m_cancel_button->show();
-						m_text_input->show();
-					});
-					return 0;
 				}
 
 				// In place of a constructor as we only support default one
-				virtual void init(
+				virtual void construct(
 				    const std::string& msg
 					, const on_result_t& on_result = {}
 					, const std::string& default_input_text = {}
@@ -85,6 +63,35 @@ namespace utils
 					m_on_result = on_result;
 				}
 				
+			private:
+				int this_on_post_construct()
+				{
+					set_title("Provide your input");
+					m_message_label = get_factory().create<ui::label>(this);
+					m_text_input = get_factory().create<ui::text_input>(this);
+					m_ok_button = get_factory().create<ui::button>(this);
+					m_cancel_button = get_factory().create<ui::button>(this);
+					auto on_submit = [self = this](const std::string& new_value) {
+						if (self->m_on_result)
+							self->m_on_result(new_value, false);
+						self->close();
+					};
+					m_ok_button->set_on_click([self = this, on_submit](bool up) {
+						if (!up)
+							return;
+						on_submit(self->m_text_input->get_value());
+					});
+					m_text_input->set_on_new_value([on_submit](const std::string& new_value) {
+						on_submit(new_value);
+					});
+					m_cancel_button->set_on_click([this](bool up) {
+						if (m_on_result)
+							m_on_result(m_text_input->get_value(), true);
+						close();
+					});
+					return 0;
+				}
+
 			protected:
 				label_ptr m_message_label;
 				button_ptr m_ok_button;

@@ -13,7 +13,7 @@ namespace utils
 		{
 			REGISTER_WIDGET(imgui::text_input);
 
-            bool imgui::text_input::show_input()
+            bool imgui::text_input::update_input(float dt)
 			{
 				// TODO: do smth with this resize:
 				m_edit_value.resize(strlen(m_edit_value.c_str()));
@@ -38,10 +38,11 @@ namespace utils
 				return ret;
 			}
 
-			void imgui::text_input::show_text()
+			bool imgui::text_input::update_text(float dt)
 			{
 				ImGui::Text("%s", get_label().c_str());
 				ImGui::SameLine();
+				return true;
 			}
 
 			void imgui::text_input::on_set_label()

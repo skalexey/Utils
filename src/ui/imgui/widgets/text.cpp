@@ -1,8 +1,8 @@
 #pragma once
 
+#include <imgui.h>
 #include <utils/ui/imgui/widget_factory.h>
 #include <utils/ui/imgui/widgets/text.h>
-#include <imgui.h>
 
 namespace utils
 {
@@ -12,9 +12,17 @@ namespace utils
 		{
 			REGISTER_WIDGET(text);
 
-			void imgui::text::on_show()
+			bool imgui::text::on_update(float dt)
+			{
+				if (!imgui_text_update(dt))
+					return false;
+				return imgui::widget::on_update(dt);
+			}
+
+			bool imgui::text::imgui_text_update(float dt)
 			{
 				ImGui::TextWrapped("%s", get_text().c_str());
+				return true;
 			}
 		}
 	}

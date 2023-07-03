@@ -14,12 +14,6 @@ namespace utils
 				using base = ui::window;
 
 			public:
-				window(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, base(parent)
-					, qt::widget(parent)
-				{}
-
 				void on_show() override {
 					if (!is_open())
 						return;

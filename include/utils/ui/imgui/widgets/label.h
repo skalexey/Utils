@@ -17,13 +17,6 @@ namespace utils
 			public:
 				using base = ui::label;
 
-				label(ui::node* parent = nullptr, const std::string& text = "")
-					: ui::node(parent)
-					, base(parent)
-					, imgui::widget(parent)
-					, m_text(text)
-				{}
-
 				void set_text(const std::string& text) {
 					m_text = text;
 				}
@@ -32,9 +25,14 @@ namespace utils
 					return m_text;
 				}
 
-				void on_show() override;
-
 			protected:
+				bool imgui_label_update(float dt);
+				virtual bool on_imgui_label_update(float dt) {
+					return true;
+				}
+				
+			private:
+				bool on_update(float dt) override final;
 				WIDGET_REGISTRATOR(imgui::widget_factory, label);
 
 			private:

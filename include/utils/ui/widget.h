@@ -30,12 +30,6 @@ namespace utils
 					, bottom
 				};
 
-				widget(node* parent = nullptr) : node(parent) {}
-
-				virtual int post_construct() {
-					return 0;
-				}
-
 				bool show() {
 					on_before_show();
 					m_is_visible = true;
@@ -45,8 +39,6 @@ namespace utils
 
 				void hide() {
 					m_is_visible = false;
-					if (m_on_hide)
-						m_on_hide();
 					on_hide();
 				}
 
@@ -57,10 +49,22 @@ namespace utils
 						// show() should be called explicitly because it is supposed to be called in every frame
 						m_is_visible = true;
 				}
-				bool is_visible() const { return m_is_visible; }
-				void set_on_show(const on_show_cb& on_show) { m_on_show = on_show; }
-				void set_on_hide(const on_hide_cb& on_hide) { m_on_hide = on_hide; }
-				void set_on_before_show(const on_show_cb& on_before_show) { m_on_before_show = on_before_show; }
+
+				bool is_visible() const {
+					return m_is_visible;
+				}
+
+				void set_on_show(const on_show_cb& on_show) {
+					m_on_show = on_show;
+				}
+				
+				void set_on_hide(const on_hide_cb& on_hide) {
+					m_on_hide = on_hide;
+				}
+
+				void set_on_before_show(const on_show_cb& on_before_show) {
+					m_on_before_show = on_before_show;
+				}
 
 				virtual const std::string& get_title() const {
 					static std::string default_title = "widget";
@@ -94,8 +98,23 @@ namespace utils
 				const alignment& get_vertical_alignment() { return m_vertical_alignment; }
 				const alignment& get_horizontal_alignment() { return m_horizontal_alignment; }
 
+				const on_show_cb& get_on_show() const {
+					return m_on_show;
+				}
+				
+				const on_hide_cb& get_on_hide() const {
+					return m_on_hide;
+				}
+				
+				const on_show_cb& get_on_before_show() const {
+					return m_on_before_show;
+				}
+				
 			protected:
-				virtual void on_hide() {};
+				virtual void on_hide() {
+					if (m_on_hide)
+						m_on_hide();
+				};
 				virtual void on_before_show() {
 					if (m_on_before_show)
 						m_on_before_show();
@@ -104,10 +123,6 @@ namespace utils
 					if (m_on_show)
 						m_on_show();
 				};
-
-				const on_show_cb& get_on_show() const { return m_on_show; }
-				const on_hide_cb& get_on_hide() const { return m_on_hide; }
-				const on_show_cb& get_on_before_show() const { return m_on_before_show; }
 
 			private:
 				vec2i m_position;

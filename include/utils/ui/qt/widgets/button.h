@@ -18,10 +18,6 @@ namespace utils
 			public:
 				using base = ui::button;
 
-				button(ui::node* parent = nullptr); 
-
-				void on_show() override;
-
 				const vec2i& text_size();
 
 				const vec2i& get_size() {
@@ -30,6 +26,9 @@ namespace utils
 
 				void on_set_text(const std::string& text) override;
 				void on_set_on_click(const on_click_t& on_click) override;
+
+			protected:
+				int init() override;
 
 			private:
 				vec2i m_calculated_size;

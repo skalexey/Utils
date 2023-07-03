@@ -13,17 +13,13 @@ namespace utils
 		namespace imgui
 		{
 			// Hide ui::node* interface using protected inheritance
-			class node : protected virtual ui::node, public std::enable_shared_from_this<imgui::node>
+			class node : protected virtual ui::node
 			{
 				using base = ui::node;
 
 			public:
 				// TODO: support constructor with imgui::node* 
-				node(ui::node* parent = nullptr);
-
-				void set_parent(imgui::node* parent) {
-					base::set_parent(parent);
-				}
+				node();
 
 				const imgui::node* get_parent() const {
 					return dynamic_cast<const imgui::node*>(base::get_parent());

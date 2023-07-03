@@ -1,5 +1,6 @@
-#pragma once
-
+#include <QVariant>
+#include <QObject>
+#include <QJSValue>
 #include <utils/ui/widget.h>
 #include <utils/ui/qt/widget.h>
 
@@ -9,6 +10,22 @@ namespace utils
 	{
 		namespace qt
 		{
+			widget::~widget()
+			{
+				if (auto object = qobject())
+				{
+					QVariant result = object->property("onDestroy");
+					if (result.canConvert<QJSValue>()) {
+						QJSValue jsFunction = result.value<QJSValue>();
+						if (jsFunction.isCallable()) {
+							QJSValueList args;
+							QJSValue returnValue = jsFunction.call(args);
+						}
+					}
+					object->setParent(nullptr);
+					object->deleteLater();
+				}
+			}
 			vec2i qt::widget::get_screen_size() const
 			{
 				// TODO: implement

@@ -15,7 +15,7 @@ namespace utils
 	{
 		int app::do_in_main_thread(const utils::int_cb& job)
 		{
-			// LOG("do_in_main_thread: main_thread_id: " << get_thread_id() << ", current_thread_id: " << std::this_thread::get_id() << "\n");
+			LOG_VERBOSE("do_in_main_thread: main_thread_id: " << get_thread_id() << ", current_thread_id: " << std::this_thread::get_id() << "\n");
 			if (std::this_thread::get_id() == get_thread_id())
 				return job();
 			else
@@ -25,6 +25,7 @@ namespace utils
 				std::condition_variable cv;
 				std::atomic<int> result = INT_MAX;
 				add_on_update([&](float dt) {
+					LOG_VERBOSE("Calling a job from thread " << std::this_thread::get_id() << "\n");
 					result = job();
 					cv.notify_one();
 					return false;

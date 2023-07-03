@@ -16,8 +16,7 @@ namespace utils
 		namespace qt
 		{
 			app::app(int argc, char* argv[])
-				: ui::node(nullptr)
-				, base::app(argc, argv)
+				: base::app(argc, argv)
 				, QGuiApplication(argc, argv)
 				, m_timer(this)
 			{
@@ -88,10 +87,8 @@ namespace utils
 			
 			bool app::update(float dt)
 			{
-				bool active = true;
-				base::update(dt);
+				bool active = base::update(dt);;
 				processEvents(QEventLoop::AllEvents);
-				active = on_update(dt);
 				return active;
 			}
 		}

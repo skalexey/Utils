@@ -15,8 +15,7 @@ namespace utils
 			using base = window;
 
 		public:
-			dialog(node* parent = nullptr)
-				: base(parent)
+			dialog()
 			// We don't pass a factory into the constructor because of virtual inheritance,
 			// so it should be set using set_factory() method
 			{
@@ -33,7 +32,6 @@ namespace utils
 				m_title = title;
 				on_set_title();
 			}
-			virtual void on_set_title() {}
 			
 			bool is_close_button_enabled() const { return m_use_close_button; }
 			bool set_close_button_enabled(bool enabled) { m_use_close_button = enabled; }
@@ -43,13 +41,28 @@ namespace utils
 
 			bool is_auto_resize() const { return m_auto_resize; }
 			void set_auto_resize(bool auto_resize) { m_auto_resize = auto_resize; }
-			
-		protected:
-			void on_show() override {
+
+		protected:	
+			virtual void on_set_title() {}
+			virtual void on_set_modal() {}
+			virtual bool on_dialog_update(float dt) {
+				return true;
+			}
+
+			bool dialog_update(float dt) {
 				if (get_horizontal_alignment() == alignment::center && get_vertical_alignment() == alignment::center) {
 					set_position_relative({ 0.5f, 0.5f }, { 0.5f, 0.5f });
 				}
-				base::on_show();
+				return true;
+			}
+
+		//private:
+			bool on_update(float dt) override { // Not final for virtual inheritance
+				if (!dialog_update(dt))
+					return false;
+				if (!base::on_update(dt))
+					return false;
+				return on_dialog_update(dt);
 			};
 
 		private:

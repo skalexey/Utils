@@ -15,11 +15,8 @@ namespace utils
 			class widget : public virtual qt::node, public virtual ui::widget
 			{
 			public:
-				widget(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, qt::node(parent)
-					, ui::widget(parent)
-				{}
+				~widget() override;
+				
 				vec2i get_screen_size() const override;
 
 				widget* as_widget() override {

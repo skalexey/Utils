@@ -18,12 +18,6 @@ namespace utils
 			public:
 				using base = ui::dialog_input_text;
 				
-				dialog_input_text(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, base(parent)
-					, imgui::dialog(parent)
-				{}
-
 				void on_show() override {
 					imgui::dialog::on_show();
 				}

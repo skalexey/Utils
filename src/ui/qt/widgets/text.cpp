@@ -13,25 +13,14 @@ namespace utils
 		{
 			REGISTER_WIDGET(text);
 
-			qt::text::text(ui::node* parent, const std::string& text)
-				: ui::node(parent)
-				, base(parent)
-				, qt::widget(parent)
+			int qt::text::init()
 			{
-				app().do_in_main_thread([self = this, text]() {
-					const QUrl url(u"qrc:QtGUI/Text.qml"_qs);
-					QVariantMap initialProperties;
-					initialProperties["text"] = QString(text.c_str());
-					auto r = self->qt::node::init(url, initialProperties);
-					if (r != 0)
-						return r; // For putting BP here while debugging
-					return 0;
-				});
-			}
-
-			void qt::text::on_show()
-			{
-				// qt::TextWrapped("%s", get_text().c_str());
+				const QUrl url(u"qrc:QtGUI/Text.qml"_qs);
+				QVariantMap initial_properties;
+				auto r = qt::node::init(url, initial_properties);
+				if (r != 0)
+					return r; // For putting BP here while debugging
+				return 0;
 			}
 
 			void qt::text::set_text(const std::string& text)

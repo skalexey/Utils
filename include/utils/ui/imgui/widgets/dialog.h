@@ -15,9 +15,17 @@ namespace utils
 
 			public:
 				// We don't pass the title as argument because of virtual inheritance
-				dialog(ui::node* parent = nullptr);
-				void on_show() override;
+				dialog();
 				
+			protected:
+				bool imgui_dialog_update(float dt);
+				virtual bool on_imgui_dialog_update(float dt) {
+					return base::on_update(dt);
+				}
+				
+			private:
+				bool on_update(float dt) override final;
+
 			private:
 				vec2i m_last_size;
 				vec2i m_last_position;

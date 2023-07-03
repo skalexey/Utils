@@ -17,18 +17,14 @@ namespace utils
 		namespace qt
 		{
 			// Hide ui::node* interface using protected inheritance
-			class node : protected virtual ui::node, public std::enable_shared_from_this<qt::node>
+			class node : protected virtual ui::node
 			{
 				using base = ui::node;
 
 			public:
 				// TODO: support constructor with qt::node* 
-				node(ui::node* parent = nullptr);
-
-				void set_parent(qt::node* parent) {
-					base::set_parent(parent);
-				}
-
+				node();
+				
 				const qt::node* get_parent() const {
 					return dynamic_cast<const qt::node*>(base::get_parent());
 				}
@@ -67,12 +63,24 @@ namespace utils
 				} // = 0; // TODO: set it to 0 then
 
 			protected:
-
 				// Contains shared code to be called by derived classes upon the construction
-				int init(const QUrl& componentUrl, const QVariantMap& initialProperties);
+				int init(const QUrl& componentUrl, const QVariantMap& initial_properties);
+				
 				int init(QObject* object) {
 					m_object = object;
 					return 0;
+				}
+
+				virtual void on_add_node(qt::node* node) {}
+				virtual int on_qt_node_post_construct() {
+					return 0;
+				}
+
+			private:
+				int on_post_construct() override final;
+
+				void on_add_node(ui::node* node) override {
+					on_add_node(dynamic_cast<qt::node*>(node));
 				}
 
 			private:

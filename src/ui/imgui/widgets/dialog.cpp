@@ -8,18 +8,22 @@ namespace utils
 	{
 		namespace imgui
 		{
-			imgui::dialog::dialog(ui::node* parent)
-				: ui::node(parent)
-				, ui::dialog(parent)
-				, imgui::window(parent)
+			imgui::dialog::dialog()
 			{
+				set_modal(false); // Modal dialogs in imgui:: are not supported yet
+				// as they are buggy if showing more than one at a time
 				set_title("ImGui Dialog");
 			}
 
-			void imgui::dialog::on_show()
+			bool imgui::dialog::on_update(float dt)
+			{
+				return imgui_dialog_update(dt);
+			}
+
+			bool imgui::dialog::imgui_dialog_update(float dt)
 			{
 				if (!is_open())
-					return;
+					return false;
 
 				auto font = ImGui::GetFont();
 				font->Scale = 1.5f;
@@ -47,6 +51,7 @@ namespace utils
 				auto label = utils::format_str("%s##", get_title().c_str());
 				bool p_open = true;
 				auto p_open_ptr = is_close_button_enabled() ? &p_open : nullptr;
+				
 				if (is_modal())
 				{
 					ImGui::OpenPopup(label.c_str());
@@ -54,7 +59,7 @@ namespace utils
 					{
 						// Early out if the window is collapsed, as an optimization.
 						ImGui::EndPopup();
-						return;
+						return true;
 					}
 				}
 				else
@@ -63,11 +68,12 @@ namespace utils
 					{
 						// Early out if the window is collapsed, as an optimization.
 						ImGui::End();
-						return;
+						return true;
 					}
 				}
 
-				base::on_show();
+				if (!on_imgui_dialog_update(dt))
+					return false;
 
 				// Close button
 				if (!p_open)
@@ -78,7 +84,7 @@ namespace utils
 					ImGui::EndPopup();
 				else
 					ImGui::End();
-				return;
+				return true;
 			}
 		}
 	}

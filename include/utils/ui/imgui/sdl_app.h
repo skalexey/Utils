@@ -20,8 +20,7 @@ namespace utils
 
 			public:
 				sdl_app(int argc, char* argv[])
-					: ui::node(nullptr)
-					, ui::app(argc, argv)
+					: ui::app(argc, argv)
 					, base::app(argc, argv)
 				{}
 				bool update(float dt) override final;

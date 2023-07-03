@@ -15,6 +15,10 @@ namespace utils
 			virtual bool show();
 			const widget_factory& get_factory() const;
 
+			bool update(float dt) {
+				return true;
+			}
+			
 		protected:
 			void set_view(const utils::ui::window_ptr& view) {
 				m_view = view;

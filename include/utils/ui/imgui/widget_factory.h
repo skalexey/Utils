@@ -20,7 +20,8 @@ namespace utils
 					if (!m_creators)
 						m_creators = new creators_t();
 					(*m_creators)[typeid(Base).name()] = [](ui::node* parent) {
-						auto ptr = std::make_shared<Final>(parent);
+						auto ptr = std::make_shared<Final>();
+						parent->add_node(ptr);
 						ptr->post_construct(); // Allow to run code after the constructor worked out
 						return ptr;
 					};

@@ -28,9 +28,7 @@ namespace utils
 				d->set_yes_text(yes_btn_text ? yes_btn_text : "Yes");
 				d->set_no_text(no_btn_text ? no_btn_text : "No");
 				d->set_title("Question");
-				m_app->add_on_update([=](float dt) {
-					return d->show();
-				});
+				d->show();
 			}
 
 			void user_input::show_message(
@@ -47,9 +45,7 @@ namespace utils
 						on_close();
 				});
 				d->set_ok_text(ok_btn_text ? ok_btn_text : "Ok");
-				m_app->add_on_update([=](float dt) {
-					return d->show();
-				});
+				d->show();
 			}
 
 			void user_input::ask_line(
@@ -71,9 +67,7 @@ namespace utils
 				d->text_input().set_label("");
 				d->ok_button().set_text(ok_btn_text ? ok_btn_text : "Submit");
 				d->cancel_button().set_text(cancel_btn_text ? cancel_btn_text : "Cancel");
-				m_app->add_on_update([=](float dt) {
-					return d->show();
-				});
+				d->show();
 			}
 
 	}

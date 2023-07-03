@@ -16,14 +16,12 @@ namespace utils
 			public:
 				using base = ui::text_input;
 
-				text_input(ui::node* parent = nullptr
-					, const std::string& label = {}
+				text_input(
+					const std::string& label = {}
 					, const std::string& default_value = {}
 					, const on_update_t& on_update = nullptr
 				)
-					: ui::node(parent)
-					, base(parent, label, default_value, on_update)
-					, imgui::widget(parent)
+					: base(label, default_value, on_update)
 				{
 					m_edit_value.reserve(256);
 				}
@@ -32,8 +30,8 @@ namespace utils
 				void set_value(const std::string& value) override;
 
 			protected:
-				bool show_input() override;
-				void show_text() override;
+				bool update_input(float dt) override;
+				bool update_text(float dt) override;
 				void on_set_label() override;
 
 			private:

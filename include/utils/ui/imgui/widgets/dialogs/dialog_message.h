@@ -15,24 +15,9 @@ namespace utils
 			{
 			public:
 				using base = utils::ui::dialog_message;
+				dialog_message();
 				
-				dialog_message(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, base(parent)
-					, imgui::dialog(parent)
-				{}
-
-				int post_construct() override;
-
-			protected:
-				void on_show() override {
-					imgui::dialog::on_show();
-				}
-
-				void button_ok_show() override;
-
 			private:
-				void init();
 				WIDGET_REGISTRATOR(imgui::widget_factory, dialog_message);
 			};
 		}

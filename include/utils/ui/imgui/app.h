@@ -3,10 +3,10 @@
 
 #pragma once
 
+#include <imgui.h>
 #include <utils/ui/app.h>
 #include <utils/ui/imgui/node.h>
 #include <utils/vec2.h>
-#include <imgui.h>
 
 namespace utils
 {
@@ -20,8 +20,7 @@ namespace utils
 
 			public:
 				app(int argc, char* argv[])
-					: ui::node(nullptr)
-					, base::app(argc, argv)
+					: base::app(argc, argv)
 				{}
 
 				bool update(float dt) override;

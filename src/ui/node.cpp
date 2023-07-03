@@ -6,10 +6,12 @@ namespace utils
 	namespace ui
 	{
 		// All the dynamic casts require a fully defined type.
-		ui::node::node(node* parent)
-			: m_parent(parent)
+		void ui::node::add_node(const node_ptr& child)
 		{
-			m_app = dynamic_cast<ui::app*>(root());
+			// This code is called from parent to avoid having a potentially called method
+			child->m_parent = this;
+			child->m_app = dynamic_cast<ui::app*>(child->root());
+			m_children.push_back(child);
 		}
 	}
 }

@@ -14,13 +14,13 @@ namespace utils
 			{
 				using base = ui::window;
 
-			public:
-				window(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, base(parent)
-					, imgui::widget(parent)
-				{}
-				void on_show() override;
+			protected:
+				virtual bool on_imgui_window_update(float dt) {
+					return true;
+				}
+
+			//private:
+				bool on_update(float dt) override; // Not final for virtual inheritance
 			};
 
 			using window_ptr = std::shared_ptr<window>;

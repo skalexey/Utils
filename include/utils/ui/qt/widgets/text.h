@@ -17,13 +17,11 @@ namespace utils
 			public:
 				using base = ui::text;
 
-				text(ui::node* parent = nullptr, const std::string& text = "");
-
-				void on_show() override;
 				void set_text(const std::string& text) override;
 				const std::string& get_text() const override;
 
 			protected:
+				int init() override;
 				WIDGET_REGISTRATOR(qt::widget_factory, text);
 
 			private:

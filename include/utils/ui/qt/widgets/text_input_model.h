@@ -14,17 +14,18 @@ namespace utils
             {
                 Q_OBJECT
             public:
-                using on_new_value_t = utils::void_cb;
+                using on_new_value_t = utils::void_string_cb;
                 
                 explicit text_input_model(QObject* parent = 0) : QObject(parent) {}
                 void set_on_new_value(const on_new_value_t& on_new_value) {
-                    m_on_new_value = on_new_value;
+                    m_on_new_value = &on_new_value;
                 }
+                
             public slots:
                 void onNewValue(const QString& value);
             
             private:
-                on_new_value_t m_on_new_value;
+                const on_new_value_t* m_on_new_value = nullptr;
             };
         }
     }

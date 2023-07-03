@@ -25,44 +25,23 @@ namespace utils
         {
 			REGISTER_WIDGET(qt::button);
 
-			qt::button::button(ui::node* parent)
-				: ui::node(parent)
-				, base(parent)
-				, qt::widget(parent)
+			int qt::button::init()
 			{
-				app().do_in_main_thread([self = this]() {
-					const QUrl url(u"qrc:QtGUI/Button.qml"_qs);
-					QVariantMap initialProperties;
-					initialProperties["text"] = QString(self->get_text().c_str());
-					self->m_model = new button_model();
-					initialProperties["model"] = QVariant::fromValue(self->m_model);
-					auto r = self->qt::node::init(url, initialProperties);
-					if (r != 0)
-						return r;
-					self->m_model->setParent(self->qobject());
-					return 0;
-				});
-
-				// QQuickItem* parentLayout = rootItem->findChild<QQuickItem*>("yourGridLayoutId");
-				// if (parentLayout) {
-				// 	// Set button position using GridLayout
-				// 	QQmlEngine::setObjectOwnership(buttonItem, QQmlEngine::CppOwnership);
-				// 	parentLayout->setProperty("layoutDirection", "LeftToRight"); // Set the layout direction if needed
-				// } else {
-				// 	// Handle the case where the layout is not found
-				// }
+				const QUrl url(u"qrc:QtGUI/Button.qml"_qs);
+				QVariantMap initial_properties;
+				initial_properties["text"] = QString(get_text().c_str());
+				m_model = new button_model();
+				initial_properties["model"] = QVariant::fromValue(m_model);
+				auto r = qt::node::init(url, initial_properties);
+				if (r != 0)
+					return r;
+				m_model->setParent(qobject());
+				return 0;
 			}
 
 			void qt::button::on_set_on_click(const on_click_t& on_click)
 			{
 				m_model->set_on_click(on_click);
-			}
-
-			void qt::button::on_show()
-			{
-				// if (qt::Button(get_text().c_str(), sz))
-				// 	on_click(true);
-				qt::widget::on_show();
 			}
 
 			const vec2i& qt::button::text_size()

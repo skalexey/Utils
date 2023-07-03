@@ -16,20 +16,20 @@ namespace utils
 			public:
 				using base = ui::button;
 				
-				button(ui::node* parent = nullptr) 
-					: ui::node(parent)
-					, base(parent)
-					, imgui::widget(parent)
-				{}
-
-				void on_show() override;
-
 				const vec2i& text_size();
 
 				const vec2i& get_size() {
 					return m_calculated_size;
 				}
 
+			protected:
+				bool imgui_button_update(float dt);
+				virtual bool on_imgui_button_update(float dt) {
+					return true;
+				}
+
+			private:
+				bool on_update(float dt) override final;
 			private:
 				vec2i m_calculated_size;
 				WIDGET_REGISTRATOR(imgui::widget_factory, imgui::button);

@@ -11,7 +11,14 @@ namespace utils
 		{
 			REGISTER_WIDGET(imgui::button);
 
-			void button::on_show()
+			bool button::on_update(float dt)
+			{
+				if (!imgui_button_update(dt))
+					return true;
+				return imgui::widget::on_update(dt);
+			}
+
+			bool button::imgui_button_update(float dt)
 			{
 				#ifdef ANDROID
 					auto ts = text_size();
@@ -23,7 +30,7 @@ namespace utils
 				#endif
 				if (ImGui::Button(get_text().c_str(), sz))
 					on_click(true);
-				imgui::widget::on_show();
+				return on_imgui_button_update(dt);
 			}
 
 			const vec2i& button::text_size()

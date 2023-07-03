@@ -3,6 +3,7 @@
 #include <string>
 #include <utils/ui/widgets/dialogs/dialog_message.h>
 #include <utils/ui/qt/widgets/dialog.h>
+#include <utils/common_macros.h>
 
 namespace utils
 {
@@ -16,14 +17,6 @@ namespace utils
 			public:
 				using base = utils::ui::dialog_message;
 				
-				dialog_message(ui::node* parent = nullptr)
-					: ui::node(parent)
-					, base(parent)
-					, qt::dialog(parent)
-				{}
-
-				int post_construct() override;
-
 			protected:
 				void on_show() override {
 					qt::dialog::on_show();
@@ -32,7 +25,12 @@ namespace utils
 				void button_ok_show() override;
 
 			private:
-				void shared_constructor();
+				int init() override {
+					RETURN_IF_NE_0(qt::dialog::init());
+					return ui::dialog_message::init();
+				}
+
+			private:
 				WIDGET_REGISTRATOR(qt::widget_factory, dialog_message);
 			};
 		}
