@@ -15,7 +15,8 @@ namespace utils
 
 			int qt::text::init()
 			{
-				const QUrl url(u"qrc:QtGUI/Text.qml"_qs);
+				std::string file_name = "qrc:QtGUI/" + qml_file_name();
+				auto url = QUrl(QString(file_name.c_str()));
 				QVariantMap initial_properties;
 				auto r = qt::node::init(url, initial_properties);
 				if (r != 0)

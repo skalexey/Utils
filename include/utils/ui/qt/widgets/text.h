@@ -12,7 +12,7 @@ namespace utils
 	{
 		namespace qt
 		{
-			class text : public qt::widget, public ui::text
+			class text : public qt::widget, public virtual ui::text
 			{
 			public:
 				using base = ui::text;
@@ -21,6 +21,9 @@ namespace utils
 				const std::string& get_text() const override;
 
 			protected:
+				virtual std::string qml_file_name() const {
+					return "Text.qml";
+				}
 				int init() override;
 				WIDGET_REGISTRATOR(qt::widget_factory, text);
 

@@ -10,7 +10,7 @@ namespace utils
 	namespace ui
 	{
 		// Logically, Label and Text are the same. They only differ in UI implementation.
-		class label : public text {};
+		class label : public virtual text {};
 		using label_ptr = std::shared_ptr<label>;
 	}
 }

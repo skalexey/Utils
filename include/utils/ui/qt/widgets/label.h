@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 #include <utils/ui/qt/fwd.h>
+#include <utils/ui/qt/widgets/text.h>
 #include <utils/ui/widgets/label.h>
-#include <utils/ui/qt/widget.h>
 
 namespace utils
 {
@@ -12,26 +12,21 @@ namespace utils
 	{
 		namespace qt
 		{
-			class label : public qt::widget, public utils::ui::label
+			class label : public qt::text, public virtual ui::label
 			{
 			public:
 				using base = ui::label;
-
-				void set_text(const std::string& text) override;
-				const std::string& get_text() const override;
 				
 			protected:
-				int init() override;
+				virtual std::string qml_file_name() const override {
+					return "Label.qml";
+				}
 
 			private:
-				WIDGET_REGISTRATOR(qt::widget_factory, label);
-				
-			private:
-				mutable std::string m_tmp_text; // Needed as get_text() returns const std::string&,
-				// but Qt can only return std::string created from QString which in turn is created
+				WIDGET_REGISTRATOR(qt::widget_factory, qt::label);
 			};
 			
-			using label_ptr = std::shared_ptr<label>;
+			using label_ptr = std::shared_ptr<qt::label>;
 		}
 	}
 }
