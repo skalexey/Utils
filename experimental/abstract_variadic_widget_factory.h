@@ -14,16 +14,12 @@ namespace utils
 		class widget_factory
 		{
 		public:
-			//TODO: support variadic arguments
-			//template <typename T, typename... TArgs>
-			//std::shared_ptr<T> create(TArgs... args) const {
 			template <typename T, typename... Args>
 			std::shared_ptr<T> create(Args&&... args) const {
 				auto& creators = get_creators();
 				auto it = creators.find(typeid(T).name());
 				if (it != creators.end())
 				{
-					// return std::dynamic_pointer_cast<T>(it->second());
 					return std::dynamic_pointer_cast<T>((*it->second)());
 				}
 				return nullptr;

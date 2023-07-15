@@ -45,24 +45,24 @@ namespace utils
 				m_on_post_construct.push_back(cb);
 			}
 
-			bool remove_child(node* child) {
+			bool remove_node(node* node) {
 				for (auto it = m_children.begin(); it != m_children.end(); ++it)
-					if (it->get() == child) {
-						child->m_parent = nullptr;
+					if (it->get() == node) {
+						node->m_parent = nullptr;
 						m_children.erase(it);
 						return true;
 					}
 				return false;
 			}
 
-			void add_node(const node_ptr& child);
+			void add_node(const node_ptr& node);
 
 			virtual void on_before_remove_from_parent() {}
 
 			bool remove_from_parent() {
 				on_before_remove_from_parent();
 				if (m_parent)
-					m_parent->remove_child(this);
+					m_parent->remove_node(this);
 				else
 					return false;
 				return true;

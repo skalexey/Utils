@@ -3,11 +3,16 @@
 #include <QList>
 #include <QObject>
 #include <QQuickItem>
+#include <QQuickStyle>
 #include <utils/ui/qt/app.h>
 #include <utils/file_utils.h>
 #include <utils/ui/qt/app_environment.h>
 #include <utils/ui/qt/import_qml_components_plugins.h>
 #include <utils/ui/qt/import_qml_plugins.h>
+#include <utils/Log.h>
+
+LOG_PREFIX("[qt::app]: ");
+LOG_POSTFIX("\n");
 
 namespace utils
 {
@@ -26,12 +31,13 @@ namespace utils
 			
 			int app::init()
 			{
+				QQuickStyle::setStyle("fusion");
 				QList<QObject*> rootObjects = engine().rootObjects();
 				for (QObject* obj : rootObjects)
 					if (m_main_window = qobject_cast<QQuickWindow*>(obj))
 						break;
 				if (!m_main_window) {
-					qWarning() << "Could not find main window";
+					LOG_WARNING("Could not find main window");
 					return -1;
 				}
 				qt::node::init(m_main_window);

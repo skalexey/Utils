@@ -289,7 +289,6 @@ namespace utils
 
 		int remove_last_line_f(std::ifstream& f)
 		{
-			// TODO: implement
 			if (f.is_open())
 			{
 				auto cur_pos = f.tellg();

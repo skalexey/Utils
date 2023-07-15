@@ -1,3 +1,4 @@
+#include <cassert>
 #include <utils/ui/node.h>
 #include <utils/ui/app.h>
 
@@ -6,12 +7,14 @@ namespace utils
 	namespace ui
 	{
 		// All the dynamic casts require a fully defined type.
-		void ui::node::add_node(const node_ptr& child)
+		void ui::node::add_node(const node_ptr& node)
 		{
+			assert(node && "Adding a null node");
+			assert(node.get() && "Adding a half-null node");
 			// This code is called from parent to avoid having a potentially called method
-			child->m_parent = this;
-			child->m_app = dynamic_cast<ui::app*>(child->root());
-			m_children.push_back(child);
+			node->m_parent = this;
+			node->m_app = dynamic_cast<ui::app*>(node->root());
+			m_children.push_back(node);
 		}
 	}
 }

@@ -85,6 +85,7 @@ namespace utils
 				return app().do_in_main_thread([self = this]() {
 					RETURN_IF_NE_0(self->base::on_post_construct());
 					RETURN_IF_NE_0(self->on_qt_node_post_construct());
+                    return 0;
 				});
 			}
 		}

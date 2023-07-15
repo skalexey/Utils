@@ -59,6 +59,7 @@ namespace utils
 						it = m_on_update.erase(it);
 					else
 						++it;
+                return true;
 			}
 
 			virtual int on_run() {

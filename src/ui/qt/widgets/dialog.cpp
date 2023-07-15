@@ -1,7 +1,6 @@
 #include <QUrl>
 #include <QString>
 #include <QtGlobal>
-#include <QQuickItem>
 #include <QQuickWindow>
 #include <utils/string_utils.h>
 #include <utils/ui/qt/widgets/dialog.h>

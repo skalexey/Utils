@@ -71,7 +71,6 @@ namespace utils
 			bool m_is_modal = false;
 			bool m_auto_resize = false;
 		};
-		// TODO: remove it as it is declared in fwd.h
 		using dialog_ptr = std::shared_ptr<dialog>;
 	}
 }

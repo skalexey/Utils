@@ -157,7 +157,7 @@ namespace utils
 			_keys().clear();
 		}
 		TV& add(const TK& __key, const TV& __value) {
-			auto res = _map().emplace(__key, _list().size());
+			auto res = _map().emplace(__key, (int)_list().size());
 			_list().push_back(__value);
 			_keys().push_back(__key);
 			return _list().back();

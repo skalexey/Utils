@@ -78,8 +78,9 @@ namespace utils
 					};
 					m_ok_button->set_on_click([self = this, on_submit](bool up) {
 						if (!up)
-							return;
+                            return false;
 						on_submit(self->m_text_input->get_value());
+                        return true;
 					});
 					m_text_input->set_on_new_value([on_submit](const std::string& new_value) {
 						on_submit(new_value);

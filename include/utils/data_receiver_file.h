@@ -30,11 +30,8 @@ namespace utils
 
 		public:
 			receiver_file(std::size_t size, const fs::path& file_path = {}) : m_fpath(file_path), m_target_size(size) {
-				// TODO: remove extra opening
 				m_file.open(m_fpath, std::ios::binary);
-				m_file.close();
 				fs::resize_file(m_fpath, size);
-				m_file.open(m_fpath, std::ios::binary);
 			}
 			bool receive(const Data_element_t* data, const std::size_t& size) override {
 				bool result = false;

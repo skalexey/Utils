@@ -10,7 +10,7 @@ namespace utils
 	{
 		class dialog_message : public dialog_with_buttons
 		{
-			const std::string ok_text_default = "ok";
+			const std::string ok_text_default = "Ok";
 
 			using base = dialog_with_buttons;
 
@@ -37,7 +37,7 @@ namespace utils
 				    const std::string& msg
 					, const on_answer_t& on_answer
 					, const char* ok_text
-					, const std::string& title
+					, const std::string& title = {}
 				)
 				{
 					set_title(title);

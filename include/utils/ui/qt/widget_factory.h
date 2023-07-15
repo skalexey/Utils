@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <utils/ui/node.h>
 #include <utils/ui/widget_factory.h>
 
 namespace utils
