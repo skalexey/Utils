@@ -63,6 +63,7 @@
 	#define LOG_EXPR_LOG(ex, msg) log_stream() << logPrefix << #ex << msg << logPostfix; ex
 	#define LOG_EXPR_VAL(ex) LOG(ex)
 	#define LOG_EXPR_AND_VAL(ex) LOG(#ex << ": " << ex)
+	#define LOG_EXPR_AND_VAL_LOG(ex, msg) LOG(#ex << ": " << ex << msg)
 #else
 	#define LOG_PREFIX(prefix)
 	#define LOG_POSTFIX(postfix)
@@ -85,6 +86,7 @@
 	#define LOG_EXPR_LOG(ex)
 	#define LOG_EXPR_VAL(ex)
 	#define LOG_EXPR_AND_VAL(ex)
+	#define LOG_EXPR_AND_VAL_LOG(ex, msg)
 #endif
 
 
