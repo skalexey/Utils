@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <utils/ui/widget_factory.h>
+#include <utils/ui/imgui/node.h>
 
 namespace utils
 {

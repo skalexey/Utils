@@ -146,10 +146,7 @@ namespace utils
                 factory_t::template register_creator<typename widget_t::base, widget_t>();
 			}
 		};
-		#define WIDGET_REGISTRATOR(factory_t, widget_t) \
-			using registrator_t = utils::ui::registrator<factory_t, widget_t>; \
-			static registrator_t s_registrator;
 		
-        #define REGISTER_WIDGET(owner_t) owner_t::registrator_t owner_t::s_registrator;
+        #define REGISTER_WIDGET_DECLARATIVELY(factory_t, widget_t) utils::ui::registrator<factory_t, widget_t> g_registrator;
 	}
 }

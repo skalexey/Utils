@@ -17,7 +17,7 @@ namespace utils
 	std::vector<std::string_view> split_repeated_delimeter(const std::string& str, const char delim);
 	bool to_bool(std::string str);
 	bool parse_bool(std::string str);
-
+	
 	// Example: "a\t\t\tb\tc" -> {"a", "b", "c"}
 	template <typename CollectionT>
 	void split_repeated_delimeter(CollectionT& result, const std::string& line, const char delim)

@@ -13,7 +13,6 @@ namespace utils
 		namespace imgui
 		{
 			int app::on_run() {
-
 				//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 				//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 

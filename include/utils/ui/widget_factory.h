@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <cassert>
 #include <cstdarg>
 #include <memory>
@@ -20,9 +21,12 @@ namespace utils
 			std::shared_ptr<T> create(node* parent = nullptr) const {
 				auto& creators = get_creators();
 				auto it = creators.find(typeid(T).name());
-                assert(it != creators.end() && (std::string("Not found the type '") + typeid(T).name() + "'").c_str());
+                assert(it != creators.end() && "Type not found");
 				if (it != creators.end())
 					return std::dynamic_pointer_cast<T>(it->second(parent));
+				#if defined(LOG_ON)
+					std::cout << "Can't find the type '" << typeid(T).name() << "'" << std::endl;
+				#endif
 				return nullptr;
 			}
 

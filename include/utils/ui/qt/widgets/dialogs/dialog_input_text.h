@@ -23,7 +23,6 @@ namespace utils
 				}
 
 			private:
-				WIDGET_REGISTRATOR(qt::widget_factory, qt::dialog_input_text);
 			};
 		}
 	}
