@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <functional>
 #include <memory>
-#include <utils/ui/widget_factory.h>
+#include <abstract_ui/widget_factory.h>
 
 namespace utils
 {

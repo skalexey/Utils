@@ -5,7 +5,7 @@
 #include <typeinfo>
 #include <unordered_map>
 #include <functional>
-#include <utils/ui/fwd.h>
+#include <abstract_ui/fwd.h>
 
 namespace utils
 {
