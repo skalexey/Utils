@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#define SSTREAM(ex) (std::stringstream() << ex).str()
+
 namespace utils
 {
 	std::string_view to_str(const char* str);
