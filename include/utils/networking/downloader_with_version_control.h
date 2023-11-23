@@ -36,14 +36,14 @@ namespace utils
 			downloader_with_version_control(downloader_interface* object) : base(object) {}
 
 			int download_file(
-				const endpoint_t& ep
+				const tcp::endpoint_t& ep
 				, const query_t& query = {}
 				, const fs::path& target_path = {}
 				, const http_response_cb& on_response = {}
 			) override;
 
 			void download_file_async(
-				const endpoint_t& ep
+				const tcp::endpoint_t& ep
 				, const result_cb& on_result = {}
 				, const query_t& query = {}
 				, const fs::path& target_path = {}

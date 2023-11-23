@@ -27,7 +27,7 @@ namespace utils
 			{}
 
 			int upload_file(
-				const endpoint_t& ep,
+				const tcp::endpoint_t& ep,
 				const fs::path& target_path,
 				const query_t& query
 			) override;

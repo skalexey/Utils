@@ -23,7 +23,7 @@ namespace
 	// TODO: support parallel download
 	void download(
 		utils::networking::downloader_with_version_control_ptr d
-		, const anp::endpoint_t& ep
+		, const anp::tcp::endpoint_t& ep
 		, const std::string& url_path_download
 		, const std::string& url_path_upload
 		, const std::string& remote_path
@@ -102,7 +102,7 @@ namespace
 
 	void download_item_recursively(
 		utils::networking::downloader_with_version_control_ptr d
-		, const anp::endpoint_t& ep
+		, const anp::tcp::endpoint_t& ep
 		, const std::string& url_path_download
 		, const std::string& url_path_upload
 		, const resources_list& resources
@@ -135,7 +135,7 @@ namespace utils
 	{
 		using resources_list = ::resources_list;
 		void sync_resources(
-			anp::endpoint_t& ep
+			anp::tcp::endpoint_t& ep
 			, const std::string& url_path_download
 			, const std::string& url_path_upload
 			, const resources_list& resources

@@ -7,7 +7,7 @@
 #include <utils/filesystem.h>
 #include <utils/print_defs.h>
 
-int upload_file(const fs::path& local_path, const anp::endpoint_t& ep, const std::string& url_path)
+int upload_file(const fs::path& local_path, const anp::tcp::endpoint_t& ep, const std::string& url_path)
 {
 	using namespace anp;
 	using namespace utils::networking;
