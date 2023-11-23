@@ -15,26 +15,9 @@
 #include <iomanip>
 #include <utils/datetime.h>
 #include <utils/system_macros.h>
+#include <utils/envar.h>
 
 namespace ch = std::chrono;
-
-#ifdef IS_WINDOWS
-int setenv(const char* name, const char* value, int overwrite)
-{
-	int errcode = 0;
-	if (!overwrite) {
-		size_t envsize = 0;
-		errcode = getenv_s(&envsize, NULL, 0, name);
-		if (errcode || envsize) return errcode;
-	}
-	return _putenv_s(name, value);
-}
-
-int unsetenv(const char* name)
-{
-	return setenv(name, "", 1);
-}
-#endif
 
 namespace utils
 {
@@ -63,7 +46,7 @@ namespace utils
 		if (fmt.find("GMT") != std::string::npos || fmt.find("UTC") != std::string::npos)
 		{	// Parse as UTC time
 			auto tz = std::getenv("TZ");
-			setenv("TZ", "UTC", 1);
+			setenv("TZ", "UTC");
 #ifdef IS_WINDOWS
 			_tzset(); // This applies TZ variable changes
 #endif
@@ -72,7 +55,7 @@ namespace utils
 			ss >> std::get_time(&tm, fmt.c_str());
 			auto t = std::mktime(&tm);
 			if (tz)
-				setenv("TZ", tz, 1);
+				setenv("TZ", tz);
 			else
 				unsetenv("TZ");
 #ifdef IS_WINDOWS
