@@ -1,9 +1,11 @@
 #pragma once
 
+#include <algorithm>
 #include <cstdarg>
 #include <cstdio>
 #include <string>
 #include <vector>
+#include <cctype>
 
 #define SSTREAM(ex) (std::stringstream() << ex).str()
 
@@ -11,8 +13,26 @@ namespace utils
 {
 	std::string_view to_str(const char* str);
 	int count_substring(const std::string& where, const std::string& what);
-	std::string str_tolower(std::string s);
-	std::string str_toupper(std::string s);
+
+	template <typename T>
+	std::string str_tolower(T s)
+	{
+		std::string result(s.begin(), s.end());
+		std::transform(result.begin(), result.end(), result.begin(),
+			[](unsigned char c) { return std::tolower(c); } // correct
+		);
+		return result;
+	}
+
+	template <typename T>
+	std::string str_toupper(T s)
+	{
+		std::string result(s.begin(), s.end());
+		std::transform(result.begin(), result.end(), result.begin(),
+			[](unsigned char c) { return std::toupper(c); } // correct
+		);
+		return result;
+	}
 	std::string format_str(const char* fmt, ...);
 	std::vector<std::string_view> split(const std::string_view& str, const std::string_view& delim);
 	std::vector<std::string_view> split_of(const std::string_view& str, const std::string_view& delims);

@@ -1,7 +1,6 @@
 #include <cassert>
 #include <sstream>
 #include <ios>
-#include <algorithm>
 #include <iterator>
 #include <string>
 #include <string_view>
@@ -34,22 +33,6 @@ namespace utils
 		for (std::size_t pos = 0; pos != std::string::npos; cnt++)
 			pos = where.find(what, pos) + 1;
 		return cnt;
-	}
-
-	std::string str_tolower(std::string s)
-	{
-		std::transform(s.begin(), s.end(), s.begin(),
-			[](unsigned char c) { return std::tolower(c); } // correct
-		);
-		return s;
-	}
-
-	std::string str_toupper(std::string s)
-	{
-		std::transform(s.begin(), s.end(), s.begin(),
-			[](unsigned char c) { return std::toupper(c); } // correct
-		);
-		return s;
 	}
 
 	std::string format_str(const char* fmt, ...)
