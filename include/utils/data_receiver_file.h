@@ -74,8 +74,8 @@ namespace utils
 				base::reset(size);
 				m_current_size = 0;
 				m_target_size = 0;
-				grow(size);
 				m_file.open(m_fpath, std::ios::binary);
+				grow(size);
 			}
 			void grow(const std::size_t& size) override {
 				base::grow(size);
@@ -85,7 +85,7 @@ namespace utils
 					m_file.close();
 				fs::resize_file(m_fpath, m_target_size);
 				if (is_open)
-					m_file.open(m_fpath, std::ios::binary | std::ios::app);
+					m_file.open(m_fpath, std::ios::binary);
 				// TODO: clear the file?
 			}
 
