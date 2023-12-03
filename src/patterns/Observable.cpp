@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <assert.h>
-#include "Observable.h"
-#include "Observer.h"
+#include <utils/patterns/Observable.h>
+#include <utils/patterns/Observer.h>
 #include <utils/Log.h>
 #ifdef LOG_ON
 	#include <utils/string_utils.h>
