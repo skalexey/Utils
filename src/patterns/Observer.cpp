@@ -33,8 +33,9 @@ namespace vl
 
 	std::unordered_map<Observer*, std::unordered_map<Observable*, SubscriptionInfo>>& Observer::GetAllSubscriptions()
 	{
-		static std::unordered_map<Observer*, std::unordered_map<Observable*, SubscriptionInfo>> mSubscriptions;
-		return mSubscriptions;
+		using T = std::unordered_map<Observer*, std::unordered_map<Observable*, SubscriptionInfo>>;
+		static T* mSubscriptions = new T;
+		return *mSubscriptions;
 	}
 
 	const std::unordered_map<Observable*, SubscriptionInfo>* Observer::GetSubscriptions() const

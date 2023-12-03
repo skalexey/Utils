@@ -84,8 +84,8 @@ namespace vl
 
 	Observable::ObserversStorage& Observable::GetObserversStorage()
 	{
-		static ObserversStorage mObserversStorage;
-		return mObserversStorage;
+		static ObserversStorage* mObserversStorage = new ObserversStorage;
+		return *mObserversStorage;
 	}
 
 	const std::vector<Observer*>* Observable::GetObservers() const
