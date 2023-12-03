@@ -45,6 +45,6 @@ namespace vl
 			std::unordered_map<Observable*, std::vector<Observer*>> mObservers;
 		};
 
-		static ObserversStorage* mObserversStorage;
+		static ObserversStorage& GetObserversStorage();
 	};
 }

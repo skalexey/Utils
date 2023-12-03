@@ -9,8 +9,6 @@
 
 namespace vl
 {
-	Observable::ObserversStorage* Observable::mObserversStorage = new Observable::ObserversStorage();
-
 	void Observable::Unsubscribe(Observer* o)
 	{
 		LOG_VERBOSE(utils::format_str("	%p->Unsubscribe(%p)", this, o));
@@ -38,8 +36,8 @@ namespace vl
 				return false;
 			}
 		}
-		mObserversStorage->GetObservers()[this].push_back(o);
-		auto& sc = Observer::mSubscriptions[o];
+		GetObserversStorage().GetObservers()[this].push_back(o);
+		auto& sc = Observer::GetAllSubscriptions()[o];
 		assert(sc.find(this) == sc.end());
 		sc[this] = {this, title};
 		return true;
@@ -70,13 +68,13 @@ namespace vl
 			LOG_VERBOSE(utils::format_str("	Found %d observers", observers->size()));
 			for (auto o : *observers)
 				Unsubscribe(o);
-			mObserversStorage->GetObservers().erase(this);
+			GetObserversStorage().GetObservers().erase(this);
 		}
 	}
 
 	void Observable::Notify(vl::VarPtr info)
 	{
-		auto& observers = mObserversStorage->GetObservers();
+		auto& observers = GetObserversStorage().GetObservers();
 		auto it = observers.find(this);
 		if (it == observers.end())
 			return;
@@ -84,9 +82,15 @@ namespace vl
 			o->Update(this, info);
 	}
 
+	Observable::ObserversStorage& Observable::GetObserversStorage()
+	{
+		static ObserversStorage mObserversStorage;
+		return mObserversStorage;
+	}
+
 	const std::vector<Observer*>* Observable::GetObservers() const
 	{
-		auto& observers = mObserversStorage->GetObservers();
+		auto& observers = GetObserversStorage().GetObservers();
 		auto it = observers.find((Observable*)(this));
 		if (it != observers.end())
 			return &it->second;

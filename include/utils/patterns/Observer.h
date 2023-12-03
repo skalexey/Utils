@@ -31,7 +31,8 @@ namespace vl
 		SubscriptionInfo* GetSubscriptionInfo(Observable* o);
 
 	private:
-		static std::unordered_map<Observer*, std::unordered_map<Observable*, SubscriptionInfo>>& mSubscriptions;
+		static std::unordered_map<Observer*, std::unordered_map<Observable*, SubscriptionInfo>>& GetAllSubscriptions();
+
 		std::string mTitle;
 	};
 }

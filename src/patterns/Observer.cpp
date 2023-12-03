@@ -1,6 +1,6 @@
 #include <assert.h>
-#include "Observer.h"
-#include "Observable.h"
+#include <utils/patterns/Observer.h>
+#include <utils/patterns/Observable.h>
 #include <utils/Log.h>
 #ifdef LOG_ON
 	#include <utils/string_utils.h>
@@ -8,19 +8,14 @@
 
 namespace vl
 {
-	// The maximum lifetime provided
-	std::unordered_map<Observer*, std::unordered_map<Observable*, SubscriptionInfo>>&
-		Observer::mSubscriptions
-			= *(new std::unordered_map<Observer*, std::unordered_map<Observable*, SubscriptionInfo>>());
-
 	Observer::~Observer()
 	{
 		LOG_VERBOSE(utils::format_str("~Observer() %p", this));
 
-		auto it = mSubscriptions.find(this);
-		if (it != mSubscriptions.end())
+		auto it = GetAllSubscriptions().find(this);
+		if (it != GetAllSubscriptions().end())
 		{
-			LOG_VERBOSE(utils::format_str("	Found %d subscriptions", mSubscriptions.size()));
+			LOG_VERBOSE(utils::format_str("	Found %d subscriptions", GetAllSubscriptions().size()));
 
 			auto& sc = it->second;
 			for (auto& [observable, info] : sc)
@@ -32,14 +27,20 @@ namespace vl
 				assert(it != observers->end());
 				observers->erase(it);
 			}
-			mSubscriptions.erase(it);
+			GetAllSubscriptions().erase(it);
 		}
+	}
+
+	std::unordered_map<Observer*, std::unordered_map<Observable*, SubscriptionInfo>>& Observer::GetAllSubscriptions()
+	{
+		static std::unordered_map<Observer*, std::unordered_map<Observable*, SubscriptionInfo>> mSubscriptions;
+		return mSubscriptions;
 	}
 
 	const std::unordered_map<Observable*, SubscriptionInfo>* Observer::GetSubscriptions() const
 	{
-		auto it = mSubscriptions.find((Observer*)this);
-		if (it != mSubscriptions.end())
+		auto it = GetAllSubscriptions().find((Observer*)this);
+		if (it != GetAllSubscriptions().end())
 			return &it->second;
 		return nullptr;
 	}
