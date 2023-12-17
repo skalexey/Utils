@@ -39,9 +39,17 @@ namespace
 
 		auto upload = [=]() {
 			auto retcode = upload_file(local_path, ep, url_path_upload);
-			// TODO: process error here
-			d->update_last_version();
-			download_cb(retcode);
+			if (retcode == 0)
+			{
+				d->update_last_version();
+				download_cb(retcode);
+			}
+			else
+			{
+				ask_user("Uploading error. Your last changes were not saved on the remote server. You still can work, but keep in mind, that your changes may get lost once you loose access to this device. Continue?", [=](bool yes) {
+					download_cb(yes ? 0 : -1);
+				});
+			}
 		};
 
 		d->download_file_async(ep, [=](int code) {
