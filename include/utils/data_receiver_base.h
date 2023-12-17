@@ -27,9 +27,10 @@ namespace utils
 			std::size_t receive(const Data_element_t* data, const std::size_t& size) {
 				auto before = this->size();
 				auto goal = m_is_unlimited ? size : std::min(target_size() - before, size);
+				std::size_t received = 0;
 				try
 				{
-					receive_impl(data, goal);
+					received = receive_impl(data, goal);
 				}
 				catch (const std::exception& e)
 				{
@@ -41,10 +42,10 @@ namespace utils
 					m_error = receiver_error::unknown_exception;
 				}
 				auto after = this->size();
-				auto received = after - before;
+				//auto received = after - before;
+				assert(received == goal); // Written less than expected
 				if (!m_is_unlimited)
 				{
-					assert(received == goal); // Written less than expected
 					if (received != goal)
 						m_error = receiver_error::partial_receive;
 				}
@@ -80,7 +81,7 @@ namespace utils
 			}
 
 		protected:
-			virtual void receive_impl(const Data_element_t* data, const std::size_t& size) = 0;
+			virtual std::size_t receive_impl(const Data_element_t* data, const std::size_t& size) = 0;
 			void set_error(const int& error) {
 				m_error = error;
 			}

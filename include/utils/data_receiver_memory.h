@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <exception>
 #include <vector>
 #include <cassert>
 #include <utils/data_receiver_base.h>
@@ -30,8 +31,17 @@ namespace utils
 				return m_data;
 			}
 			// Overrides
-			void receive_impl(const Data_element_t* data, const std::size_t& size) override {
-				m_data.insert(m_data.end(), data, data + size);
+			std::size_t receive_impl(const Data_element_t* data, const std::size_t& size) override {
+				auto before = m_data.size();
+				try
+				{
+					m_data.insert(m_data.end(), data, data + size);
+					return size;
+				}
+				catch (const std::exception& ex)
+				{
+					return m_data.size() - before;
+				}
 			}
 			const Data_element_t* data() const override {
 				return m_data.data();
@@ -47,8 +57,10 @@ namespace utils
 			}
 			void reset(const std::size_t& size = 0) override {
 				base::reset(size);
-				m_data.clear();
+				m_data = decltype(m_data)();
 				m_data.reserve(size);
+				auto cap = m_data.capacity();
+				assert(cap == size);
 			}
 			void grow(const std::size_t& size) {
 				base::grow(size);

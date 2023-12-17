@@ -31,7 +31,7 @@ namespace utils
 				reset(size);
 			}
 			// Overrides
-			void receive_impl(const Data_element_t* data, const std::size_t& size) override {
+			std::size_t receive_impl(const Data_element_t* data, const std::size_t& size) override {
 				auto before = this->size();
 				auto goal = std::min(m_target_size - before, size);
 				try
@@ -52,6 +52,7 @@ namespace utils
 				m_current_size = after;
 				if (after == m_target_size)
 					m_file.close();
+				return after - before;
 			}
 			const Data_element_t* data() const override {
 				m_buffer = file::contents<data_t>(m_fpath);
