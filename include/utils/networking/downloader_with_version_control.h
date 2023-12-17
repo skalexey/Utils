@@ -55,7 +55,7 @@ namespace utils
 			int replace_with_download();
 
 			bool on_response(
-				const headers_t& headers
+				const http::headers_t& headers
 				, const char* data
 				, std::size_t sz
 				, int status

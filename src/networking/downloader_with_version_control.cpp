@@ -62,7 +62,7 @@ namespace utils
 		}
 
 		bool downloader_with_version_control::on_response(
-			const headers_t& headers
+			const http::headers_t& headers
 			, const char* data
 			, std::size_t sz
 			, int status
@@ -149,7 +149,7 @@ namespace utils
 				else
 				{
 					LOG_DEBUG("Files contents are the same");
-					notify(http_client::erc::no_error);
+					notify(http_client_base::erc::no_error);
 				}
 			}
 			return true;
@@ -184,7 +184,7 @@ namespace utils
 					return erc::update_last_version_error;
 				m_is_file_updated = true;
 				LOG_VERBOSE("Download file successfully stored into the local file's path '" << m_target << "'");
-				return http_client::erc::no_error;
+				return http_client_base::erc::no_error;
 			}
 			LOG_ERROR("Error while placing the downloaded file '" << get_file_path() << "' into the target path '" << m_target << "'");
 			return erc::store_download_error;
@@ -192,7 +192,7 @@ namespace utils
 
 		void downloader_with_version_control::on_notify(int ec)
 		{
-			if (errcode() == http_client::erc::no_error)
+			if (errcode() == http_client_base::erc::no_error)
 				remove_backup();
 			else
 				restore_from_backup();

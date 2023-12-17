@@ -16,7 +16,7 @@ int upload_file(const fs::path& local_path, const anp::tcp::endpoint_t& ep, cons
 	query_t q;
 	q.path = url_path;
 	auto r = u.upload_file(ep, local_path.string(), q);
-	if (r == http_client::erc::no_error)
+	if (r == http_client_base::erc::no_error)
 		MSG("Uploaded '" << local_path.string() << "'");
 	else
 		LOG_ERROR("Error while uploading '" << local_path << "'");

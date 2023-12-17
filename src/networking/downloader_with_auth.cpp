@@ -44,7 +44,7 @@ namespace utils
 		}
 
 		bool downloader_with_auth::on_response(
-			const headers_t& headers
+			const http::headers_t& headers
 			, const char* data
 			, std::size_t sz
 			, int status
