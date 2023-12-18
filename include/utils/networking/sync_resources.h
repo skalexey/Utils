@@ -90,6 +90,19 @@ namespace
 					}
 				);
 			}
+			else if (code == downloader_with_version_control::erc::no_file)
+			{
+				ask_user(
+					STR("The remote server does not have your data stored. Would you like to upload your local changes to the remote?")
+					, [=](bool yes)
+					{
+						if (yes)
+							upload();
+						else
+							download_cb(0);
+					}
+				);
+			}
 			else if (code == downloader::erc::parse_date_error)
 				ask_for_replace();
 			else if (code != http_client_base::erc::no_error)
