@@ -11,8 +11,8 @@ int upload_file(const fs::path& local_path, const anp::tcp::endpoint_t& ep, cons
 {
 	using namespace anp;
 	using namespace utils::networking;
-    uploader u_base;
-	uploader_with_auth u(get_user_name(), get_user_token(), &u_base); 
+    http::uploader u_base;
+	utils::networking::uploader_with_auth u(get_user_name(), get_user_token(), &u_base); 
 	query_t q;
 	q.path = url_path;
 	auto r = u.upload_file(ep, local_path.string(), q);

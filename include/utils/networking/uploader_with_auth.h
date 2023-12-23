@@ -12,9 +12,9 @@ namespace utils
 	{
 		using namespace anp;
 
-		class uploader_with_auth : public uploader_decorator
+		class uploader_with_auth : public http::uploader_decorator
 		{
-			using base = uploader_decorator;
+			using base = http::uploader_decorator;
 
 		public:
 			uploader_with_auth(
