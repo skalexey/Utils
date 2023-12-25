@@ -34,11 +34,11 @@ namespace
 		MSG("Download remote version of resource '" << local_path.filename() << "'...");
 		query_t q;
 		q.path = url_path_download;
-		q.values.add("p", remote_path);
+		q.add_value("p", remote_path);
 		std::string s;
 
 		auto upload = [=]() {
-			auto retcode = upload_file(local_path, ep, url_path_upload);
+			auto retcode = utils::http::upload_file(local_path, ep, url_path_upload);
 			if (retcode == 0)
 			{
 				d->update_last_version();

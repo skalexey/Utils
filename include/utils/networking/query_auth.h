@@ -11,8 +11,8 @@ namespace utils
 		{
 			void init(const std::string& user_name, const std::string& token)
 			{
-				values.add("u", user_name);
-				values.add("t", token);
+				add_value("u", user_name);
+				add_value("t", token);
 			}
 		public:
 			query_auth(const query_t& q) : query_t(q) {}
