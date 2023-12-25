@@ -9,14 +9,15 @@ namespace utils
 	{
 		using namespace anp;
 
-		int uploader_with_auth::upload_file(
+		void uploader_with_auth::upload_file_async(
 			const tcp::endpoint_t& ep,
 			const fs::path& target_path,
-			const query_t& query
+			const query_t& query,
+			const void_int_cb& cb
 		)
 		{
 			query_auth q(query, m_user_name, m_token);
-			return base::upload_file(ep, target_path, q);
+			return base::upload_file_async(ep, target_path, q, cb);
 		}
 	}
 }
