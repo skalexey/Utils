@@ -11,7 +11,6 @@ namespace utils
 	namespace networking
 	{
 		using namespace anp;
-
 		class uploader_with_auth : public http::uploader_decorator
 		{
 			using base = http::uploader_decorator;
