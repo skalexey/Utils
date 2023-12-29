@@ -151,6 +151,9 @@ namespace utils
 		bool empty() const {
 			return size() == 0;
 		}
+		bool has(const TK& k) const {
+			return get_index(k) != -1;
+		}
 		void clear() {
 			_list().clear();
 			_map().clear();
