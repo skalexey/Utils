@@ -24,7 +24,7 @@ namespace utils
 			using data_t = std::vector<Data_element_t>;
 			enum receiver_file_error : int
 			{
-				write_error = receiver_error::count,
+				write_error = base::receiver_error::count,
 				count,
 			};
 			receiver_file(std::size_t size, const fs::path& file_path = {}) : m_fpath(file_path), m_target_size(size) {
