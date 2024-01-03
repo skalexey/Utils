@@ -1,4 +1,4 @@
-﻿// downloader_with_version_control.cpp
+// downloader_with_version_control.cpp
 
 #include <cassert>
 #include <utils/file_utils.h>

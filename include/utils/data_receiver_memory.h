@@ -1,4 +1,4 @@
-﻿// data_receiver_memory.h
+// data_receiver_memory.h
 
 #pragma once
 

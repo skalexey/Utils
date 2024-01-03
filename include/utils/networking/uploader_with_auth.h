@@ -1,4 +1,4 @@
-﻿// uploader_with_auth.h
+// uploader_with_auth.h
 
 #pragma once
 
