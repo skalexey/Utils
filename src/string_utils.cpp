@@ -42,7 +42,11 @@ namespace utils
 		int buf_size = 0, n = 0, cnt = 0, trials = 3; // 1 for check, 2 for the actual formatting and 3 for spare
 		std::string buf;
 		while ((n = vsnprintf(buf.data(), buf_size, fmt, args)) > buf_size && cnt++ < trials)
+		{
 			buf = std::string(buf_size = n + 1, 0);
+			va_end(args);
+			va_start(args, fmt);
+		}
 		assert(n <= buf.size());
 		buf.resize(n);
 		va_end(args);
