@@ -46,7 +46,7 @@ namespace utils
 		if (fmt.find("GMT") != std::string::npos || fmt.find("UTC") != std::string::npos)
 		{	// Parse as UTC time
 			auto tz = std::getenv("TZ");
-			setenv("TZ", "UTC");
+			setenv("TZ", "UTC", 1);
 #ifdef IS_WINDOWS
 			_tzset(); // This applies TZ variable changes
 #endif
@@ -55,7 +55,7 @@ namespace utils
 			ss >> std::get_time(&tm, fmt.c_str());
 			auto t = std::mktime(&tm);
 			if (tz)
-				setenv("TZ", tz);
+				setenv("TZ", tz, 1);
 			else
 				unsetenv("TZ");
 #ifdef IS_WINDOWS

@@ -5,7 +5,7 @@
 #include <utils/datetime.h>
 #include <utils/networking/downloader_with_version_control.h>
 #include <utils/networking/query_auth.h>
-#include <utils/log.h>
+#include <utils/Log.h>
 
 LOG_PREFIX("[downloader_with_version_control]: ");
 LOG_POSTFIX("\n");

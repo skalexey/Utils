@@ -41,12 +41,12 @@ namespace utils
 				catch (const std::exception& e)
 				{
 					m_file.close();
-					set_error(receiver_file_error::write_error);
+					base::set_error(receiver_file_error::write_error);
 				}
 				catch (...)
 				{
 					m_file.close();
-					set_error(receiver_file_error::write_error);
+					base::set_error(receiver_file_error::write_error);
 				}
 				auto after = this->size();
 				m_current_size = after;
