@@ -93,7 +93,8 @@
 #else
 	#define DEFINE_LOG_STREAM_IMPL(class_name, stream_expression)
 	#define DEFINE_LOG_STREAM(class_name, stream_expression)
-	#define LOG_STREAM(stream_expression) 
+	#define LOG_STREAM(stream_expression)
+	#define GLOBAL_LOG_STREAM(stream_expression)
 #endif
 
 

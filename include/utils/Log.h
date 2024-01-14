@@ -28,31 +28,31 @@
 	}
 
 	// Is necessarily required for all LOCAL_LOG* functions
-	#define LOG_TITLE(title) namespace { const char* logTitle = title; } 
-	#define LOCAL_LOG(msg) log_stream() << "[" << logTitle << "] " << msg << "\n"
+	#define LOCAL_LOG(msg) log_stream() << logPrefix << msg << "\n"
 	#ifdef LOG_LEVEL_DEBUG
 		#define LOG_DEBUG(msg) log_stream() << logPrefix << "[D] " << msg << logPostfix
-		#define LOCAL_DEBUG(msg) { if (debugLevel) { log_stream() << "[" << logTitle << "] [D] " << msg << "\n"; } };
-		#define SET_LOG_DEBUG(boolVal) namespace { bool debugLevel = boolVal; }
+		#define LOCAL_DEBUG(msg) { if (debugLevel) { LOG_DEBUG(msg); } };
+		#define SET_LOCAL_LOG_DEBUG(boolVal) namespace { bool debugLevel = boolVal; }
 	#else
 		#define LOG_DEBUG(msg)
 		#define LOCAL_DEBUG(msg)
-		#define SET_LOG_DEBUG(boolVal)
+		#define SET_LOCAL_LOG_DEBUG(boolVal)
 	#endif
-	#define LOCAL_ERROR(msg) log_stream() << "[" << logTitle << "] " << "Error! " << msg << "\n"
-	#define LOCAL_WARNING(msg) log_stream() << "[" << logTitle << "] " << "Warning: " << msg << "\n"
-	#define LOCAL_INFO(msg) log_stream() << "[" << logTitle << "] " << msg << "\n"
+	#define LOCAL_ERROR(msg) log_stream() << logPrefix << "Error! " << msg << "\n"
+	#define LOCAL_WARNING(msg) log_stream() << logPrefix << "Warning: " << msg << "\n"
+	#define LOCAL_INFO(msg) log_stream() << logPrefix << msg << "\n"
 	#ifdef LOG_LEVEL_VERBOSE
-        #define LOG_VERBOSE(msg) log_stream() << "[V] " << msg << "\n"
-		#define LOCAL_VERBOSE(msg) { if (verboseLevel) { log_stream() << "[" << logTitle << "] " << "[V] " << msg << "\n"; } };
-		#define SET_LOG_VERBOSE(boolVal) namespace { bool verboseLevel = boolVal;}
+        #define LOG_VERBOSE(msg) log_stream() << logPrefix << "[V] " << msg << "\n"
+		#define LOCAL_VERBOSE(msg) { if (verboseLevel) { LOG_VERBOSE(msg); } };
+		#define SET_LOCAL_LOG_VERBOSE(boolVal) namespace { bool verboseLevel = boolVal;}
 	#else
 		#define LOG_VERBOSE(msg)
 		#define LOCAL_VERBOSE(msg)
-		#define SET_LOG_VERBOSE(boolVal)
+		#define SET_LOCAL_LOG_VERBOSE(boolVal)
 	#endif
-	#define LOG_PREFIX(prefix) const auto prefixInitializer = PrefixInitializer(prefix)
-	#define LOG_POSTFIX(postfix) const auto postfixInitializer = PostfixInitializer(postfix)
+	#define LOG_PREFIX(prefix) const auto prefixInitializer = PrefixInitializer(prefix);
+	#define LOG_POSTFIX(postfix) const auto postfixInitializer = PostfixInitializer(postfix);
+	#define LOG_TITLE(prefix) const auto prefixInitializer = PrefixInitializer("["#prefix"]: ");
 	#define LOG(msg) log_stream() << logPrefix << msg << logPostfix
 	#define LOG_ERROR(msg) log_stream() << logPrefix << "Error! " << msg << (logPostfix.empty() ? "\n" : logPostfix)
 	#define LOG_WARNING(msg) log_stream() << logPrefix << "Warning: " << msg << (logPostfix.empty() ? "\n" : logPostfix)
@@ -68,8 +68,8 @@
 	#define LOG_PREFIX(prefix)
 	#define LOG_POSTFIX(postfix)
 	#define LOG_TITLE(title)
-	#define SET_LOG_VERBOSE(boolVal)
-	#define SET_LOG_DEBUG(boolVal)
+	#define SET_LOCAL_LOG_VERBOSE(boolVal)
+	#define SET_LOCAL_LOG_DEBUG(boolVal)
 	#define LOCAL_LOG(msg)
 	#define LOCAL_DEBUG(msg)
 	#define LOCAL_WARNING(msg)
