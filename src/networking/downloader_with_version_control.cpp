@@ -9,7 +9,7 @@
 
 LOG_PREFIX("[downloader_with_version_control]: ");
 LOG_POSTFIX("\n");
-SET_LOG_DEBUG(true);
+SET_LOCAL_LOG_DEBUG(true);
 
 namespace utils
 {
