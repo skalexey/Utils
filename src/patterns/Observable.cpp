@@ -3,6 +3,12 @@
 #include <utils/patterns/Observable.h>
 #include <utils/patterns/Observer.h>
 #include <utils/Log.h>
+LOG_TITLE("Observable");
+#ifdef OBSERVER_LOG_VERBOSE
+	SET_LOCAL_LOG_VERBOSE(true);
+#else
+	SET_LOCAL_LOG_VERBOSE(false);
+#endif
 #ifdef LOG_ON
 	#include <utils/string_utils.h>
 #endif
@@ -11,7 +17,7 @@ namespace vl
 {
 	void Observable::Unsubscribe(Observer* o)
 	{
-		LOG_VERBOSE(utils::format_str("	%p->Unsubscribe(%p)", this, o));
+		LOCAL_VERBOSE(utils::format_str("	%p->Unsubscribe(%p)", this, o));
 		auto sc = o->GetSubscriptions();
 		assert(sc != nullptr);
 		auto scIt = sc->find(this);
@@ -21,18 +27,18 @@ namespace vl
 
 	Observable::Observable()
 	{
-		LOG_VERBOSE(utils::format_str("Observable() %p", this));
+		LOCAL_VERBOSE(utils::format_str("Observable() %p", this));
 	}
 
 	bool Observable::Attach(Observer* o, const std::string& title)
 	{
-		LOG_VERBOSE(utils::format_str("%p->Attach(%p)", this, o));
+		LOCAL_VERBOSE(utils::format_str("%p->Attach(%p)", this, o));
 		if (auto observers = GetObservers())
 		{
 			auto it = std::find(observers->begin(), observers->end(), o);
 			if (it != observers->end())
 			{
-				LOG_VERBOSE("	Already attached");
+				LOCAL_VERBOSE("	Already attached");
 				return false;
 			}
 		}
@@ -45,7 +51,7 @@ namespace vl
 
 	bool Observable::Detach(Observer* o)
 	{
-		LOG_VERBOSE(utils::format_str("%p->Detach(%p)", this, o));
+		LOCAL_VERBOSE(utils::format_str("%p->Detach(%p)", this, o));
 		if (auto observers = GetObservers())
 		{
 			auto it = std::find(observers->begin(), observers->end(), o);
@@ -62,10 +68,10 @@ namespace vl
 
 	Observable::~Observable()
 	{
-		LOG_VERBOSE(utils::format_str("~Observable() %p", this));
+		LOCAL_VERBOSE(utils::format_str("~Observable() %p", this));
 		if (auto observers = GetObservers())
 		{
-			LOG_VERBOSE(utils::format_str("	Found %d observers", observers->size()));
+			LOCAL_VERBOSE(utils::format_str("	Found %d observers", observers->size()));
 			for (auto o : *observers)
 				Unsubscribe(o);
 			GetObserversStorage().GetObservers().erase(this);

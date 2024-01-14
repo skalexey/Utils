@@ -2,6 +2,12 @@
 #include <utils/patterns/Observer.h>
 #include <utils/patterns/Observable.h>
 #include <utils/Log.h>
+LOG_TITLE("Observer");
+#ifdef OBSERVER_LOG_VERBOSE
+	SET_LOCAL_LOG_VERBOSE(true);
+#else
+	SET_LOCAL_LOG_VERBOSE(false);
+#endif
 #ifdef LOG_ON
 	#include <utils/string_utils.h>
 #endif
@@ -10,17 +16,17 @@ namespace vl
 {
 	Observer::~Observer()
 	{
-		LOG_VERBOSE(utils::format_str("~Observer() %p", this));
+		LOCAL_VERBOSE(utils::format_str("~Observer() %p", this));
 
 		auto it = GetAllSubscriptions().find(this);
 		if (it != GetAllSubscriptions().end())
 		{
-			LOG_VERBOSE(utils::format_str("	Found %d subscriptions", GetAllSubscriptions().size()));
+			LOCAL_VERBOSE(utils::format_str("	Found %d subscriptions", GetAllSubscriptions().size()));
 
 			auto& sc = it->second;
 			for (auto& [observable, info] : sc)
 			{
-				LOG_VERBOSE(utils::format_str("	Unsubscribe from %p", observable));
+				LOCAL_VERBOSE(utils::format_str("	Unsubscribe from %p", observable));
 				auto observers = observable->GetObservers();
 				assert(observers != nullptr);
 				auto it = std::find(observers->begin(), observers->end(), this);
