@@ -20,7 +20,9 @@ namespace math
 		// Constructors and assignment operators
 		vector() : m_data({}) {}
 		vector(const data_t& data) : m_data(data) {}
-		RT& operator = (const RT& r) { m_data = r.m_data; return rt_this; }
+		RT& operator = (const RT& r) {
+			m_data = r.m_data; return rt_this;
+		}
 		// Value returning operations
 		RT operator + (const RT& r) const { return RT(rt_const_this) += r; }
 		RT operator - (const RT& r) const { return RT(rt_const_this) -= r; };
