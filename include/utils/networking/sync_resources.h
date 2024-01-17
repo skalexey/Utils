@@ -19,7 +19,8 @@ extern void ask_user(
 
 namespace
 {
-	using resources_list = std::vector<std::pair<std::string, fs::path>>;
+	using resource_t = std::pair<std::string, fs::path>;
+	using resources_list = std::vector<resource_t>;
 	// TODO: support parallel download
 	void download(
 		utils::networking::downloader_with_version_control_ptr d
@@ -149,7 +150,41 @@ namespace
 			}
 		});
 	};
+
+	using processor_t = std::function<void(const resource_t&, const utils::void_int_cb&)>;
+	void process_item_recursively(
+		const processor_t& processor
+		, const resources_list& resources
+		, int i
+		, const utils::void_int_cb& on_result = nullptr
+	)
+	{
+		if (resources.empty())
+		{
+			if (on_result)
+				on_result(10);
+			return;
+		}
+		auto& r = resources[i];
+		processor(r, [=](int code) {
+			if (code != 0)
+			{
+				if (on_result)
+					on_result(i + 1);
+			}
+			else
+			{
+				if (i + 1 < resources.size())
+					process_item_recursively(processor, resources, i + 1, on_result);
+				else
+					if (on_result)
+						on_result(0);
+			}
+			return code;
+		});
+	};
 }
+
 namespace utils
 {
 	namespace networking
@@ -169,6 +204,47 @@ namespace utils
 			downloader_with_auth_ptr da = std::make_shared<downloader_with_auth>(get_user_name(), get_user_token(), downloader_base.get());
 			downloader_with_version_control_ptr d = std::make_shared<downloader_with_version_control>(da.get());
 			download_item_recursively(d, ep, url_path_download, url_path_upload, resources, 0, on_result);
+			process_item_recursively(
+				[=](const resource_t& r, const utils::void_int_cb& on_result) {
+					download(d, ep, url_path_download, url_path_upload, r.first, r.second, on_result);
+				}
+				, resources
+				, 0
+				, on_result
+			);
+		}
+
+		void upload_changes(
+			anp::tcp::endpoint_t& ep
+			, const std::string& url_path_upload
+			, const resources_list& resources
+			, const utils::void_int_cb& on_result = {}
+		)
+		{
+			process_item_recursively(
+				[=](const resource_t& r, const utils::void_int_cb& on_result) {
+					if (utils::file::same(r.second, r.second.string() + ".last"))
+					{
+						MSG("No changes in '" << r.second << "'");
+						on_result(0);
+						return;
+					}
+					utils::http::upload_file_async(r.second, ep, url_path_upload, [=](int code) {
+						if (code == 0)
+						{
+							MSG("Changes uploaded '" << r.second << "'");
+							utils::file::copy(r.second, r.second.string() + ".last");
+							MSG("Copied '" << r.second << "' to '" << r.second.string() + ".last" << "'");
+						}
+						else
+							LOG_ERROR("Error while uploading '" << r.second << "'");
+						on_result(code);
+					});
+				}
+				, resources
+				, 0
+				, on_result
+			);
 		}
 	}
 }
