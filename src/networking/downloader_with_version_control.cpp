@@ -164,13 +164,14 @@ namespace utils
 		{
 			assert(!m_target.empty());
 			fs::path bac = m_target.parent_path() / fs::path(m_target.filename().string() + ".bac");
-			if (utils::file::copy(m_target, bac) == 0)
+			auto copy_return_code = utils::file::copy(m_target, bac);
+			if (copy_return_code == 0)
 			{
 				LOG_VERBOSE("Backup of the local file created in '" << bac << "'");
 				m_backup = bac;
 				return true;
 			}
-			LOG_ERROR("Error while backuping the local file '" << m_target << "' into '" << bac << "'");
+			LOG_ERROR("Error while backuping the local file '" << m_target << "' into '" << bac << "': " << copy_return_code);
 			return false;
 		}
 

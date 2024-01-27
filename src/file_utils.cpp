@@ -12,6 +12,8 @@
 #endif
 
 #include <utils/file_utils.h>
+#include <utils/Log.h>
+LOG_TITLE("file_utils");
 #ifndef FILESYSTEM_SUPPORTED
 #include <cstdio>
 #endif
@@ -209,6 +211,7 @@ namespace utils
 				last_error_msg = "";
 				return 3;
 			}
+			return 0;
 	#else
 		bool is_directory(const std::string& path)
 		{
@@ -252,7 +255,7 @@ namespace utils
 			return lines_impl(path);
 		}
 
-		int copy(const std::string & from_path, const std::string & to_path, bool safe)
+		int copy(const std::string & from_path, const std::string & to_path, bool safe, bool overwrite)
         {
 			return copy_overwrite(from_path, to_path, safe);
 	#endif

@@ -43,7 +43,7 @@ namespace utils
 		bool is_directory(const fs::path& path);
 #else
 		bool exists(const std::string& fpath);
-		int copy(const std::string& from_path, const std::string& to_path, bool safe = false);
+		int copy(const std::string& from_path, const std::string& to_path, bool safe = false, bool overwrite = false);
 		int move(const std::string& from_path, const std::string& to_path, bool safe = false);
 		int remove_last_line(const std::string& fpath);
 		bool remove(const std::string& fpath);
