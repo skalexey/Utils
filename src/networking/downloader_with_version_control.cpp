@@ -180,7 +180,7 @@ namespace utils
 				return erc::backup_error;
 			if (utils::file::move(get_file_path(), m_target) == 0)
 			{
-				if (utils::file::copy(m_target, get_last_version_path()) != 0)
+				if (!update_last_version())
 					return erc::update_last_version_error;
 				m_is_file_updated = true;
 				LOG_VERBOSE("Download file successfully stored into the local file's path '" << m_target << "'");
@@ -224,7 +224,12 @@ namespace utils
 		bool downloader_with_version_control::update_last_version()
 		{
 			if (!m_target.empty())
-				return utils::file::copy(m_target, get_last_version_path()) == 0;
+			{
+				auto last_version_path = get_last_version_path();
+				if (utils::file::same(m_target, last_version_path))
+					return true;
+				return utils::file::copy(m_target, last_version_path) == 0;
+			}
 			return false;
 		}
 	}

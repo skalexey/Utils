@@ -8,6 +8,7 @@
 #include <utils/io_utils.h>
 #include <utils/filesystem.h>
 #include <utils/print_defs.h>
+#include <utils/datetime.h>
 #include <utils/common.h>
 
 extern void ask_user(
@@ -15,6 +16,11 @@ extern void ask_user(
 	, const utils::void_bool_cb& on_answer
 	, const char* yes_btn_text
 	, const char* no_btn_text
+);
+
+extern void upload_changes(
+	const utils::void_int_cb& on_result
+	, bool force
 );
 
 namespace
@@ -38,19 +44,29 @@ namespace
 		q.add_value("p", remote_path);
 		std::string s;
 
-		auto upload = [=]() {
-			auto retcode = utils::http::upload_file(local_path, ep, url_path_upload);
-			if (retcode == 0)
-			{
-				d->update_last_version();
-				download_cb(retcode);
-			}
-			else
-			{
-				ask_user("Uploading error. Your last changes were not saved on the remote server. You still can work, but keep in mind, that your changes may get lost once you loose access to this device. Continue?", [=](bool yes) {
-					download_cb(yes ? 0 : -1);
-				});
-			}
+		enum upload_options : int
+		{
+			none,
+			force,
+		};
+
+		auto option_present = [=](int options, int option) {
+			return (options & option) == option;
+		};
+		auto upload = [=](int options = upload_options::none) {
+			upload_changes([=](int code) {
+				if (code == 0)
+				{
+					d->update_last_version();
+					download_cb(code);
+				}
+				else
+				{
+					ask_user("Uploading error. Your last changes were not saved on the remote server. You still can work, but keep in mind, that your changes may get lost once you loose access to this device. Continue?", [=](bool yes) {
+						download_cb(yes ? 0 : -1);
+					});
+				}
+			}, option_present(options, upload_options::force));
 		};
 
 		d->download_file_async(ep, [=](int code) {
@@ -170,7 +186,7 @@ namespace
 			if (code != 0)
 			{
 				if (on_result)
-					on_result(i + 1);
+					on_result(code);
 			}
 			else
 			{
@@ -219,6 +235,7 @@ namespace utils
 			, const std::string& url_path_upload
 			, const resources_list& resources
 			, const utils::void_int_cb& on_result = {}
+			, bool force = false // Keep it the last argument for safety
 		)
 		{
 			process_item_recursively(
@@ -233,13 +250,20 @@ namespace utils
 						if (code == 0)
 						{
 							MSG("Changes uploaded '" << r.second << "'");
-							utils::file::copy(r.second, r.second.string() + ".last");
-							MSG("Copied '" << r.second << "' to '" << r.second.string() + ".last" << "'");
+							auto mtp = utils::file::modif_time(r.second);
+							auto time_str = utils::time_to_string(mtp);
+							MSG("Modification time before copy: " << time_str);
+							auto last_version_fname = r.second.string() + ".last";
+							utils::file::copy(r.second, last_version_fname, false, true);
+							MSG("Copied '" << r.second << "' to '" << last_version_fname << "'");
+							mtp = utils::file::modif_time(last_version_fname);
+							time_str = utils::time_to_string(mtp);
+							MSG("Modification time after copy: " << time_str);
 						}
 						else
-							LOG_ERROR("Error while uploading '" << r.second << "'");
+							LOG_ERROR("Error while uploading (" << code << "): '" << r.second << "'");
 						on_result(code);
-					});
+					}, force);
 				}
 				, resources
 				, 0

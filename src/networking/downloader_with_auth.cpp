@@ -1,5 +1,6 @@
 ﻿// downloader_with_auth.cpp
 
+#include <http/authenticator.h>
 #include <utils/networking/downloader_with_auth.h>
 #include <utils/networking/query_auth.h>
 
