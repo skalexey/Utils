@@ -26,7 +26,7 @@ namespace utils
 #ifdef FILESYSTEM_SUPPORTED
 		bool exists(const fs::path& fpath);
 		bool dir_exists(const fs::path& path);
-		int copy(const fs::path& from_path, const fs::path& to_path, bool safe = false);
+		int copy(const fs::path& from_path, const fs::path& to_path, bool safe = false, bool overwrite = false); // Overwrite leads to update the last modified time
 		int move(const fs::path& from_path, const fs::path& to_path, bool safe = false);
 		int remove_last_line(const fs::path& fpath);
 		bool remove(const fs::path& fpath);

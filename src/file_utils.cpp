@@ -116,6 +116,32 @@ namespace utils
 			return 1;
 		}
 
+		int copy_overwrite(const std::string& from_path, const std::string& to_path, bool safe)
+		{
+			std::ifstream src(from_path, std::ios::binary);
+
+			// Check if the copied file exists
+			if (!src.is_open())
+				return 1;
+
+			// Check if the target path contains a file in the safe mode
+			if (safe)
+			{
+				std::ifstream dst_check(to_path, std::ios::binary);
+				if (src.is_open())
+					return 2;
+				dst_check.close();
+			}
+
+			// Copy the file
+			std::ofstream dst(to_path, std::ios::binary);
+			dst << src.rdbuf();
+			dst.close();
+			std::ifstream dst_check(to_path, std::ios::binary);
+			if (!dst_check.is_open())
+				return 3;
+			return 0;
+		}
 	#ifdef FILESYSTEM_SUPPORTED
 		bool is_directory(const fs::path& path)
 		{
@@ -155,8 +181,11 @@ namespace utils
 			return fs::exists(path);
 		}
 
-		int copy(const fs::path& from_path, const fs::path& to_path, bool safe)
+		int copy(const fs::path& from_path, const fs::path& to_path, bool safe, bool overwrite)
 		{
+			if (overwrite)
+				return copy_overwrite(from_path.string(), to_path.string(), safe);
+
 			if (!fs::exists(from_path))
 				return 1;
 
@@ -225,30 +254,8 @@ namespace utils
 
 		int copy(const std::string & from_path, const std::string & to_path, bool safe)
         {
-			std::ifstream src(from_path, std::ios::binary);
-
-			// Check if the copied file exists
-			if (!src.is_open())
-				return 1;
-
-			// Check if the target path contains a file in the safe mode
-			if (safe)
-			{
-				std::ifstream dst_check(to_path, std::ios::binary);
-				if (src.is_open())
-					return 2;
-				dst_check.close();
-			}
-
-			// Copy the file
-			std::ofstream dst(to_path, std::ios::binary);
-			dst << src.rdbuf();
-			dst.close();
-			std::ifstream dst_check(to_path, std::ios::binary);
-			if (!dst_check.is_open())
-				return 3;
+			return copy_overwrite(from_path, to_path, safe);
 	#endif
-			return 0;
 		}
 
 	#ifdef FILESYSTEM_SUPPORTED
