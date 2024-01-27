@@ -54,7 +54,7 @@ namespace utils
 			std::string_view s(data, sz);
 			if (s.find("Auth error") != std::string::npos)
 			{
-				notify(erc::auth_error);
+				notify(http_client_interface::erc::auth_error);
 				return false;
 			}
 			if (cb)

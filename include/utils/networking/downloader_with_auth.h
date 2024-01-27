@@ -20,11 +20,6 @@ namespace utils
 			using base = downloader_decorator;
 
 		public:
-			enum erc : int
-			{
-				auth_error = downloader::erc::count * 100,
-				end
-			};
 			downloader_with_auth(
 				const std::string& user_name
 				, const std::string& token

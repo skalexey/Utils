@@ -20,19 +20,6 @@ namespace utils
 			using base = downloader_decorator;
 
 		public:
-			enum erc : int
-			{
-				uncommitted_changes = downloader::erc::count * 200,
-				uncommitted_old_changes,
-				no_date,
-				parse_date_error,
-				no_file,
-				file_error,
-				backup_error,
-				store_download_error,
-				update_last_version_error,
-				auth_error,
-			};
 			downloader_with_version_control(downloader_interface* object) : base(object) {}
 
 			int download_file(

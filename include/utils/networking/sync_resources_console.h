@@ -36,9 +36,9 @@ namespace utils
 				query_t q;
 				q.path = url_path_download;
 				q.values.add("p", remote_path);
-				if (d.download_file(ep, q, local_path, nullptr ) != http_client::erc::no_error)
+				if (d.download_file(ep, q, local_path, nullptr ) != http_client_interface::erc::no_error)
 				{
-					if (d.errcode() == downloader_with_version_control::erc::uncommitted_changes)
+					if (d.errcode() == http_client_interface::erc::uncommitted_changes)
 					{
 						std::stringstream ss;
 						ss << "You have changes in '" << local_path << "'.\nWould you like to upload your file to the remote?";
@@ -63,7 +63,7 @@ namespace utils
 						}
 						return true;
 					}
-					else if (d.errcode() == downloader::erc::parse_date_error)
+					else if (d.errcode() == http_client_interface::erc::parse_date_error)
 						if (utils::input::ask_user("Replace with the downloaded version?"))
 							d.replace_with_download();
 					LOG_ERROR("Error while downloading resource '" << remote_path << "'" << " to '" << local_path << "': " << d.errcode());

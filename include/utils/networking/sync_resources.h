@@ -62,7 +62,7 @@ namespace
 						download_cb(0);
 				});
 			};
-			if (code == downloader_with_version_control::erc::uncommitted_changes)
+			if (code == http_client_interface::erc::uncommitted_changes)
 			{
 				ask_user(
 					STR("You have changes in '" << local_path << "'.\nWould you like to upload your file to the remote?")
@@ -75,7 +75,7 @@ namespace
 					}
 				);
 			}
-			else if (code == downloader_with_version_control::erc::uncommitted_old_changes)
+			else if (code == http_client_interface::erc::uncommitted_old_changes)
 			{
 				ask_user(
 					STR("You have changes in '" << local_path << ", but there is a newer version available'.\nReplace your file with the downloaded version?")
@@ -91,7 +91,7 @@ namespace
 					}
 				);
 			}
-			else if (code == downloader_with_version_control::erc::no_file)
+			else if (code == http_client_interface::erc::no_file)
 			{
 				ask_user(
 					STR("The remote server does not have your data stored. Would you like to upload your local changes to the remote?")
@@ -104,9 +104,9 @@ namespace
 					}
 				);
 			}
-			else if (code == downloader::erc::parse_date_error)
+			else if (code == http_client_interface::erc::parse_date_error)
 				ask_for_replace();
-			else if (code != http_client_base::erc::no_error)
+			else if (code != http_client_interface::erc::no_error)
 			{
 				LOG_ERROR("Error while downloading resource '" << remote_path << "'" << " to '" << local_path << "': " << code);
 				download_cb(code);
@@ -119,7 +119,7 @@ namespace
 					MSG("Local resource is up to date: '" << local_path.string() << "'");
 				download_cb(0);
 			}
-		}, q, local_path); // != http_client::erc::no_error
+		}, q, local_path); // != http_client_interface::erc::no_error
 	};
 
 	void download_item_recursively(
