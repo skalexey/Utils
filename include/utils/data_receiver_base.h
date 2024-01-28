@@ -15,6 +15,8 @@ namespace utils
 		class receiver_base
 		{
 		public:
+			virtual ~receiver_base() {}
+			
 			enum receiver_error : int
 			{
 				std_exception = 1,
