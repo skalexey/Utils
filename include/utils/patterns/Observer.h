@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <vl_fwd.h>
+#include <vl/var_ptr.h>
 
 namespace vl
 {
