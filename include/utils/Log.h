@@ -10,7 +10,7 @@
 		using log_stream = std::conditional<is_complete<utils::user_log_stream>::value, utils::user_log_stream, utils::default_log_stream>::type;
 
 		std::string logPrefix; // Prefix for LOG_* commands. Is set through LOG_PREFIX function
-		std::string logPostfix; // Postfix for LOG_* commands. Is set through LOG_POSTFIX function
+		std::string logPostfix = "\n"; // Postfix for LOG_* commands. Is set through LOG_POSTFIX function
 
 		struct PrefixInitializer
 		{
