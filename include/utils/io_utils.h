@@ -13,7 +13,8 @@
 #include <functional>
 #include <unordered_map>
 #include <string>
-#include "string_utils.h"
+#include <utils/string_utils.h>
+#include <utils/Log.h>
 
 namespace utils
 {
@@ -34,6 +35,16 @@ namespace utils
 				std::cout << ", ";
 			}
 		}
+	}
+
+	template <class T>
+	void dump_object_text(T const *t)
+	{
+		unsigned char const *p = reinterpret_cast<unsigned char const *>(t);
+		LOUT("typeid: " << typeid(T).name() << ", size: " << sizeof(T) << ", address: " << t << ", data: ");
+		for (size_t n = 0; n < sizeof(T); ++n)
+			LOUT(p[n]);
+		LOUT("\n");
 	}
 
 	namespace input
