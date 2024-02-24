@@ -4,9 +4,9 @@
 #include <utils/Log.h>
 LOG_TITLE("Observer");
 #ifdef OBSERVER_LOG_VERBOSE
-	SET_LOCAL_LOG_VERBOSE(true);
+	SET_LOCAL_LOG_LEVEL(verbose);
 #else
-	SET_LOCAL_LOG_VERBOSE(false);
+	SET_LOCAL_LOG_LEVEL(debug);
 #endif
 #ifdef LOG_ON
 	#include <utils/string_utils.h>

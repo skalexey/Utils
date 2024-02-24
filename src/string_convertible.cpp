@@ -4,8 +4,7 @@
 #include <utils/Log.h>
 #include <interfaces/string_convertible.h>
 
-LOG_PREFIX("[string_convertible]: ");
-LOG_POSTFIX("\n");
+LOG_TITLE("string_convertible");
 
 namespace interfaces
 {

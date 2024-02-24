@@ -2,8 +2,7 @@
 #include <zlib.h>
 #include <utils/Log.h>
 
-LOG_POSTFIX("\n");
-LOG_PREFIX("[utils::zip]: ");
+LOG_TITLE("utils::zip");
 
 namespace
 {
