@@ -72,27 +72,27 @@
 	#define LOG_EXPR_AND_VAL(ex) LOG(#ex << ": " << ex)
 	#define LOG_EXPR_AND_VAL_LOG(ex, msg) LOG(#ex << ": " << ex << msg)
 #else
-	#define LOG_PREFIX(prefix)
-	#define LOG_POSTFIX(postfix)
-	#define LOG_TITLE(title)
-	#define SET_LOCAL_LOG_LEVEL(level)
-	#define LOCAL_LOG(msg)
-	#define LOCAL_DEBUG(msg)
-	#define LOCAL_WARNING(msg)
-	#define LOCAL_ERROR(msg)
-	#define LOCAL_INFO(msg)
-	#define LOCAL_VERBOSE(msg)
-	#define LOG(msg)
-	#define LOG_DEBUG(msg)
-	#define LOG_WARNING(msg)
-	#define LOG_ERROR(msg)
-	#define LOG_INFO(msg)
-	#define LOG_VERBOSE(msg)
-	#define LOG_EXPR(ex)
-	#define LOG_EXPR_LOG(ex)
-	#define LOG_EXPR_VAL(ex)
-	#define LOG_EXPR_AND_VAL(ex)
-	#define LOG_EXPR_AND_VAL_LOG(ex, msg)
+	#define LOG_PREFIX(prefix) {}
+	#define LOG_POSTFIX(postfix) {}
+	#define LOG_TITLE(title) {}
+	#define SET_LOCAL_LOG_LEVEL(level) {}
+	#define LOCAL_LOG(msg) {}
+	#define LOCAL_DEBUG(msg) {}
+	#define LOCAL_WARNING(msg) {}
+	#define LOCAL_ERROR(msg) {}
+	#define LOCAL_INFO(msg) {}
+	#define LOCAL_VERBOSE(msg) {}
+	#define LOG(msg) {}
+	#define LOG_DEBUG(msg) {}
+	#define LOG_WARNING(msg) {}
+	#define LOG_ERROR(msg) {}
+	#define LOG_INFO(msg) {}
+	#define LOG_VERBOSE(msg) {}
+	#define LOG_EXPR(ex) {}
+	#define LOG_EXPR_LOG(ex) {}
+	#define LOG_EXPR_VAL(ex) {}
+	#define LOG_EXPR_AND_VAL(ex) {}
+	#define LOG_EXPR_AND_VAL_LOG(ex, msg) {}
 #endif
 
 
