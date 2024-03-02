@@ -13,11 +13,12 @@ namespace utils
 	class ordered_map_iterator
 	{
 	public:
+		using iterator_t = ordered_map_iterator<TK, TV>;
 		using TM = ordered_map_interface<TK, TV>;
 		using value_t = std::pair<TK&, TV&>;
 		using const_value_t = std::pair<const TK&, const TV&>;
 		ordered_map_iterator(const TM& __map, int __index)
-			: m_map(__map)
+			: m_map_ptr(&__map)
 			, m_index(__index)
 		{}
 		value_t operator *() {
@@ -25,15 +26,15 @@ namespace utils
 			return {const_cast<TK&>(v.first), const_cast<TV&>(v.second)};
 		}
 		const_value_t operator *() const {
-			auto it = m_map.begin() + m_index;
+			auto it = map().begin() + m_index;
 			if (!it._valid())
 				throw "ordered_map_iterator: Invalid iterator dereference";
-			auto& n = m_map.get_key_at(it.m_index);
-			auto& v = m_map.get_value(n);
+			auto& n = map().get_key_at(it.m_index);
+			auto& v = map().get_value(n);
 			return const_value_t(n, v);
 		}
 		ordered_map_iterator& operator ++() {
-			if (m_index < m_map.size() - 1)
+			if (m_index < map().size() - 1)
 				m_index++;
 			else if (m_index != -1)
 				m_index = -1;
@@ -46,19 +47,19 @@ namespace utils
 		}
 		ordered_map_iterator operator +(int __diff) const {
 			if (!_valid())
-				return m_map.end();
-			auto it = ordered_map_iterator(m_map, m_index + __diff);
+				return map().end();
+			auto it = ordered_map_iterator(map(), m_index + __diff);
 			if (it._valid())
 				return it;
-			return m_map.end();
+			return map().end();
 		}
 		ordered_map_iterator operator -(int __diff) const {
 			if (!_valid())
-				return m_map.end();
-			auto it = ordered_map_iterator(m_map, m_index - __diff);
+				return map().end();
+			auto it = ordered_map_iterator(map(), m_index - __diff);
 			if (it._valid())
 				return it;
-			return m_map.end();
+			return map().end();
 		}
 		bool operator != (const ordered_map_iterator& y) const {
 			return (m_index != y.m_index);
@@ -67,16 +68,19 @@ namespace utils
 			return (m_index == y.m_index);
 		}
 		operator bool() const {
-			return !operator==(m_map.end());
+			return !operator==(map().end());
 		}
 		
 	protected:
 		bool _valid() const {
-			return m_index >= 0 && m_index < m_map.size();
+			return m_index >= 0 && m_index < map().size();
+		}
+		const TM& map() const {
+			return *m_map_ptr;
 		}
 		
 	private:
-		const TM& m_map;
+		const TM* m_map_ptr = nullptr;
 		int m_index = -1;
 	};
 
@@ -198,6 +202,21 @@ namespace utils
 				if (v > i)
 					i--;
 			return true;
+		}
+		iterator erase(iterator __it) {
+			if (!__it)
+				return end();
+			auto it = _map().find(__it->first);
+			if (it == _map().end())
+				return end();
+			auto i = it->second;
+			_map().erase(it);
+			_list().erase(_list().begin() + i);
+			_keys().erase(_keys().begin() + i);
+			for (auto& [k,v] : _map())
+				if (v > i)
+					v--;
+			return iterator(*this, i < size() ? i : -1);
 		}
 		bool erase_at(int __index) {
 			if (__index < 0 || __index >= size())
