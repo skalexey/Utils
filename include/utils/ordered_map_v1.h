@@ -99,14 +99,14 @@ namespace utils
 		virtual const TM& get_map() const = 0;
 	};
 
-	// ordered_map_view
+	// ordered_hashmap_view
 	// View-like type for being able to use std::for_each with custom iteration logic
 	// without creating ordered_map class
 	template <typename TK, typename TV>
-	class ordered_map_view : public ordered_map_interface
+	class ordered_hashmap_view : public ordered_map_interface
 	{
 	public:
-		ordered_map_view(const TL&, __list, const TM& __map)
+		ordered_hashmap_view(const TL&, __list, const TM& __map)
 			: m_list(__list)
 			, m_map(__map)
 		{}
