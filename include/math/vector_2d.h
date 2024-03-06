@@ -3,7 +3,7 @@
 
 namespace math
 {
-	// Use CRTP pattern
+	// CRTP pattern
 	template <typename T>
 	struct vector_2d : public vector<T, 2, vector_2d<T>>
 	{
