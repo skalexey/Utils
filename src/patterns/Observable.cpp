@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <utils/patterns/Observable.h>
 #include <utils/patterns/Observer.h>
-#include <utils/Log.h>
+#include <utils/log.h>
 LOG_TITLE("Observable");
 #ifdef OBSERVER_LOG_VERBOSE
 	SET_LOCAL_LOG_LEVEL(verbose);

@@ -5,7 +5,7 @@
 #include <utils/datetime.h>
 #include <utils/networking/downloader_with_version_control.h>
 #include <utils/networking/query_auth.h>
-#include <utils/Log.h>
+#include <utils/log.h>
 
 LOG_TITLE("downloader_with_version_control");
 SET_LOCAL_LOG_LEVEL(debug);

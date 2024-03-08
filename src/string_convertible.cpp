@@ -1,7 +1,7 @@
 ﻿// string_convertible.cpp
 
 #include <ostream>
-#include <utils/Log.h>
+#include <utils/log.h>
 #include <interfaces/string_convertible.h>
 
 LOG_TITLE("string_convertible");

@@ -12,7 +12,7 @@
 #endif
 
 #include <utils/file_utils.h>
-#include <utils/Log.h>
+#include <utils/log.h>
 LOG_TITLE("file_utils");
 #ifndef FILESYSTEM_SUPPORTED
 #include <cstdio>
