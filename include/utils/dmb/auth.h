@@ -28,7 +28,7 @@ extern int request_auth(const std::string& user_name, const std::string& token);
 const std::string& get_user_name()
 {
 	if (auto data_ptr = get_identity_cfg_data())
-		return (*data_ptr)["user"].AsObject().Get("name").AsString().Val();
+		return (*data_ptr)["user"].as<vl::Object>().Get("name").as<vl::String>().Val();
 	static std::string empty_string;
 	return empty_string;
 }
@@ -36,7 +36,7 @@ const std::string& get_user_name()
 const std::string& get_user_token()
 {
 	if (auto data_ptr = get_identity_cfg_data())
-		return (*data_ptr)["user"].AsObject().Get("token").AsString().Val();
+		return (*data_ptr)["user"].as<vl::Object>().Get("token").as<vl::String>().Val();
 	static std::string empty_string;
 	return empty_string;
 }
@@ -95,7 +95,7 @@ bool get_identity(std::string* user_name, std::string* user_pass)
 	{
 		if (!ask_name(name))
 			return false;
-		data["user"].AsObject().Set("name", name);
+		data["user"].as<vl::Object>().Set("name", name);
 		store = true;
 	}
 	if (user_name)
@@ -107,7 +107,7 @@ bool get_identity(std::string* user_name, std::string* user_pass)
 		if (!ask_pass(pass))
 			return false;
 		token = h(pass);
-		data["user"].AsObject().Set("token", token);
+		data["user"].as<vl::Object>().Set("token", token);
 		store = true;
 	}
 	if (user_pass)
