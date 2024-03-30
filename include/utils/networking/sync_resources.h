@@ -1,8 +1,6 @@
 #pragma once
 
 #include <string>
-#include <mutex>
-#include <condition_variable>
 #include <utils/networking/downloader_with_auth.h>
 #include <utils/networking/downloader_with_version_control.h>
 #include <utils/networking/upload_file.h>
