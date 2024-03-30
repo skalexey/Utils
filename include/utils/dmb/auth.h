@@ -2,6 +2,7 @@
 #include <string>
 #include <DMBCore.h>
 #include <utils/io_utils.h>
+#include <utils/extern/user_input.h>
 
 #ifndef AUTH_LOG_ERROR
 #define AUTH_LOG_ERROR(msg)
@@ -10,7 +11,7 @@
 namespace
 {
 	std::unique_ptr<dmb::Model> identity_model_ptr;
-	extern fs::path identity_path;
+	extern const fs::path identity_path;
 }
 
 // Function declarations
@@ -18,7 +19,7 @@ bool get_identity(std::string* name = nullptr, std::string* pass = nullptr);
 std::string h(const std::string& s);
 bool ask_pass(std::string& s);
 bool ask_name(std::string& s);
-int auth();
+bool auth();
 const std::string& get_user_token();
 const std::string& get_user_name();
 vl::Object* get_identity_cfg_data();
@@ -28,7 +29,11 @@ extern int request_auth(const std::string& user_name, const std::string& token);
 const std::string& get_user_name()
 {
 	if (auto data_ptr = get_identity_cfg_data())
-		return (*data_ptr)["user"].as<vl::Object>().Get("name").as<vl::String>().Val();
+	{
+		auto& user = data_ptr->Get("user").as<vl::Object>();
+		if (user.Has("name"))
+			return user.Get("name").as<vl::String>().Val();
+	}
 	static std::string empty_string;
 	return empty_string;
 }
@@ -36,7 +41,11 @@ const std::string& get_user_name()
 const std::string& get_user_token()
 {
 	if (auto data_ptr = get_identity_cfg_data())
-		return (*data_ptr)["user"].as<vl::Object>().Get("token").as<vl::String>().Val();
+	{
+		auto& user = data_ptr->Get("user").as<vl::Object>();
+		if (user.Has("token"))
+			return user.Get("token").as<vl::String>().Val();
+	}
 	static std::string empty_string;
 	return empty_string;
 }
@@ -45,6 +54,11 @@ vl::Object* get_identity_cfg_data()
 {
 	if (!identity_model_ptr)
 		identity_model_ptr = std::make_unique<dmb::Model>();
+
+	auto& data = identity_model_ptr->GetContent().GetData();
+	auto& user = data["user"];
+	if (!user)
+		user = vl::Object();
 
 	if (!identity_model_ptr->IsLoaded())
 		if (!identity_model_ptr->Load(identity_path.string()))
@@ -56,13 +70,13 @@ vl::Object* get_identity_cfg_data()
 	return &identity_model_ptr->GetContent().GetData();
 }
 
-int auth()
+bool auth()
 {
 	vl::Object& data = identity_model_ptr->GetContent().GetData();
 	std::string user_name, token;
 	if (!get_identity(&user_name, &token))
 		return false;
-	return request_auth(user_name, token);
+	return request_auth(user_name, token) == 0;
 }
 
 bool ask_name(std::string& s)
@@ -87,7 +101,7 @@ bool get_identity(std::string* user_name, std::string* user_pass)
 		return false;
 
 	auto& data = *data_ptr;
-
+	
 	auto name = get_user_name();
 	auto token = get_user_token();
 	bool store = false;

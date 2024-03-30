@@ -4,26 +4,10 @@
 #include <functional>
 #include <string>
 #include <DMBCore.h>
-#include <utils/io_utils.h>
-#include <utils/common.h>
+#include <utils/extern/user_input.h>
 #ifndef AUTH_LOG_ERROR
 #define AUTH_LOG_ERROR(msg)
 #endif
-
-extern void ask_user(
-	const std::string& question
-	, const utils::void_bool_cb& on_answer
-	, const char* yes_btn_text = nullptr
-	, const char* no_btn_text = nullptr
-);
-
-extern void ask_line(
-	const std::string& msg
-	, const utils::void_string_bool_cb& on_answer
-	, const std::string& default_value = {}
-	, const char* ok_btn_text = nullptr
-	, const char* cancel_btn_text = nullptr
-);
 
 namespace
 {
