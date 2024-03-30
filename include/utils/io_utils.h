@@ -60,10 +60,10 @@ namespace utils
 		extern std::unordered_map<std::string, wr_file_info> file_info;
 
 		// utils::getline
-		extern std::string last_getline_value;
-		extern std::string last_command;
-		extern bool last_getline_valid;
-		extern std::string last_input_fpath;
+		std::string last_getline_value();
+		std::string last_command();
+		bool last_getline_valid();
+		std::string& last_input_fpath(); // TODO: remove the reference
 
 		bool getline(std::istream& is, std::string& s);
 
@@ -89,7 +89,7 @@ namespace utils
 					info.fo.seekp(0, std::ios::end);
 					info.fi.open(fpath);
 					info.fsize = info.fo.tellp();
-					last_input_fpath = fpath;
+					last_input_fpath() = fpath;
 				}
 				else
 				{

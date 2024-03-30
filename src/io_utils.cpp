@@ -3,7 +3,8 @@
 //
 //  Created by Alex Skorokhodov on 2022/06/05.
 //
-
+#include <unordered_map>
+#include <thread>
 #include <utils/string_utils.h>
 #include <utils/io_utils.h>
 
@@ -14,9 +15,53 @@ namespace utils
 		std::unordered_map<std::string, wr_file_info> file_info;
 
 		// utils::getline
-		std::string last_getline_value;
-		bool last_getline_valid = true;
-		std::string last_command;
+		struct io_context_data_t
+		{
+			std::string last_getline_value;
+			bool last_getline_valid = true;
+			std::string last_command;
+			std::string last_input_fpath;
+
+			void reset_last_input()
+			{
+				last_getline_value.clear();
+				last_getline_valid = true;
+				last_command.clear();
+			}
+		};
+
+		class io_context_t
+		{
+			// Allow a new thread entry to be created even in the constant data getter
+			std::unordered_map<std::thread::id, io_context_data_t> m_data;
+
+		public:
+			io_context_data_t& data() {
+				return m_data[std::this_thread::get_id()];
+			}
+		};
+		
+		io_context_t io_context;
+
+		std::string last_getline_value()
+		{
+			return io_context.data().last_getline_value;
+		}
+
+		std::string last_command()
+		{
+			return io_context.data().last_command;
+		}
+
+		bool last_getline_valid()
+		{
+			return io_context.data().last_getline_valid;
+		}
+
+		std::string& last_input_fpath()
+		{
+			return io_context.data().last_input_fpath;
+		}
 
 		bool getline(std::istream& is, std::string& s)
 		{
@@ -28,12 +73,16 @@ namespace utils
 				if (std::cin.fail())
 					return false;
 				// Set last getline value
+				auto& last_getline_value = io_context.data().last_getline_value;
 				last_getline_value = tmp;
 				auto first_word = last_getline_value.substr(0, last_getline_value.find_first_of(" "));
 
 				// Set valid flag
 
 				auto it = registered_commands.find(utils::str_tolower(first_word));
+				auto& io_context_data = io_context.data();
+				auto& last_getline_valid = io_context_data.last_getline_valid;
+				auto& last_command = io_context_data.last_command;
 				if (!(last_getline_valid = it == registered_commands.end()))
 				{
 					cmd_ret = it->second.call(); // Call a command
@@ -47,8 +96,6 @@ namespace utils
 		}
 
 		// input_line, close_input
-		std::string last_input_fpath;
-
 		bool input_line(std::string& s, std::istream& def_i, const std::string& fpath)
 		{
 			return input_t_impl<std::string>(s, def_i
@@ -61,6 +108,7 @@ namespace utils
 
 		void close_input(const std::string& fpath)
 		{
+			auto& last_input_fpath = io_context.data().last_input_fpath;
 			auto _fpath_ = fpath.empty() ? last_input_fpath : fpath;
 			if (!_fpath_.empty())
 			{
@@ -78,6 +126,7 @@ namespace utils
 
 		std::ifstream* get_file(const std::string& fpath)
 		{
+			auto& last_input_fpath = io_context.data().last_input_fpath;
 			auto _fpath_ = fpath.empty() ? last_input_fpath : fpath;
 			if (!_fpath_.empty())
 			{
@@ -103,9 +152,7 @@ namespace utils
 
 		void reset_last_input()
 		{
-			last_command = "";
-			last_getline_valid = false;
-			last_getline_value = "";
+			io_context.data().reset_last_input();
 		}
         
 		bool ask_user(const std::string& question)
