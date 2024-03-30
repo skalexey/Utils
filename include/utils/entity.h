@@ -30,6 +30,7 @@ namespace utils
 			virtual ~entity() = default;
 
 		protected:
+			// Override for redirecting interface to another object (e.g., if this is a proxy object)
 			virtual const entity* self() const {
 				return this;
 			}
