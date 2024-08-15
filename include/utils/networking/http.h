@@ -24,7 +24,7 @@ namespace utils
 			q.path = url_path;
 			if (!force)
 			{
-				auto local_mtp = utils::file::modif_time(local_path.string() + ".last");
+				auto local_mtp = utils::file::modif_time(local_path.string());
 				long sec = std::chrono::duration_cast<std::chrono::seconds>(local_mtp.time_since_epoch()).count();
 				q.add_value("modification_time", std::to_string(sec));
 			}
