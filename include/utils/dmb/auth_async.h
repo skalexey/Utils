@@ -31,7 +31,7 @@ extern void request_auth(const std::string& user_name, const std::string& token,
 const std::string& get_user_name()
 {
 	if (auto data_ptr = get_identity_cfg_data())
-		return (*data_ptr)["user"].as<vl::Object>().Get("name").as<vl::String>().Val();
+		return data_ptr->Def<vl::Object>("user").Def<vl::String>("name").Val();
 	static std::string empty_string;
 	return empty_string;
 }
@@ -39,7 +39,7 @@ const std::string& get_user_name()
 const std::string& get_user_token()
 {
 	if (auto data_ptr = get_identity_cfg_data())
-		return (*data_ptr)["user"].as<vl::Object>().Get("token").as<vl::String>().Val();
+		return data_ptr->Def<vl::Object>("user").Def<vl::String>("token").Val();
 	static std::string empty_string;
 	return empty_string;
 }
@@ -56,12 +56,12 @@ vl::Object* get_identity_cfg_data()
 				AUTH_LOG_ERROR("Can't create identity file");
 				return nullptr;
 			}
-	return &identity_model_ptr->GetContent().GetData();
+	return &identity_model_ptr->Content().Data();
 }
 
 void auth(const utils::void_int_cb& on_result)
 {
-	vl::Object& data = identity_model_ptr->GetContent().GetData();
+	vl::Object& data = identity_model_ptr->Content().Data();
 	std::string user_name, token;
 	get_identity([=](bool ok, std::string user_name, std::string token) {
 		if (!ok)
@@ -114,7 +114,7 @@ void get_identity(const on_get_identity_result_t& on_result)
 					finish(false);
 				auto token = h(pass);
 				auto& data = *data_ptr;
-				data["user"].as<vl::Object>().Set("token", token);
+				data.Def<vl::Object>("user")["token"] = token;
 				ctx->store = true;
 				ctx->token = token;
 				finish(true);
@@ -130,7 +130,7 @@ void get_identity(const on_get_identity_result_t& on_result)
 			if (!ok)
 				on_result(false, {}, {});
 			auto& data = *data_ptr;
-			data["user"].as<vl::Object>().Set("name", name);
+			data.Def<vl::Object>("user")["name"] = name;
 			ctx->store = true;
 			ctx->name = name;
 			check_token();
