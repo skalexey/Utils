@@ -24,6 +24,14 @@ namespace utils
 				return std::dynamic_pointer_cast<T>(self()->shared_from_this());
 			}
 			template <typename T>
+			T* as_raw_ptr() {
+				return dynamic_cast<T*>(self());
+			}
+			template <typename T>
+			const T* as_raw_ptr() const {
+				return dynamic_cast<const T*>(self());
+			}
+			template <typename T>
 			bool is() const {
 				return dynamic_cast<const T*>(self()) != nullptr;
 			}
