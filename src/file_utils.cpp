@@ -1,3 +1,5 @@
+#include <iostream>
+#include <cstdlib>
 #include <type_traits>
 #include <fstream>
 #include <string>
@@ -158,6 +160,37 @@ namespace utils
 #endif
 		}
 
+		fs::path app_data_directory_path(const std::string& app_name)
+		{
+			std::filesystem::path app_data_path;
+
+#ifdef _WIN32
+			const char* env_appdata = std::getenv("APPDATA");
+			if (env_appdata != nullptr) {
+				app_data_path = std::filesystem::path(env_appdata) / app_name;
+			}
+			else {
+				const char* env_userprofile = std::getenv("USERPROFILE");
+				if (env_userprofile != nullptr) {
+					app_data_path = std::filesystem::path(env_userprofile) / "AppData" / "Roaming" / app_name;
+				}
+			}
+#else
+			const char* env_xdg_config_home = std::getenv("XDG_CONFIG_HOME");
+			if (env_xdg_config_home != nullptr) {
+				app_data_path = std::filesystem::path(env_xdg_config_home) / app_name;
+			}
+			else {
+				const char* env_home = std::getenv("HOME");
+				if (env_home != nullptr) {
+					app_data_path = std::filesystem::path(env_home) / ".config" / app_name;
+				}
+			}
+#endif
+
+			return app_data_path;
+		}
+
 		bool is_file_path(const fs::path& path)
 		{
 			return path.has_filename();
@@ -243,6 +276,12 @@ namespace utils
 		std::string temp_directory_path()
 		{
 			return std::tmpnam(nullptr);
+		}
+
+		std::string app_data_directory_path(const std::string& app_name)
+		{
+			assert(false) // Not ported yet
+			return temp_directory_path()
 		}
 		
 		int create(const std::string& path)

@@ -40,6 +40,7 @@ namespace utils
 		int create(const fs::path& path);
 		bool is_file_path(const fs::path& path);
 		fs::path temp_directory_path();
+		fs::path app_data_directory_path(const std::string& app_name);
 		bool is_directory(const fs::path& path);
 #else
 		bool exists(const std::string& fpath);
@@ -56,6 +57,7 @@ namespace utils
 		bool same(const std::string& f1, const std::string& f2);
 		int create(const std::string& path);
 		std::string temp_directory_path();
+		std::string app_data_directory_path(const std::string& app_name);
 		bool is_directory(const std::string& path);
 #endif
 
