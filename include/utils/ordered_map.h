@@ -6,6 +6,8 @@
 
 namespace utils
 {
+	using ordered_map_index_t = long long;
+
 	template <typename TK, typename TV, typename TC>
 	class ordered_map_interface;
 
@@ -18,7 +20,7 @@ namespace utils
 		using value_t = std::pair<TK&, TV&>;
 		using const_value_t = std::pair<const TK&, const TV&>;
 
-		ordered_map_iterator(const TM& __map, int __index)
+		ordered_map_iterator(const TM& __map, ordered_map_index_t __index)
 			: m_map_ptr(&__map)
 			, m_index(__index)
 		{}
@@ -35,7 +37,7 @@ namespace utils
 			return const_value_t(n, v);
 		}
 		ordered_map_iterator& operator++() {
-			if (m_index < map().size() - 1)
+			if (m_index < (decltype(m_index))map().size() - 1)
 				m_index++;
 			else if (m_index != -1)
 				m_index = -1;
@@ -46,7 +48,7 @@ namespace utils
 			operator++();
 			return r;
 		}
-		ordered_map_iterator operator+(int __diff) const {
+		ordered_map_iterator operator+(ordered_map_index_t __diff) const {
 			if (!_valid())
 				return map().end();
 			auto it = ordered_map_iterator(map(), m_index + __diff);
@@ -54,7 +56,7 @@ namespace utils
 				return it;
 			return map().end();
 		}
-		ordered_map_iterator operator-(int __diff) const {
+		ordered_map_iterator operator-(ordered_map_index_t __diff) const {
 			if (!_valid())
 				return map().end();
 			auto it = ordered_map_iterator(map(), m_index - __diff);
@@ -74,14 +76,14 @@ namespace utils
 		
 	protected:
 		bool _valid() const {
-			return m_index >= 0 && m_index < map().size();
+			return m_index >= 0 && m_index < (decltype(m_index))map().size();
 		}
 		const TM& map() const {
 			return *m_map_ptr;
 		}
 		
 	protected:
-		int m_index = -1;
+		ordered_map_index_t m_index = -1;
 
 	private:
 		const TM* m_map_ptr = nullptr;
@@ -92,12 +94,12 @@ namespace utils
 	{
 	public:
 		using base = ordered_map_iterator<TK, TV, TC>;
-		ordered_map_reverse_iterator(const base::TM& __map, int __index)
+		ordered_map_reverse_iterator(const base::TM& __map, ordered_map_index_t __index)
 			: base(__map, __index)
 		{}
 		ordered_map_reverse_iterator& operator++() {
-			if (m_index >= 0)
-				m_index--;
+			if (base::m_index >= 0)
+				base::m_index--;
 			return *this;
 		}
 		ordered_map_reverse_iterator operator++(int) {
@@ -105,24 +107,24 @@ namespace utils
 			operator++();
 			return r;
 		}
-		ordered_map_reverse_iterator operator+(int __diff) const {
-			if (!_valid())
-				return map().rend();
-			auto it = ordered_map_reverse_iterator(map(), m_index - __diff);
+		ordered_map_reverse_iterator operator+(ordered_map_index_t __diff) const {
+			if (!base::_valid())
+				return base::map().rend();
+			auto it = ordered_map_reverse_iterator(base::map(), base::m_index - __diff);
 			if (it._valid())
 				return it;
-			return map().rend();
+			return base::map().rend();
 		}
-		ordered_map_reverse_iterator operator-(int __diff) const {
-			if (!_valid())
-				return map().rend();
-			auto it = ordered_map_reverse_iterator(map(), m_index + __diff);
+		ordered_map_reverse_iterator operator-(ordered_map_index_t __diff) const {
+			if (!base::_valid())
+				return base::map().rend();
+			auto it = ordered_map_reverse_iterator(base::map(), base::m_index + __diff);
 			if (it._valid())
 				return it;
-			return map().rend();
+			return base::map().rend();
 		}
 		operator bool() const {
-			return !operator==(map().rend());
+			return !operator==(base::map().rend());
 		}
 	};
 
@@ -134,8 +136,6 @@ namespace utils
 		using TL = std::vector<TV>;
 		using TM = TC;
 		using TKI = std::vector<TK>;
-		
-	public:
 		using iterator = ordered_map_iterator<TK, TV, TC>;
 		using reverse_iterator = ordered_map_reverse_iterator<TK, TV, TC>;
 
@@ -183,18 +183,18 @@ namespace utils
 		TV& value(const TK& __key) {
 			return const_cast<TV&>(const_cast<ordered_map_interface*>(this)->get_value(__key));
 		}
-		TV& at(int __index) {
+		TV& at(ordered_map_index_t __index) {
 			auto& k = get_key_at(__index);
 			return value(k);
 		}
-		const TV& get_at(int __index) const {
+		const TV& get_at(ordered_map_index_t __index) const {
 			auto& k = get_key_at(__index);
 			return get_value(k);
 		}
-		const TK& get_key_at(int __index) const {
+		const TK& get_key_at(ordered_map_index_t __index) const {
 			return _get_keys()[__index];
 		}
-		int get_index(const TK& k) const {
+		ordered_map_index_t get_index(const TK& k) const {
 			auto it = _get_map().find(k);
 			if (it == _get_map().end())
 				return -1;
@@ -215,7 +215,7 @@ namespace utils
 			_keys().clear();
 		}
 		std::pair<iterator, bool> add(const TK& __key, const TV& __value) {
-			auto res = _map().emplace(__key, (int)_list().size());
+			auto res = _map().emplace(__key, (ordered_map_index_t)_list().size());
 			if (!res.second)
 				return {{*this, res.first->second}, false};
 			_list().push_back(__value);
@@ -272,9 +272,9 @@ namespace utils
 			for (auto& [k,v] : _map())
 				if (v > i)
 					v--;
-			return iterator(*this, i < size() ? i : -1);
+			return iterator(*this, i < (decltype(i))size() ? i : -1);
 		}
-		bool erase_at(int __index) {
+		bool erase_at(ordered_map_index_t __index) {
 			if (__index < 0 || __index >= size())
 				return false;
 			erase(_get_keys(__index));
@@ -303,7 +303,7 @@ namespace utils
 	};
 
 	template <typename TK>
-	using ordered_hashmap_t = std::unordered_map<TK, int>;
+	using ordered_hashmap_t = std::unordered_map<TK, ordered_map_index_t>;
 
 	template <typename TK, typename TV, typename TC = ordered_hashmap_t<TK>>
 	class ordered_hashmap_view;
