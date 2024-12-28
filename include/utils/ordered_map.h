@@ -223,15 +223,11 @@ namespace utils
 			return {iterator(*this, _list().size() - 1), true};
 		}
 		iterator set(const TK& __key, const TV& __value) {
-			auto index = get_index(__key);
-			if (index < 0)
-				return add(__key, __value);
-			else
-			{
-				auto& r = _list()[index];
-				r = __value;
-				return iterator(*this, index);
-			}
+			auto it = find(__key);
+			if (it == end())
+				return add(__key, __value).first;
+			(*it).second = __value;
+			return it;
 		}
 		virtual std::pair<iterator, bool> rename(const TK& __old_key, const TK& __new_key) {
 			auto it = _map().find(__old_key);
