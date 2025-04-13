@@ -55,10 +55,10 @@ vl::Object* get_identity_cfg_data()
 	if (!identity_model_ptr)
 		identity_model_ptr = std::make_unique<dmb::Model>();
 
-	auto& data = identity_model_ptr->GetContent().GetData();
+	auto& data = identity_model_ptr->Content().Data();
 	auto& user = data["user"];
 	if (!user)
-		user = vl::Object();
+		data["user"] = vl::Object();
 
 	if (!identity_model_ptr->IsLoaded())
 		if (!identity_model_ptr->Load(identity_path.string()))
@@ -67,12 +67,12 @@ vl::Object* get_identity_cfg_data()
 				AUTH_LOG_ERROR("Can't create identity file");
 				return nullptr;
 			}
-	return &identity_model_ptr->GetContent().GetData();
+	return &identity_model_ptr->Content().Data();
 }
 
 bool auth()
 {
-	vl::Object& data = identity_model_ptr->GetContent().GetData();
+	vl::Object& data = identity_model_ptr->Content().Data();
 	std::string user_name, token;
 	if (!get_identity(&user_name, &token))
 		return false;
